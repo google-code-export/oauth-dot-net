@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="PackageSource" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- MSBuild community tasks -->
+  <PropertyGroup>
+	<MSBuildCommunityTasksPath>Libraries</MSBuildCommunityTasksPath>
+  </PropertyGroup>
+  <Import Project="MSBuild.Community.Tasks.Targets" />
+  
+  <Target Name="PackageSource">
+	<!-- Build OAuth.Net.Common (to get assembly version) -->
+	<MSBuild Projects="OAuth.Net.Common\OAuth.Net.Common.csproj" Targets="Build" Properties="Configuration=Debug"/>
+	
+	<!-- Find the assembly version (for Common but should all be the same) -->
+	<GetAssemblyIdentity AssemblyFiles="OAuth.Net.Common\bin\Debug\OAuth.Net.Common.dll">
+		<Output TaskParameter="Assemblies" ItemName="AssemblyInfo" />
+	</GetAssemblyIdentity>
+	
+	<!-- Clean up directory -->
+	<MSBuild Projects="OAuth.net.sln" Targets="Clean" />
+	
+	<!-- Make temp directory -->		
+	<RemoveDir Directories="tmp" Condition="Exists('tmp')"/>
+	<MakeDir Directories="tmp\OAuth.Net-source-%(AssemblyInfo.Version)" />
+	
+	<!-- SVN Export (NB: Unversioned files in the working copy will not be included) -->
+	<Message Text="Running SVN export" />
+	<Exec Command="svn export . tmp\OAuth.Net-source-%(AssemblyInfo.Version) --force" />
+		
+	<!-- Error if svn export didn't create the tmp directory (i.e. didn't run) -->
+	<Error Text="Error running svn export. Cannot package source" Condition="!Exists('tmp\OAuth.Net-source-%(AssemblyInfo.Version)')" />
+
+	<!-- Items to zip from temp directory -->
+	<ItemGroup>
+      <!-- All files copied to tmp directory -->
+      <ZipFiles Include="tmp\OAuth.Net-source-%(AssemblyInfo.Version)\**\*.*"/>
+	</ItemGroup>
+		
+	<!-- Create the zip file -->
+	<MakeDir Directories="Source" Condition="!Exists('Source')"/>
+	<Delete Files="Source\OAuthNet-source-%(AssemblyInfo.Version).zip" Condition="Exists('Source\OAuthNet-source-%(AssemblyInfo.Version).zip')"/>
+    <Zip Files="@(ZipFiles)" ZipFileName="Source\OAuthNet-source-%(AssemblyInfo.Version).zip" WorkingDirectory="tmp" ZipLevel="9" />
+	
+	<!-- Clean up tmp directory -->
+	<RemoveDir Directories="tmp" Condition="Exists('tmp')"/>
+	
+	<Message Text="Created source packages in .\Source" />
+  </Target>
+  
+</Project>
