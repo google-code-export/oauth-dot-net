@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="OAuth.Net.Consumer.ConsumerSettings" Collapsed="true">
+    <Position X="8.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Configuration\ConsumerSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OAuth.Net.Consumer.ConsumerContext" Collapsed="true">
+    <Position X="6.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAgAAQAAAAAAAAAAEAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>ConsumerContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OAuth.Net.Consumer.OAuthRequest">
+    <Position X="1" Y="3.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAhEAAEAAAAEAIAAAAEJQAAEAAQAAACAQRAAA=</HashCode>
+      <FileName>OAuthRequest.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OAuth.Net.Consumer.PreRequestEventArgs" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAAAIACAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>OAuthRequest.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OAuth.Net.Consumer.RequestTokenReceivedEventArgs" Collapsed="true">
+    <Position X="4.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>OAuthRequest.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OAuth.Net.Consumer.AuthorizationEventArgs" Collapsed="true">
+    <Position X="4.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>OAuthRequest.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OAuth.Net.Consumer.PreAccessTokenRequestEventArgs" Collapsed="true">
+    <Position X="3" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIACAAAAAIAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>OAuthRequest.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OAuth.Net.Consumer.AccessTokenReceivedEventArgs" Collapsed="true">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAAAAAAAAAAEIAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>OAuthRequest.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OAuth.Net.Consumer.PreProtectedResourceRequestArgs" Collapsed="true">
+    <Position X="0.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAEIAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>OAuthRequest.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OAuth.Net.Consumer.OAuthResponse">
+    <Position X="3.5" Y="3.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>OAuthResponse.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OAuth.Net.Consumer.OAuthService" Collapsed="true">
+    <Position X="6.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAEEwYEAAAAAAAAAAMAAAAACAgAAAjQ=</HashCode>
+      <FileName>OAuthService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OAuth.Net.Consumer.OAuthToken" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="8.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAEgAAAAgAgACBAAIAAAQAAIAABAAA=</HashCode>
+      <FileName>OAuthToken.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="OAuth.Net.Common.OAuthResource">
+    <Position X="6.5" Y="3.5" Width="2.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Tahoma" Size="8.25" />
+</ClassDiagram>

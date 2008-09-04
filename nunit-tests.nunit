@@ -1,0 +1,11 @@
+﻿<NUnitProject>
+  <Settings activeconfig="Debug" />
+  <Config name="Debug" binpathtype="Auto">
+    <assembly path="OAuth.Net.Common\bin\Debug\OAuth.Net.Common.dll" />
+    <assembly path="OAuth.Net.ServiceProvider\bin\Debug\OAuth.Net.ServiceProvider.dll" />
+    <assembly path="OAuth.Net.Components\bin\Debug\OAuth.Net.Components.dll" />
+    <assembly path="OAuth.Net.Consumer\bin\Debug\OAuth.Net.Consumer.dll" />
+    <assembly path="OAuth.Net.TestCases\bin\Debug\OAuth.Net.TestCases.dll" />
+  </Config>
+  <Config name="Release" binpathtype="Auto" />
+</NUnitProject>
