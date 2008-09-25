@@ -12,6 +12,8 @@
     <AssemblyName>OAuth.Net.Components</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(SignAssemblies)' == 'true' ">
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\oauth.net.strongname.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
