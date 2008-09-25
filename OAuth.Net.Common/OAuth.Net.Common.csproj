@@ -12,6 +12,8 @@
     <AssemblyName>OAuth.Net.Common</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(SignAssemblies)' == 'true' ">
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\oauth.net.strongname.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
@@ -99,6 +101,7 @@
     <None Include="..\oauth.net.strongname.pfx">
       <Link>Properties\oauth.net.strongname.pfx</Link>
     </None>
+    <None Include="oauth.net.strongname.pfx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
