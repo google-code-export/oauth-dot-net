@@ -1,14 +1,13 @@
-#summary Release history and change log
 #labels Featured
-
 = OAuth.net 0.5.1.0=
 
-===28th September 2008===
+===26th September 2008===
  * Fixed [http://code.google.com/p/oauth-dot-net/issues/detail?id=8 #8]: could not build source without password for signing key. Everyone should now be able to view and build the source (unsigned).
 
 Source:
  * [http://code.google.com/p/oauth-dot-net/downloads/detail?name=OAuthNet-source-0.5.1.0.zip Download OAuthNet-source-0.5.1.0.zip] 
  * [http://code.google.com/p/oauth-dot-net/source/browse/#svn/tags/0.5.1.0-release Browse tags/0.5.1.0-release in repository]
+ * `svn checkout http://oauth-dot-net.googlecode.com/svn/tags/0.5.1.0-release/ oauth-0.5.1.0-release`
 
 Binaries:
  * [http://code.google.com/p/oauth-dot-net/downloads/detail?name=OAuthNet-Release-0.5.1.0.zip& Download OAuthNet-Release-0.5.1.0.zip] 
@@ -24,6 +23,7 @@ Binaries:
 Source: 
  * [http://code.google.com/p/oauth-dot-net/downloads/detail?name=OAuthNet-source-0.5.0.0.zip Download OAuthNet-source-0.5.0.0.zip]
  * [http://code.google.com/p/oauth-dot-net/source/browse/#svn/tags/0.5.0.0-release Browse tags/0.5.0.0-release in repository]
+ * `svn checkout http://oauth-dot-net.googlecode.com/svn/tags/0.5.0.0-release/ oauth-0.5.0.0-release`
 
 Binaries:
  * [http://code.google.com/p/oauth-dot-net/downloads/detail?name=OAuthNet-Release-0.5.0.0.zip& Download OAuthNet-Release-0.5.0.0.zip]
