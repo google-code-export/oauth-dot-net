@@ -104,10 +104,14 @@ This example is taken from the Fire Eagle consumer's [http://code.google.com/p/o
     <components>
 
       <!-- Signing provider for HMAC-SHA1 -->
-      <component id="signing.provider:HMAC-SHA1" service="OAuth.Net.Common.ISigningProvider, OAuth.Net.Common" type="OAuth.Net.Components.HmacSha1SigningProvider, OAuth.Net.Components" />
+      <component id="signing.provider:HMAC-SHA1" 
+        service="OAuth.Net.Common.ISigningProvider, OAuth.Net.Common"
+        type="OAuth.Net.Components.HmacSha1SigningProvider, OAuth.Net.Components" />
 
       <!-- Nonce provider -->
-      <component id="nonce.provider" service="OAuth.Net.Common.INonceProvider, OAuth.Net.Common" type="OAuth.Net.Components.GuidNonceProvider, OAuth.Net.Components"/>
+      <component id="nonce.provider"
+        service="OAuth.Net.Common.INonceProvider, OAuth.Net.Common" 
+        type="OAuth.Net.Components.GuidNonceProvider, OAuth.Net.Components"/>
 
     </components>
   </oauth.net.consumer>
