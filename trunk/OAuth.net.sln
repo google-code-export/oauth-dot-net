@@ -17,6 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{
 		Libraries\Castle.MicroKernel.xml = Libraries\Castle.MicroKernel.xml
 		Libraries\Castle.Windsor.dll = Libraries\Castle.Windsor.dll
 		Libraries\Castle.Windsor.xml = Libraries\Castle.Windsor.xml
+		Libraries\HtmlAgilityPack.dll = Libraries\HtmlAgilityPack.dll
 		Libraries\nunit.framework.dll = Libraries\nunit.framework.dll
 	EndProjectSection
 EndProject
@@ -53,6 +54,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Examples.FireEagl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Examples.EchoServiceProvider", "Examples\OAuth.Net.Examples.EchoServiceProvider\OAuth.Net.Examples.EchoServiceProvider.csproj", "{70CBEA9B-51EE-4529-AD92-5EDD09617DDA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRDS-Simple.Net", "XRDS-Simple.Net\XRDS-Simple.Net.csproj", "{62092966-4CD6-40A6-9761-B322B1122742}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRDS-Simple.Net.TestCases", "XRDS-Simple.Net.TestCases\XRDS-Simple.Net.TestCases.csproj", "{9BEC321E-5A9D-43A0-AA1C-EDD8D4FE76AB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +92,14 @@ Global
 		{70CBEA9B-51EE-4529-AD92-5EDD09617DDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70CBEA9B-51EE-4529-AD92-5EDD09617DDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70CBEA9B-51EE-4529-AD92-5EDD09617DDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62092966-4CD6-40A6-9761-B322B1122742}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62092966-4CD6-40A6-9761-B322B1122742}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62092966-4CD6-40A6-9761-B322B1122742}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62092966-4CD6-40A6-9761-B322B1122742}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BEC321E-5A9D-43A0-AA1C-EDD8D4FE76AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BEC321E-5A9D-43A0-AA1C-EDD8D4FE76AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BEC321E-5A9D-43A0-AA1C-EDD8D4FE76AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BEC321E-5A9D-43A0-AA1C-EDD8D4FE76AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
