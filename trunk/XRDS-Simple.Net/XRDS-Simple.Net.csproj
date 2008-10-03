@@ -44,7 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="IPriority.cs" />
     <Compile Include="LocalIDElement.cs" />
+    <Compile Include="PriorityComparer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceElement.cs" />
     <Compile Include="DiscoveryException.cs" />

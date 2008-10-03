@@ -15,6 +15,8 @@ namespace XRDS_Simple.Net
 
         public const string XRDSimple_Namespace = "http://xrds-simple.net/core/1.0";
 
+        public const string XRDSimple_XRI = "xri://$xrds*simple";
+
         public const string ApplicationXRDSXML_ContentType = "application/xrds+xml";
 
         public const string XRDSLocation_Header = "X-XRDS-Location";

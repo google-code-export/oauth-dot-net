@@ -24,9 +24,9 @@ namespace XRDS_Simple.Net.TestCases
                 document = XRDSDocument.Parse(s);
             }
 
-            Assert.That(document.XRDElements.Length == 2, "Invalid number of XRD Elements, expected 2");
+            Assert.That(document.AllXRDElements.Length == 2, "Invalid number of XRD Elements, expected 2");
 
-        }
+        }      
 
         [Test]
         public void TestPlaxoDotCOMXRDSRetrieval()
@@ -34,7 +34,7 @@ namespace XRDS_Simple.Net.TestCases
 
             XRDSDocument document = XRDSDocument.LoadDocument(new Uri("http://pulse.plaxo.com/pulse/oauth/xrds"));
 
-            Assert.That(document.XRDElements.Length  > 2, "Invalid number of XRD Elements, expected 2");
+            Assert.That(document.AllXRDElements.Length  > 0, "Invalid number of XRD Elements, expected 2");
         }
     }
 }

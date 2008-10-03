@@ -8,13 +8,15 @@ namespace XRDS_Simple.Net
 {
     [XmlType(Namespace = Constants.XRD_Namespace)]
     [XmlRoot(ElementName = "Service", Namespace = Constants.XRD_Namespace)]
-    public class ServiceElement
+    public class ServiceElement : IPriority
     {
         private List<string> typeElements = new List<string>();
         private List<string> mediaTypeElements = new List<string>();
         private List<URIElement> uriElements = new List<URIElement>();
         private List<LocalIDElement> localIDElements = new List<LocalIDElement>();
         private List<string> mustSupportElements = new List<string>();
+
+        #region ServiceElement Properties
 
         [XmlAttribute(DataType = "nonNegativeInteger", AttributeName = "priority", Namespace = Constants.XRD_Namespace)]
         public string Priority
@@ -71,7 +73,6 @@ namespace XRDS_Simple.Net
             }
         }
 
-
         [XmlElement(DataType = "anyURI", ElementName = "MustSupport", Namespace = Constants.XRDSimple_Namespace)]
         public string[] MustSupport
         {
@@ -83,5 +84,52 @@ namespace XRDS_Simple.Net
                     mustSupportElements.AddRange(value);
             }
         }
+
+        #endregion
+
+        #region XRDSSimple Helper Methods
+
+        /// <summary>
+        /// Returns a sorted by priority enumeration of the LocalID elements
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<LocalIDElement> GetLocalIDs()
+        {
+            if (localIDElements.Count > 1)
+            {
+                List<IPriority> sortedList = localIDElements.ConvertAll<IPriority>(element => (IPriority)element);
+
+                PriorityComparer comparer = new PriorityComparer();
+                sortedList.Sort(comparer);
+
+                //Expose this only as an IEnumerable.
+                return sortedList.ConvertAll<LocalIDElement>(element => (LocalIDElement)element);
+            }
+            else
+                return localIDElements;
+        }
+
+
+        /// <summary>
+        /// Returns a sorted list of URI's by priority enumeration of the URi elements
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<URIElement> GetURIs()
+        {
+            if (uriElements.Count > 1)
+            {
+                List<IPriority> sortedList = uriElements.ConvertAll<IPriority>(element => (IPriority)element);
+
+                PriorityComparer comparer = new PriorityComparer();
+                sortedList.Sort(comparer);
+
+                //Expose this only as an IEnumerable.
+                return sortedList.ConvertAll<URIElement>(element => (URIElement)element); ;
+            }
+            else
+                return uriElements;
+        }
+
+        #endregion
     }
 }
