@@ -15,6 +15,8 @@ namespace XRDS_Simple.Net
 
         private string xrdsVersion = Constants.XRDS_Version;
 
+        #region XRDElement Properties
+        
         [XmlAttribute(AttributeName = "id", Namespace="http://www.w3.org/XML/1998/namespace")]
         public string ID
         {
@@ -63,7 +65,50 @@ namespace XRDS_Simple.Net
             }
         }
 
+        #endregion
 
+        /// <summary>
+        /// Returns an enumeration of services for this XRD Element in 
+        /// a valid order based on each services priority.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<ServiceElement> FindServices()
+        {
+            return FindServices((Predicate<ServiceElement>)null);
+        }
+
+        /// <summary>
+        /// Returns an enumeration of services for this XRD Element in 
+        /// a valid order based on each services priority.
+        /// </summary>
+        /// <returns></returns
+        public IEnumerable<ServiceElement> FindServices(string type)
+        {
+            return FindServices(service => Array.IndexOf<string>(service.Types, type) > -1);
+        }        
+
+        public IEnumerable<ServiceElement> FindServices(Predicate<ServiceElement> filter)
+        {
+            ///Need to implement some filters.. but in the bottom we need to sort based on priority.
+
+            List<ServiceElement> filteredList = serviceElements;
+
+            if (filter != null)
+                filteredList = serviceElements.FindAll(filter);
+
+            if (filteredList.Count > 1)
+            {
+                List<IPriority> sortedList = filteredList.ConvertAll<IPriority>(element => (IPriority)element);
+
+                PriorityComparer comparer = new PriorityComparer();
+                sortedList.Sort(comparer);
+
+                //Expose this only as an IEnumerable.
+                return sortedList.ConvertAll<ServiceElement>(element => (ServiceElement)element); ;
+            }
+            else
+                return filteredList;
+        }
 
     }
 }
