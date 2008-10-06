@@ -5,6 +5,7 @@
         <assembly assemblyPath=".\OAuth.Net.Consumer\bin\Debug\OAuth.Net.Consumer.dll" xmlCommentsPath=".\OAuth.Net.Consumer\bin\Debug\OAuth.Net.Consumer.XML" commentsOnly="False" />
         <assembly assemblyPath=".\Examples\OAuth.Net.Examples.FireEagleConsumer\bin\OAuth.Net.Examples.FireEagleConsumer.dll" xmlCommentsPath=".\Examples\OAuth.Net.Examples.FireEagleConsumer\bin\OAuth.Net.Examples.FireEagleConsumer.XML" commentsOnly="False" />
         <assembly assemblyPath=".\OAuth.Net.ServiceProvider\bin\Debug\OAuth.Net.ServiceProvider.dll" xmlCommentsPath=".\OAuth.Net.ServiceProvider\bin\Debug\OAuth.Net.ServiceProvider.XML" commentsOnly="False" />
+        <assembly assemblyPath=".\XRDS-Simple.Net\bin\Debug\XRDS-Simple.Net.dll" xmlCommentsPath=".\OAuth.Net.ServiceProvider\bin\Debug\OAuth.Net.ServiceProvider.XML" commentsOnly="False" />
     </assemblies>
     <dependencies>
         <dependencyItem depPath=".\Libraries\*.*" />
