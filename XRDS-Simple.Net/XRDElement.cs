@@ -1,4 +1,34 @@
-﻿using System;
+﻿// Copyright (c) 2008 Madgex
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+// OAuth.net uses the Windsor Container from the Castle Project. See "Castle 
+// Project License.txt" in the Licenses folder.
+//
+// XRDS-Simple.net uses the HTMLAgility Pack. See "HTML Agility Pack License.txt"
+// in the Licenses folder.
+// 
+// Authors: Chris Adams, Bruce Boughton
+// Website: http://lab.madgex.com/oauth-net/
+// Email:   oauth-dot-net@madgex.com
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +36,10 @@ using System.Xml.Serialization;
 
 namespace XRDS_Simple.Net
 {
+    /// <summary>
+    /// An XRD element in an XRDS document, with the elements supported
+    /// by XRDSSimple.
+    /// </summary>
     [XmlType(Namespace = Constants.XRD_Namespace)]
     [XmlRoot(ElementName = "XRD", Namespace = Constants.XRD_Namespace)]
     public class XRDElement
@@ -17,6 +51,10 @@ namespace XRDS_Simple.Net
 
         #region XRDElement Properties
         
+        /// <summary>
+        /// An identifier used to distinguish different XRD elements in a
+        /// single XRDS document.
+        /// </summary>
         [XmlAttribute(AttributeName = "id", Namespace="http://www.w3.org/XML/1998/namespace")]
         public string ID
         {
@@ -24,6 +62,9 @@ namespace XRDS_Simple.Net
             set;
         }        
 
+        /// <summary>
+        /// The XRDS version this XRD complies to.
+        /// </summary>
         [XmlAttribute(AttributeName = "version", Namespace = Constants.XRD_Namespace)]
         public string Version
         {
@@ -34,6 +75,10 @@ namespace XRDS_Simple.Net
             }
         }
 
+        /// <summary>
+        /// An array of types that this XRD document represents.  For XRDSSimple 
+        /// only one type element needs to be defined.
+        /// </summary>
         [XmlElement(DataType = "anyURI", ElementName = "Type", Namespace = Constants.XRD_Namespace)]
         public string[] Types
         {
@@ -46,6 +91,9 @@ namespace XRDS_Simple.Net
             }
         }
 
+        /// <summary>
+        /// The date and time that this XRD is no longer valid from.
+        /// </summary>
         [XmlElement(DataType = "dateTime", ElementName = "Expires", IsNullable = true, Namespace = Constants.XRD_Namespace)]
         public DateTime? Expires
         {
@@ -53,6 +101,9 @@ namespace XRDS_Simple.Net
             set;
         }
 
+        /// <summary>
+        /// An array of service elements associated with this XRD.
+        /// </summary>
         [XmlElement(ElementName = "Service", Namespace = Constants.XRD_Namespace)]
         public ServiceElement[] Services
         {
@@ -87,10 +138,16 @@ namespace XRDS_Simple.Net
             return FindServices(service => Array.IndexOf<string>(service.Types, type) > -1);
         }        
 
+        /// <summary>
+        /// Returns an enumeration of service for this XRD Element filtered by
+        /// the supplied Predicate.  The returned elements are ordered based on their 
+        /// priority.
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
         public IEnumerable<ServiceElement> FindServices(Predicate<ServiceElement> filter)
         {
-            ///Need to implement some filters.. but in the bottom we need to sort based on priority.
-
+          
             List<ServiceElement> filteredList = serviceElements;
 
             if (filter != null)
