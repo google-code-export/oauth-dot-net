@@ -29,7 +29,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Security.Principal;
-using Castle.Core;
 using OAuth.Net.Common;
 
 namespace OAuth.Net.Components
@@ -38,7 +37,6 @@ namespace OAuth.Net.Components
     /// An thread-safe, in-memory implementation of ITokenStore. Items are not persisted across
     /// application restarts.
     /// </summary>
-    [Singleton]
     public class InMemoryTokenStore
         : ITokenStore
     {

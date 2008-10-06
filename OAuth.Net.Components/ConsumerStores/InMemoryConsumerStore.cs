@@ -28,7 +28,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Castle.Core;
 using OAuth.Net.Common;
 
 namespace OAuth.Net.Components
@@ -37,7 +36,6 @@ namespace OAuth.Net.Components
     /// An thread-safe, in-memory implementation of IConsumerStore. Items are not persisted across
     /// application restarts.
     /// </summary>
-    [Singleton]
     public class InMemoryConsumerStore
         : IConsumerStore
     {

@@ -26,36 +26,73 @@
 // Email:   oauth-dot-net@madgex.com
 
 #if DEBUG
-using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using OAuth.Net.Common;
-using OAuth.Net.Components;
 
-namespace OAuth.Net.ServiceProvider
+namespace OAuth.Net.TestCases.WikiTests
 {
     [TestFixture]
-    public class IocTests
+    public class ParameterEncodingTests
     {
-        [Test]
-        [SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores", Justification = "Unit test")]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Unit test methods cannot be static")]
-        public void Test_SigningProviderLookup()
+        [Test]        
+        public void TestAlphanumerics()
         {
-            ISigningProvider provider;
-
-            provider = ServiceProviderContext.GetSigningProvider("HMAC-SHA1");
-            Assert.That(provider, Is.TypeOf(typeof(HmacSha1SigningProvider)));
-            Assert.That(provider.SignatureMethod, Is.EqualTo("HMAC-SHA1"));
+            Assert.That(Rfc3986.Encode("abcABC123"), Is.EqualTo("abcABC123"));
         }
 
         [Test]
-        [SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores", Justification = "Unit test")]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Unit test methods cannot be static")]
-        public void Test_NonexistentSigningProviderLookup()
+        public void TestDashDotUnderscoreTilde()
         {
-            ISigningProvider provider = ServiceProviderContext.GetSigningProvider("MADEUP");
-            Assert.That(provider, Is.Null);
+            Assert.That(Rfc3986.Encode("-._~"), Is.EqualTo("-._~"));
+        }
+
+        [Test]
+        public void TestPercent()
+        {
+            Assert.That(Rfc3986.Encode("%"), Is.EqualTo("%25"));
+        }
+
+        [Test]
+        public void TestPlus()
+        {
+            Assert.That(Rfc3986.Encode("+"), Is.EqualTo("%2B"));
+        }
+
+        [Test]
+        public void TestAmpersandEqualsAsterisk()
+        {
+            Assert.That(Rfc3986.Encode("&=*"), Is.EqualTo("%26%3D%2A"));
+        }
+
+        [Test]
+        public void TestUnicodeU000A()
+        {
+            Assert.That(Rfc3986.Encode("\u000A"), Is.EqualTo("%0A"));
+        }
+
+        [Test]
+        public void TestUnicodeU0020()
+        {
+            Assert.That(Rfc3986.Encode("\u0020"), Is.EqualTo("%20"));
+        }
+
+        [Test]
+        public void TestUnicodeU007F()
+        {
+            Assert.That(Rfc3986.Encode("\u007F"), Is.EqualTo("%7F"));
+        }
+
+        [Test]
+        public void TestUnicodeU0080()
+        {
+            Assert.That(Rfc3986.Encode("\u0080"), Is.EqualTo("%C2%80"));
+        }
+
+        [Test]
+        public void TestUnicodeU3001()
+        {
+            Assert.That(Rfc3986.Encode("\u3001"), Is.EqualTo("%E3%80%81"));
         }
     }
 }

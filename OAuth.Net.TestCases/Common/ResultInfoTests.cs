@@ -26,48 +26,24 @@
 // Email:   oauth-dot-net@madgex.com
 
 #if DEBUG
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using OAuth.Net.Common;
-using OAuth.Net.Components;
 
-namespace OAuth.Net.TestCases
+namespace OAuth.Net.TestCases.Common
 {
     [TestFixture]
-    public class HmacSha1Tests
+    public class ResultInfoTests
     {
         [Test]
-        public void Test1()
+        [SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores", Justification = "Unit test")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Unit test methods cannot be static")]
+        public void Test_ResultInfo_NullData()
         {
-            Assert.That(
-                new HmacSha1SigningProvider().ComputeSignature(
-                    "bs",
-                    "cs",
-                    null),
-                Is.EqualTo("egQqG5AJep5sJ7anhXju1unge2I="));
-        }
-
-        [Test]
-        public void Test2()
-        {
-            Assert.That(
-                   new HmacSha1SigningProvider().ComputeSignature(
-                    "bs",
-                    "cs",
-                    "ts"),
-                Is.EqualTo("VZVjXceV7JgPq/dOTnNmEfO0Fv8="));
-        }
-
-        [Test]
-        public void Test3()
-        {
-            Assert.That(
-                   new HmacSha1SigningProvider().ComputeSignature(
-                    "GET&http%3A%2F%2Fphotos.example.net%2Fphotos&file%3Dvacation.jpg%26oauth_consumer_key%3Ddpf43f3p2l4k3l03%26oauth_nonce%3Dkllo9940pd9333jh%26oauth_signature_method%3DHMAC-SHA1%26oauth_timestamp%3D1191242096%26oauth_token%3Dnnch734d00sl2jdk%26oauth_version%3D1.0%26size%3Doriginal",
-                    "kd94hf93k423kf44",
-                    "pfkkdhi9sl3r4s00"),
-                Is.EqualTo("tR3+Ty81lMeYAr/Fid0kMTYa/WM="));
+            ResultInfo<string> a = new ResultInfo<string>(true, null);
+            Assert.That(a.Success, Is.EqualTo(true));
+            Assert.That(a.Data, Is.EqualTo(null));
         }
     }
 }

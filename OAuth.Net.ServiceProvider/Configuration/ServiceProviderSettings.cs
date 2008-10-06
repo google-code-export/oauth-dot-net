@@ -33,13 +33,6 @@ namespace OAuth.Net.ServiceProvider
     public sealed class ServiceProviderSettings
         : ConfigurationSection
     {
-        [ConfigurationProperty("ComponentsSection", IsRequired = false, DefaultValue = "oauth.net.serviceprovider")]
-        public string ComponentsSection
-        {
-            get { return (string)this["ComponentsSection"]; }
-            set { this["ComponentsSection"] = value; }
-        }
-
         [ConfigurationProperty("AuthenticationRealm", IsRequired = true)]
         public string AuthenticationRealm
         {

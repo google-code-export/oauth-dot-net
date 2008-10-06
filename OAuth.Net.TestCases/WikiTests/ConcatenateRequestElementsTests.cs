@@ -32,7 +32,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using OAuth.Net.Common;
 
-namespace OAuth.Net.TestCases
+namespace OAuth.Net.TestCases.WikiTests
 {
     [TestFixture]
     public class ConcatenateRequestElementsTests

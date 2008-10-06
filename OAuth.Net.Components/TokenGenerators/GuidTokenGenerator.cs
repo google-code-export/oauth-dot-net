@@ -28,12 +28,10 @@
 using System;
 using System.Diagnostics;
 using System.Security.Principal;
-using Castle.Core;
 using OAuth.Net.Common;
 
 namespace OAuth.Net.Components
 {
-    [Singleton]
     public class GuidTokenGenerator
         : ITokenGenerator
     {

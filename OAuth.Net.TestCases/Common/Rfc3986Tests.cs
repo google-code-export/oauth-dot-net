@@ -25,16 +25,26 @@
 // Website: http://lab.madgex.com/oauth-net/
 // Email:   oauth-dot-net@madgex.com
 
-using System.Configuration;
-using Castle.Windsor.Configuration.AppDomain;
+#if DEBUG
+using System.Diagnostics.CodeAnalysis;
+using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
+using OAuth.Net.Common;
 
-namespace OAuth.Net.Consumer
+namespace OAuth.Net.TestCases.Common
 {
-    /// <summary>
-    /// Configuration section handler for OAuth.net consumer settings 
-    /// (including components).
-    /// </summary>
-    public class ConfigSectionHandler : CastleSectionHandler, IConfigurationSectionHandler
+    [TestFixture]
+    public class Rfc3986Tests
     {
+        [Test]
+        [SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores", Justification = "Unit test")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Unit test methods cannot be static")]
+        public void Test_GoogleRequestTokenUrlScopeValue_Encode()
+        {
+            string googleurl = Rfc3986.Encode("http://www.google.com/m8/feeds");
+
+            Assert.That(googleurl, Is.EqualTo("http%3A%2F%2Fwww.google.com%2Fm8%2Ffeeds"));
+        }
     }
 }
+#endif

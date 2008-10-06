@@ -36,21 +36,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.Core, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libraries\Castle.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.MicroKernel, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libraries\Castle.MicroKernel.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.Windsor, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libraries\Castle.Windsor.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework, Version=2.4.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libraries\nunit.framework.dll</HintPath>
+      <HintPath>..\Libraries\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -59,7 +47,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Consumers\MockConsumer.cs" />
-    <Compile Include="IServiceLocator.cs" />
     <Compile Include="OAuthException.cs" />
     <Compile Include="OAuthRequestExceptionParameters.cs" />
     <Compile Include="OAuthRequestExceptionProblemTypes.cs" />
@@ -73,8 +60,6 @@
     <Compile Include="OAuthParameters.cs" />
     <Compile Include="OAuthResource.cs" />
     <Compile Include="PathHelper.cs" />
-    <Compile Include="Tests\OAuthParametersTests.cs" />
-    <Compile Include="Tests\Rfc3986Tests.cs" />
     <Compile Include="Tokens\IAccessToken.cs" />
     <Compile Include="Tokens\IRequestToken.cs" />
     <Compile Include="Tokens\ITokenGenerator.cs" />
@@ -87,21 +72,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultInfo.cs" />
     <Compile Include="SignatureBase.cs" />
-    <Compile Include="Tests\ResultInfoTests.cs" />
-    <Compile Include="Tests\SignatureBaseTests.cs" />
     <Compile Include="RequestId.cs" />
     <Compile Include="Tokens\ITokenStore.cs" />
     <Compile Include="Tokens\MockToken.cs" />
     <Compile Include="Tokens\TokenStatus.cs" />
     <Compile Include="Tokens\TokenType.cs" />
     <Compile Include="UnixTime.cs" />
-    <Compile Include="WindsorAdaptor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\oauth.net.strongname.pfx">
       <Link>Properties\oauth.net.strongname.pfx</Link>
     </None>
-    <None Include="oauth.net.strongname.pfx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

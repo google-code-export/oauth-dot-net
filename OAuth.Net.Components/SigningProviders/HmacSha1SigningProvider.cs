@@ -30,12 +30,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
-using Castle.Core;
 using OAuth.Net.Common;
 
 namespace OAuth.Net.Components
 {
-    [PerThread]
     [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Justification = "HMAC-SHA1 is a domain term")]
     public class HmacSha1SigningProvider
         : ISigningProvider

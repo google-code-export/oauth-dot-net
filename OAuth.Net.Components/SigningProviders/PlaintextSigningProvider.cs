@@ -26,12 +26,10 @@
 // Email:   oauth-dot-net@madgex.com
 
 using System.Web;
-using Castle.Core;
 using OAuth.Net.Common;
 
 namespace OAuth.Net.Components
 {
-    [PerThread]
     public class PlaintextSigningProvider
         : ISigningProvider
     {

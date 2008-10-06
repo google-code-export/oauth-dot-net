@@ -18,5 +18,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
-OAuth.net uses the Windsor Container from the Castle Project. See "Castle 
-Project License.txt" in the Licenses folder.
+OAuth.net uses the Common Service Locator interface, released under the MS-PL
+license. See "CommonServiceLocator License.txt" in the Licenses folder.
+
+The examples and test cases use the Windsor Container from the Castle Project
+and Common Service Locator Windsor adaptor, released under the Apache License,
+Version 2.0. See "Castle Project License.txt" in the Licenses folder.
+
+XRDS-Simple.net uses the HTMLAgility Pack. See "HTML Agility Pack License.txt"
+in the Licenses folder.

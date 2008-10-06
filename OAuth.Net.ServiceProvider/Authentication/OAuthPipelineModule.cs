@@ -132,9 +132,9 @@ namespace OAuth.Net.ServiceProvider
             /*
              * Check the token
              */
-            if (ServiceProviderContext.TokenStore.ContainsAccessToken(context.Parameters.Token))
+            if (ServiceProviderContext.GetTokenStore().ContainsAccessToken(context.Parameters.Token))
             {
-                IAccessToken accessToken = ServiceProviderContext.TokenStore.GetAccessToken(context.Parameters.Token);
+                IAccessToken accessToken = ServiceProviderContext.GetTokenStore().GetAccessToken(context.Parameters.Token);
 
                 if (accessToken == null)
                     OAuthRequestException.ThrowTokenRejected(null);

@@ -32,7 +32,7 @@ using NUnit.Framework.SyntaxHelpers;
 using OAuth.Net.Common;
 using OAuth.Net.Components;
 
-namespace OAuth.Net.TestCases
+namespace OAuth.Net.TestCases.WikiTests
 {
     [TestFixture]
     public class RsaSha1Tests
@@ -43,7 +43,7 @@ namespace OAuth.Net.TestCases
             ISigningProvider rsa = new RsaSha1SigningProvider()
             {
                 // PFX file is copied to output directory
-                PfxFile = "testcase.rsa.pfx"
+                PfxFile = @"WikiTests\testcase.rsa.pfx"
             };
 
             OAuthParameters parameters = new OAuthParameters()

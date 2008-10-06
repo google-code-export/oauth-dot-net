@@ -29,9 +29,7 @@ using System;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Castle.Core.Resource;
-using Castle.Windsor;
-using Castle.Windsor.Configuration.Interpreters;
+using Microsoft.Practices.ServiceLocation;
 using OAuth.Net.Common;
 
 namespace OAuth.Net.Consumer
@@ -62,20 +60,9 @@ namespace OAuth.Net.Consumer
     [DebuggerDisplay("Request Token URL: {RequestTokenUrl} Authorization URL: {AuthorizationUrl} Access Token URL: {AccessTokenUrl} Http Method: {HttpMethod} Use Authorization Header: {UseAuthorizationHeader} Realm: {Realm} Signature Method: {SignatureMethod} OAuth Version: {OAuthVersion} Consumer: {Consumer}")]
     public class OAuthService
     {
-        /// <summary>
-        /// The default config section to use when no other is specified.
-        /// </summary>
-        public const string DefaultConfigSection = "oauth.net.consumer";
-
         // Uninstantiable except via factory methods
         private OAuthService() 
         {
-        }
-
-        public string ConfigSection
-        {
-            get;
-            private set;
         }
 
         /// <summary>
@@ -174,7 +161,7 @@ namespace OAuth.Net.Consumer
 
         /// <summary>
         /// Creates an OAuthService using defaults for most parameters, loading components
-        /// from the default config section..
+        /// from the current global service locator.
         /// </summary>
         /// <remarks>
         /// <para>The OAuthService created will have the following defaults:</para>
@@ -230,12 +217,12 @@ namespace OAuth.Net.Consumer
                 "HMAC-SHA1", 
                 Constants.Version1_0,
                 consumer,
-                OAuthService.DefaultConfigSection);
+                () => ServiceLocator.Current);
         }
 
         /// <summary>
         /// Creates an OAuthService using defaults for most parameters, loading components
-        /// from the specified config section.
+        /// from the service locator provided by the supplied provider.
         /// </summary>
         /// <remarks>
         /// <para>The OAuthService created will have the following defaults:</para>
@@ -270,14 +257,14 @@ namespace OAuth.Net.Consumer
         /// <param name="authorizationUrl">URL to send users to for authorization</param>
         /// <param name="accessTokenUrl">URL for obtaining access tokens</param>
         /// <param name="consumer">Consumer credentials</param>
-        /// <param name="configSection">Name of the config section to load components from</param>
+        /// <param name="serviceLocatorProvider">Service locator provider which provides a service locator for components</param>
         /// <returns>An OAuthService</returns>
         public static OAuthService Create(
             Uri requestTokenUrl,
             Uri authorizationUrl,
             Uri accessTokenUrl,
             IConsumer consumer,
-            string configSection)
+            ServiceLocatorProvider serviceLocatorProvider)
         {
             return OAuthService.Create(
                 requestTokenUrl,
@@ -289,12 +276,12 @@ namespace OAuth.Net.Consumer
                 "HMAC-SHA1",
                 Constants.Version1_0,
                 consumer,
-                configSection);
+                serviceLocatorProvider);
         }
 
         /// <summary>
         /// Creates an OAuthService using defaults for most parameters, loading components
-        /// from the default config section.
+        /// from the current global service locator.
         /// </summary>
         /// <remarks>
         /// <para>The OAuthService created will have the following defaults:</para>
@@ -348,12 +335,12 @@ namespace OAuth.Net.Consumer
                 signatureMethod,
                 Constants.Version1_0,
                 consumer,
-                OAuthService.DefaultConfigSection);
+                () => ServiceLocator.Current);
         }
 
         /// <summary>
         /// Creates an OAuthService using defaults for most parameters, loading components
-        /// from the specified config section.
+        /// from the service locator provided by the supplied provider.
         /// </summary>
         /// <remarks>
         /// <para>The OAuthService created will have the following defaults:</para>
@@ -385,7 +372,8 @@ namespace OAuth.Net.Consumer
         /// <param name="accessTokenUrl">URL for obtaining access tokens</param>
         /// <param name="signatureMethod">Signature method to use</param>
         /// <param name="consumer">Consumer credentials</param>
-        /// <param name="configSection">Name of the config section to load components from</param>
+        /// <param name="serviceLocatorProvider">Service locator provider which provides 
+        /// a service locator for components</param>
         /// <returns>An OAuthService</returns>
         public static OAuthService Create(
             Uri requestTokenUrl,
@@ -393,7 +381,7 @@ namespace OAuth.Net.Consumer
             Uri accessTokenUrl,
             string signatureMethod,
             IConsumer consumer,
-            string configSection)
+            ServiceLocatorProvider serviceLocatorProvider)
         {
             return OAuthService.Create(
                 requestTokenUrl,
@@ -405,12 +393,12 @@ namespace OAuth.Net.Consumer
                 signatureMethod,
                 Constants.Version1_0,
                 consumer,
-                configSection);
+                serviceLocatorProvider);
         }
 
         /// <summary>
         /// Creates an OAuthService, with each parameter specified, loading components
-        /// from the default config section (<c>"oauth.net.consumer"</c>).
+        /// from the current global service locator.
         /// </summary>
         /// <param name="requestTokenUrl">URL for obtaining request tokens</param>
         /// <param name="authorizationUrl">URL to send users to for authorization</param>
@@ -444,12 +432,12 @@ namespace OAuth.Net.Consumer
                 signatureMethod,
                 oauthVersion,
                 consumer,
-                OAuthService.DefaultConfigSection);
+                () => ServiceLocator.Current);
         }
 
         /// <summary>
         /// Creates an OAuthService, with each parameter specified, loading components
-        /// from the specified config section.
+        /// from the service locator provided by the supplied provider.
         /// </summary>
         /// <param name="requestTokenUrl">URL for obtaining request tokens</param>
         /// <param name="authorizationUrl">URL to send users to for authorization</param>
@@ -460,7 +448,7 @@ namespace OAuth.Net.Consumer
         /// <param name="signatureMethod">Signature method to use</param>
         /// <param name="oauthVersion">OAuth specification version</param>
         /// <param name="consumer">Consumer credentials</param>
-        /// <param name="configSection">Name of the config section to load components from</param>
+        /// <param name="serviceLocatorProvider">Service locator provider which provides a service locator for components</param>
         /// <returns>An OAuthService</returns>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "oauth", Justification = "OAuth is a domain term")]
         public static OAuthService Create(
@@ -473,12 +461,11 @@ namespace OAuth.Net.Consumer
             string signatureMethod,
             string oauthVersion,
             IConsumer consumer,
-            string configSection)
+            ServiceLocatorProvider serviceLocatorProvider)
         {
             return new OAuthService()
             {
-                ConfigSection = configSection,
-                ComponentLocator = OAuthService.CreateServiceLocator(configSection),
+                ComponentLocator = serviceLocatorProvider(),
                 RequestTokenUrl = requestTokenUrl,
                 AuthorizationUrl = authorizationUrl,
                 AccessTokenUrl = accessTokenUrl,
@@ -643,7 +630,6 @@ namespace OAuth.Net.Consumer
         public bool Equals(OAuthService other)
         {
             return other != null
-                && string.Equals(this.ConfigSection, other.ConfigSection)
                 && this.RequestTokenUrl.Equals(other.RequestTokenUrl)
                 && this.AuthorizationUrl.Equals(other.AuthorizationUrl)
                 && this.AccessTokenUrl.Equals(other.AccessTokenUrl)
@@ -661,29 +647,11 @@ namespace OAuth.Net.Consumer
         /// <returns>A hash code, computed from the hash codes of the properties</returns>
         public override int GetHashCode()
         {
-            return this.ConfigSection.GetHashCode() ^ this.RequestTokenUrl.GetHashCode() 
+            return this.RequestTokenUrl.GetHashCode() 
                 ^ this.AuthorizationUrl.GetHashCode() ^ this.AccessTokenUrl.GetHashCode() 
                 ^ this.HttpMethod.GetHashCode() ^ this.UseAuthorizationHeader.GetHashCode() 
                 ^ this.Realm.GetHashCode() ^ this.SignatureMethod.GetHashCode() 
                 ^ this.OAuthVersion.GetHashCode() ^ this.Consumer.GetHashCode();
-        }
-
-        /// <summary>
-        /// Creates a service locator instance configured from the config section
-        /// specified. If the config section is null or empty then the service 
-        /// locator created will not have loaded any components.
-        /// </summary>
-        /// <param name="configSection">Config section to load components from</param>
-        /// <returns>A service locator</returns>
-        private static IServiceLocator CreateServiceLocator(string configSection)
-        {
-            if (!string.IsNullOrEmpty(configSection))
-                return new WindsorAdaptor(
-                    new WindsorContainer(
-                        new XmlInterpreter(
-                            new ConfigResource(configSection))));
-            else
-                return new WindsorAdaptor(new WindsorContainer());
         }
     }
 }
