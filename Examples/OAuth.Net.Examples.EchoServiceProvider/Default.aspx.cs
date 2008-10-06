@@ -38,11 +38,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Web;
 using System.Web.UI;
-using Castle.Core.Resource;
-using Castle.Windsor;
-using Castle.Windsor.Configuration.Interpreters;
-using CommonServiceLocator.WindsorAdapter;
-using Microsoft.Practices.ServiceLocation;
 using OAuth.Net.Common;
 using OAuth.Net.Components;
 using OAuth.Net.ServiceProvider;
@@ -51,15 +46,6 @@ namespace OAuth.Net.Examples.EchoServiceProvider
 {
     public class DemoPage : Page
     {
-        static DemoPage()
-        {
-            ServiceLocator.SetLocatorProvider(() =>
-                new WindsorServiceLocator(
-                    new WindsorContainer(
-                        new XmlInterpreter(
-                            new ConfigResource("oauth.net.components")))));
-        }
-
         [SuppressMessage("Microsoft.Usage", "CA2234:PassSystemUriObjectsInsteadOfStrings", Justification = "VirtualPathUtility returns a string")]
         public Uri RequestTokenBaseUri
         {
