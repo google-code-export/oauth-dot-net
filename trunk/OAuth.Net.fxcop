@@ -30,6 +30,7 @@
   <Target Name="$(ProjectDir)/OAuth.Net.Components/bin/Debug/OAuth.Net.Components.dll" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/OAuth.Net.Consumer/bin/Debug/OAuth.Net.Consumer.dll" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/OAuth.Net.ServiceProvider/bin/Debug/OAuth.Net.ServiceProvider.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/XRDS-Simple.Net/bin/Debug/XRDS-Simple.Net.dll" Analyze="True" AnalyzeAllChildren="True" />
  </Targets>
  <Rules>
   <RuleFiles>
@@ -46,5 +47,162 @@
   <Groups />
   <Settings />
  </Rules>
- <FxCopReport Version="1.36" />
+ <FxCopReport Version="1.36">
+  <Targets>
+   <Target Name="$(ProjectDir)/Examples/OAuth.Net.Examples.EchoServiceProvider/bin/OAuth.Net.Examples.EchoServiceProvider.dll">
+    <Modules>
+     <Module Name="oauth.net.examples.echoserviceprovider.dll">
+      <Messages>
+       <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2008-10-06 19:46:51Z">
+        <Issue Name="NoStrongName">
+         <Item>'OAuth.Net.Examples.EchoServiceProvider.dll'</Item>
+        </Issue>
+       </Message>
+      </Messages>
+      <Namespaces>
+       <Namespace Name="OAuth.Net.Examples.EchoServiceProvider">
+        <Types>
+         <Type Name="DemoPage">
+          <Members>
+           <Member Name="#.cctor()">
+            <Messages>
+             <Message TypeName="InitializeReferenceTypeStaticFieldsInline" Category="Microsoft.Performance" CheckId="CA1810" Created="2008-10-06 19:46:51Z">
+              <Issue>
+               <Item>'DemoPage'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
+      </Namespaces>
+     </Module>
+    </Modules>
+   </Target>
+   <Target Name="$(ProjectDir)/Examples/OAuth.Net.Examples.FireEagleConsumer/bin/OAuth.Net.Examples.FireEagleConsumer.dll">
+    <Modules>
+     <Module Name="oauth.net.examples.fireeagleconsumer.dll">
+      <Messages>
+       <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2008-10-06 19:46:51Z">
+        <Issue Name="NoStrongName">
+         <Item>'OAuth.Net.Examples.FireEagleConsumer.dll'</Item>
+        </Issue>
+       </Message>
+      </Messages>
+     </Module>
+    </Modules>
+   </Target>
+   <Target Name="$(ProjectDir)/OAuth.Net.Common/bin/Debug/OAuth.Net.Common.dll">
+    <Modules>
+     <Module Name="oauth.net.common.dll">
+      <Messages>
+       <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2008-10-06 19:46:51Z">
+        <Issue Name="NoStrongName">
+         <Item>'OAuth.Net.Common.dll'</Item>
+        </Issue>
+       </Message>
+      </Messages>
+     </Module>
+    </Modules>
+   </Target>
+   <Target Name="$(ProjectDir)/OAuth.Net.Components/bin/Debug/OAuth.Net.Components.dll">
+    <Modules>
+     <Module Name="oauth.net.components.dll">
+      <Messages>
+       <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2008-10-06 19:46:51Z">
+        <Issue Name="NoStrongName">
+         <Item>'OAuth.Net.Components.dll'</Item>
+        </Issue>
+       </Message>
+      </Messages>
+     </Module>
+    </Modules>
+   </Target>
+   <Target Name="$(ProjectDir)/OAuth.Net.Consumer/bin/Debug/OAuth.Net.Consumer.dll">
+    <Modules>
+     <Module Name="oauth.net.consumer.dll">
+      <Messages>
+       <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2008-10-06 19:46:51Z">
+        <Issue Name="NoStrongName">
+         <Item>'OAuth.Net.Consumer.dll'</Item>
+        </Issue>
+       </Message>
+      </Messages>
+     </Module>
+    </Modules>
+   </Target>
+   <Target Name="$(ProjectDir)/OAuth.Net.ServiceProvider/bin/Debug/OAuth.Net.ServiceProvider.dll">
+    <Modules>
+     <Module Name="oauth.net.serviceprovider.dll">
+      <Messages>
+       <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2008-10-06 19:46:51Z">
+        <Issue Name="NoStrongName">
+         <Item>'OAuth.Net.ServiceProvider.dll'</Item>
+        </Issue>
+       </Message>
+      </Messages>
+      <Namespaces>
+       <Namespace Name="OAuth.Net.ServiceProvider">
+        <Types>
+         <Type Name="ServiceProviderContext">
+          <Members>
+           <Member Name="#GetConsumerStore()">
+            <Messages>
+             <Message TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024" Created="2008-10-06 19:46:51Z">
+              <Issue Certainty="50">
+               <Item>'ServiceProviderContext.GetConsumerStore()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#GetRequestIdValidator()">
+            <Messages>
+             <Message TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024" Created="2008-10-06 19:46:51Z">
+              <Issue Certainty="50">
+               <Item>'ServiceProviderContext.GetRequestIdValidator()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#GetTokenGenerator()">
+            <Messages>
+             <Message TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024" Created="2008-10-06 19:46:51Z">
+              <Issue Certainty="50">
+               <Item>'ServiceProviderContext.GetTokenGenerator()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#GetTokenStore()">
+            <Messages>
+             <Message TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024" Created="2008-10-06 19:46:51Z">
+              <Issue Certainty="50">
+               <Item>'ServiceProviderContext.GetTokenStore()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
+      </Namespaces>
+     </Module>
+    </Modules>
+   </Target>
+  </Targets>
+  <Rules>
+   <Rule TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210">
+    <Resolution Name="NoStrongName">Sign {0} with a strong name key.</Resolution>
+   </Rule>
+   <Rule TypeName="InitializeReferenceTypeStaticFieldsInline" Category="Microsoft.Performance" CheckId="CA1810">
+    <Resolution Name="Default">Initialize all static fields in {0} when those fields are declared and remove the explicit static constructor.</Resolution>
+   </Rule>
+   <Rule TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024">
+    <Resolution Name="Default">Change {0} to a property if appropriate.</Resolution>
+   </Rule>
+  </Rules>
+ </FxCopReport>
 </FxCopProject>
