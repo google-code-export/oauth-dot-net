@@ -1,5 +1,5 @@
 ﻿// Copyright (c) 2008 Madgex
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
@@ -18,9 +18,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // 
-// OAuth.net uses the Windsor Container from the Castle Project. See "Castle 
-// Project License.txt" in the Licenses folder.
+// OAuth.net uses the Common Service Locator interface, released under the MS-PL
+// license. See "CommonServiceLocator License.txt" in the Licenses folder.
 // 
+// The examples and test cases use the Windsor Container from the Castle Project
+// and Common Service Locator Windsor adaptor, released under the Apache License,
+// Version 2.0. See "Castle Project License.txt" in the Licenses folder.
+// 
+// XRDS-Simple.net uses the HTMLAgility Pack. See "HTML Agility Pack License.txt"
+// in the Licenses folder.
+//
 // Authors: Bruce Boughton, Chris Adams
 // Website: http://lab.madgex.com/oauth-net/
 // Email:   oauth-dot-net@madgex.com
