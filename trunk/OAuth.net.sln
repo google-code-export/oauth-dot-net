@@ -38,6 +38,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Licenses", "Licenses", "{29F5B41F-415D-45E6-AAC9-E2E0662D00BE}"
 	ProjectSection(SolutionItems) = preProject
 		Licenses\Castle Project License.txt = Licenses\Castle Project License.txt
+		HTML Agility Pack License.txt = HTML Agility Pack License.txt
 		Licenses\OAuth.Net License.txt = Licenses\OAuth.Net License.txt
 	EndProjectSection
 EndProject
