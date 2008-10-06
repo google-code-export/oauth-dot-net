@@ -26,73 +26,64 @@
 // Email:   oauth-dot-net@madgex.com
 
 #if DEBUG
+using System.Collections.Specialized;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using OAuth.Net.Common;
 
-namespace OAuth.Net.TestCases
+namespace OAuth.Net.TestCases.WikiTests
 {
     [TestFixture]
-    public class ParameterEncodingTests
+    public class NormalizeRequestParameterTests
     {
-        [Test]        
-        public void TestAlphanumerics()
+        [Test]
+        public void TestNameParamNoValue()
         {
-            Assert.That(Rfc3986.Encode("abcABC123"), Is.EqualTo("abcABC123"));
+            OAuthParameters parameters = new OAuthParameters();
+
+            // NB: HttpRequest parses "name=" as { "name", string.Empty }
+            parameters.AdditionalParameters.Add("name", string.Empty);
+
+            Assert.That(parameters.ToNormalizedString(), Is.EqualTo("name="));
         }
 
         [Test]
-        public void TestDashDotUnderscoreTilde()
+        public void TestAEqualsB()
         {
-            Assert.That(Rfc3986.Encode("-._~"), Is.EqualTo("-._~"));
+            OAuthParameters parameters = new OAuthParameters();
+            parameters.AdditionalParameters.Add("a", "b");
+
+            Assert.That(parameters.ToNormalizedString(), Is.EqualTo("a=b"));
         }
 
         [Test]
-        public void TestPercent()
+        public void TestAEqualsBAndCEqualsD()
         {
-            Assert.That(Rfc3986.Encode("%"), Is.EqualTo("%25"));
+            OAuthParameters parameters = new OAuthParameters();
+            parameters.AdditionalParameters.Add("a", "b");
+            parameters.AdditionalParameters.Add("c", "d");
+
+            Assert.That(parameters.ToNormalizedString(), Is.EqualTo("a=b&c=d"));
         }
 
         [Test]
-        public void TestPlus()
+        public void TestAEqualsXBangYAndAEqualsXSpaceY()
         {
-            Assert.That(Rfc3986.Encode("+"), Is.EqualTo("%2B"));
+            OAuthParameters parameters = new OAuthParameters();
+            parameters.AdditionalParameters.Add("a", "x!y");
+            parameters.AdditionalParameters.Add("a", "x y");
+
+            Assert.That(parameters.ToNormalizedString(), Is.EqualTo("a=x%20y&a=x%21y"));
         }
 
         [Test]
-        public void TestAmpersandEqualsAsterisk()
+        public void TestXBangYEqualsAAndXEqualsA()
         {
-            Assert.That(Rfc3986.Encode("&=*"), Is.EqualTo("%26%3D%2A"));
-        }
+            OAuthParameters parameters = new OAuthParameters();
+            parameters.AdditionalParameters.Add("x!y", "a");
+            parameters.AdditionalParameters.Add("x", "a");
 
-        [Test]
-        public void TestUnicodeU000A()
-        {
-            Assert.That(Rfc3986.Encode("\u000A"), Is.EqualTo("%0A"));
-        }
-
-        [Test]
-        public void TestUnicodeU0020()
-        {
-            Assert.That(Rfc3986.Encode("\u0020"), Is.EqualTo("%20"));
-        }
-
-        [Test]
-        public void TestUnicodeU007F()
-        {
-            Assert.That(Rfc3986.Encode("\u007F"), Is.EqualTo("%7F"));
-        }
-
-        [Test]
-        public void TestUnicodeU0080()
-        {
-            Assert.That(Rfc3986.Encode("\u0080"), Is.EqualTo("%C2%80"));
-        }
-
-        [Test]
-        public void TestUnicodeU3001()
-        {
-            Assert.That(Rfc3986.Encode("\u3001"), Is.EqualTo("%E3%80%81"));
+            Assert.That(parameters.ToNormalizedString(), Is.EqualTo("x=a&x%21y=a"));
         }
     }
 }

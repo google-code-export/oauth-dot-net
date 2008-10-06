@@ -138,7 +138,7 @@ namespace OAuth.Net.ServiceProvider
 
             // Store the token
             requestContext.RequestToken = token;
-            ServiceProviderContext.TokenStore.Add(token);
+            ServiceProviderContext.GetTokenStore().Add(token);
 
             // Add to the response
             requestContext.ResponseParameters[Constants.TokenParameter] = token.Token;
@@ -150,9 +150,9 @@ namespace OAuth.Net.ServiceProvider
             IRequestToken requestToken;
             do
             {
-                requestToken = ServiceProviderContext.TokenGenerator.CreateRequestToken(requestContext.Consumer, requestContext.Parameters);
+                requestToken = ServiceProviderContext.GetTokenGenerator().CreateRequestToken(requestContext.Consumer, requestContext.Parameters);
             }
-            while (ServiceProviderContext.TokenStore.Contains(requestToken.Token));
+            while (ServiceProviderContext.GetTokenStore().Contains(requestToken.Token));
 
             return requestToken;
         }

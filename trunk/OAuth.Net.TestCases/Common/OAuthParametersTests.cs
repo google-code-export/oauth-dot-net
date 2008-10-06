@@ -31,8 +31,9 @@ using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using OAuth.Net.Common;
 
-namespace OAuth.Net.Common
+namespace OAuth.Net.TestCases.Common
 {
     [TestFixture]
     public class OAuthParametersTests
@@ -61,41 +62,41 @@ namespace OAuth.Net.Common
             Assert.That(Enum.Format(typeof(OAuthParameterSources), sources, "G"), Is.EqualTo("HttpAuthorizationHeader, HttpPostBody"));
         }
 
-        [Test]
-        [SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores", Justification = "Unit test")]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Unit test methods cannot be static")]
-        public void Test_ParseParameters()
-        {
-            NameValueCollection queryString = new NameValueCollection();
-            NameValueCollection form = new NameValueCollection();
-            string authHeader;
+////        [Test]
+////        [SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores", Justification = "Unit test")]
+////        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Unit test methods cannot be static")]
+////        public void Test_ParseParameters()
+////        {
+////            NameValueCollection queryString = new NameValueCollection();
+////            NameValueCollection form = new NameValueCollection();
+////            string authHeader;
 
-            queryString.Add("file", "vacation.jpg");
+////            queryString.Add("file", "vacation.jpg");
 
-            form.Add("size", "original");
+////            form.Add("size", "original");
 
-            authHeader = @"OAuth realm=""http://sp.example.com/"",
-            oauth_consumer_key=""0685bd9184jfhq22"",
-            oauth_token=""ad180jjd733klru7"",
-            oauth_signature_method=""HMAC-SHA1"",
-            oauth_signature=""wOJIO9A2W5mFwDgiDvZbTSMK%2FPY%3D"",
-            oauth_timestamp=""137131200"",
-            oauth_nonce=""4572616e48616d6d65724c61686176"",
-            oauth_version=""1.0""";
+////            authHeader = @"OAuth realm=""http://sp.example.com/"",
+////            oauth_consumer_key=""0685bd9184jfhq22"",
+////            oauth_token=""ad180jjd733klru7"",
+////            oauth_signature_method=""HMAC-SHA1"",
+////            oauth_signature=""wOJIO9A2W5mFwDgiDvZbTSMK%2FPY%3D"",
+////            oauth_timestamp=""137131200"",
+////            oauth_nonce=""4572616e48616d6d65724c61686176"",
+////            oauth_version=""1.0""";
 
-            OAuthParameters parameters = OAuthParameters.DoParse(authHeader, null, form, queryString, OAuthParameterSources.ServiceProviderDefault, true);
+////            OAuthParameters parameters = OAuthParameters.DoParse(authHeader, null, form, queryString, OAuthParameterSources.ServiceProviderDefault, true);
 
-            Assert.That(parameters.AdditionalParameters["file"], Is.EqualTo("vacation.jpg"));
-            Assert.That(parameters.AdditionalParameters["size"], Is.EqualTo("original"));
-            Assert.That(parameters.Realm, Is.EqualTo("http://sp.example.com/"));
-            Assert.That(parameters.ConsumerKey, Is.EqualTo("0685bd9184jfhq22"));
-            Assert.That(parameters.Token, Is.EqualTo("ad180jjd733klru7"));
-            Assert.That(parameters.SignatureMethod, Is.EqualTo("HMAC-SHA1"));
-            Assert.That(parameters.Signature, Is.EqualTo("wOJIO9A2W5mFwDgiDvZbTSMK%2FPY%3D"));
-            Assert.That(parameters.Timestamp, Is.EqualTo("137131200"));
-            Assert.That(parameters.Nonce, Is.EqualTo("4572616e48616d6d65724c61686176"));
-            Assert.That(parameters.Version, Is.EqualTo(Constants.Version1_0));
-        }
+////            Assert.That(parameters.AdditionalParameters["file"], Is.EqualTo("vacation.jpg"));
+////            Assert.That(parameters.AdditionalParameters["size"], Is.EqualTo("original"));
+////            Assert.That(parameters.Realm, Is.EqualTo("http://sp.example.com/"));
+////            Assert.That(parameters.ConsumerKey, Is.EqualTo("0685bd9184jfhq22"));
+////            Assert.That(parameters.Token, Is.EqualTo("ad180jjd733klru7"));
+////            Assert.That(parameters.SignatureMethod, Is.EqualTo("HMAC-SHA1"));
+////            Assert.That(parameters.Signature, Is.EqualTo("wOJIO9A2W5mFwDgiDvZbTSMK%2FPY%3D"));
+////            Assert.That(parameters.Timestamp, Is.EqualTo("137131200"));
+////            Assert.That(parameters.Nonce, Is.EqualTo("4572616e48616d6d65724c61686176"));
+////            Assert.That(parameters.Version, Is.EqualTo(Constants.Version1_0));
+////        }
     }
 }
 #endif

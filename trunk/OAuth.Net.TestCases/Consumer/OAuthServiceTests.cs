@@ -29,15 +29,30 @@
 using System;
 using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
+using Castle.Core.Resource;
+using Castle.Windsor;
+using Castle.Windsor.Configuration.Interpreters;
+using CommonServiceLocator.WindsorAdapter;
+using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using OAuth.Net.Common;
+using OAuth.Net.Consumer;
 
-namespace OAuth.Net.Consumer
+namespace OAuth.Net.TestCases.Consumer
 {
     [TestFixture]
     public class OAuthServiceTests
     {
+        [TestFixtureSetUp]
+        public void SetLocatorProvider()
+        {
+            ServiceLocator.SetLocatorProvider(() => new WindsorServiceLocator(
+                    new WindsorContainer(
+                        new XmlInterpreter(
+                            new ConfigResource("oauth.net.components")))));
+        }
+
         [Test]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Unit test methods cannot be static")]
         public void TestBuildAuthorizationUriWithoutExistingQueryString()
@@ -46,13 +61,12 @@ namespace OAuth.Net.Consumer
                 new Uri("http://example.com/request_token"),
                 new Uri("http://example.com/authorize"),
                 new Uri("http://example.com/access_token"),
-                new MockConsumer() 
-                { 
-                    Key = "key", 
-                    Secret = "secret", 
+                new MockConsumer()
+                {
+                    Key = "key",
+                    Secret = "secret",
                     Status = ConsumerStatus.Valid
-                },
-                "oauth.net.components");
+                });
 
             Uri authUri = service.BuildAuthorizationUrl(
                 new MockToken()
@@ -80,8 +94,7 @@ namespace OAuth.Net.Consumer
                     Key = "key",
                     Secret = "secret",
                     Status = ConsumerStatus.Valid
-                },
-                "oauth.net.components");
+                });
 
             Uri authUri = service.BuildAuthorizationUrl(
                 new MockToken()
@@ -109,8 +122,7 @@ namespace OAuth.Net.Consumer
                     Key = "key",
                     Secret = "secret",
                     Status = ConsumerStatus.Valid
-                },
-                "oauth.net.components");
+                });
 
             Uri authUri = service.BuildAuthorizationUrl(
                 new MockToken()
@@ -142,8 +154,7 @@ namespace OAuth.Net.Consumer
                     Key = "key",
                     Secret = "secret",
                     Status = ConsumerStatus.Valid
-                },
-                "oauth.net.components");
+                });
 
             Uri authUri = service.BuildAuthorizationUrl(
                 new MockToken()

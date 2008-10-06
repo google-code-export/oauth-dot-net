@@ -29,7 +29,6 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using Castle.Core;
 using OAuth.Net.Common;
 
 namespace OAuth.Net.Components
@@ -38,7 +37,6 @@ namespace OAuth.Net.Components
     /// This implementation of the RsaSha1SigningProvider expects a PFX X.509 certificate file
     /// to be available.
     /// </summary>
-    [PerThread]
     [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Justification = "RSA-SHA1 is a domain term")]
     public class RsaSha1SigningProvider
         : ISigningProvider

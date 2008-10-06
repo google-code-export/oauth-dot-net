@@ -6,6 +6,9 @@
     <assembly path="OAuth.Net.Components\bin\Debug\OAuth.Net.Components.dll" />
     <assembly path="OAuth.Net.Consumer\bin\Debug\OAuth.Net.Consumer.dll" />
     <assembly path="OAuth.Net.TestCases\bin\Debug\OAuth.Net.TestCases.dll" />
+    <assembly path="XRDS-Simple.Net.TestCases\bin\Debug\XRDS-Simple.Net.TestCases.dll" />
   </Config>
-  <Config name="Release" binpathtype="Auto" />
+  <Config name="Release" binpathtype="Auto">
+    <assembly path="XRDS-Simple.Net.TestCases\bin\Release\XRDS-Simple.Net.TestCases.dll" />
+  </Config>
 </NUnitProject>

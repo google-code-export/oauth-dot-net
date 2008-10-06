@@ -29,7 +29,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
-using Castle.Core;
 using OAuth.Net.Common;
 
 namespace OAuth.Net.Components
@@ -44,7 +43,6 @@ namespace OAuth.Net.Components
     /// to avoid potential resource attacks involving large numbers of requests
     /// with large numbers of different consumer keys making the cache very large.
     /// </summary>
-    [Singleton]
     public class InMemoryWindowedRequestIdValidator
         : IRequestIdValidator, IDisposable
     {
