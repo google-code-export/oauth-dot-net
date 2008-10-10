@@ -1,4 +1,4 @@
-The current source trunk is under active development, and may be unstable.  The latest stable release is 0.5.1 available from the [http://code.google.com/p/oauth-dot-net/downloads/list download section].
+The current source trunk is under active development, and may be unstable.  The latest stable release is 0.5.1 available from the [http://code.google.com/p/oauth-dot-net/downloads/list download section] (or [http://code.google.com/p/oauth-dot-net/source/browse/#svn/tags/0.5.1.0-release browse the source]).
 
 [http://code.google.com/p/oauth-dot-net/source/browse/ Continue to browse source...]
 
@@ -6,6 +6,6 @@ The current source trunk is under active development, and may be unstable.  The 
 
  * Additional work is being performed on OAUTH Discovery with XRDS-Simple parsing.  These libraries are experimental and may change between versions.
 
- * The dependency on the Windsor container is being removed and replaced with the Common Service Locator interface
+ * The dependency on the Windsor container has been removed and replaced with the Common Service Locator interface ([http://code.google.com/p/oauth-dot-net/source/browse/?r=22#svn/trunk r22])
 
- * Tests are being moved out of the core assemblies to reduce their dependencies
+ * Tests have been moved out of the core assemblies ([http://code.google.com/p/oauth-dot-net/source/browse/?r=19#svn/trunk r19])
