@@ -32,7 +32,6 @@
 // Website: http://lab.madgex.com/oauth-net/
 // Email:   oauth-dot-net@madgex.com
 
-using System;
 using System.Web;
 using Castle.Core.Resource;
 using Castle.Windsor;
@@ -47,13 +46,15 @@ namespace OAuth.Net.Examples.EchoServiceProvider
     /// </summary>
     public class Global : HttpApplication
     {
-        protected void Application_Start(object sender, EventArgs e)
+        public override void Init()
         {
-            ServiceLocator.SetLocatorProvider(() =>
+            IServiceLocator injector =
                 new WindsorServiceLocator(
                     new WindsorContainer(
                         new XmlInterpreter(
-                            new ConfigResource("oauth.net.components")))));
+                            new ConfigResource("oauth.net.components"))));
+
+            ServiceLocator.SetLocatorProvider(() => injector);
         }
     }
 }
