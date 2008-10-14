@@ -65,6 +65,22 @@ namespace OAuth.Net.ServiceProvider
             private set;
         }
 
+        private static IServiceLocator ServiceLocatorInstance;
+        private static volatile object syncRoot = new object();
+
+        private static IServiceLocator CurrentServiceLocator
+        {
+            get
+            {
+                if (ServiceLocatorInstance == null)
+                    lock (syncRoot)
+                        if (ServiceLocatorInstance == null)
+                            ServiceLocatorInstance = ServiceLocator.Current;
+
+                return ServiceLocatorInstance;
+            }
+        }
+
         /// <summary>
         /// Get a signing provider for the given signature method. Returns 
         /// <c>null</c> if no signing provider can be found for the 
@@ -77,7 +93,7 @@ namespace OAuth.Net.ServiceProvider
         {
             try
             {
-                return ServiceLocator.Current.GetInstance<ISigningProvider>(Constants.SigningProviderIdPrefix + signatureMethod);
+                return CurrentServiceLocator.GetInstance<ISigningProvider>(Constants.SigningProviderIdPrefix + signatureMethod);
             }
             catch (ActivationException)
             {
@@ -99,7 +115,7 @@ namespace OAuth.Net.ServiceProvider
         {
             try
             {
-                return ServiceLocator.Current.GetInstance<IConsumerStore>();
+                return CurrentServiceLocator.GetInstance<IConsumerStore>();
             }
             catch (ActivationException)
             {
@@ -121,7 +137,7 @@ namespace OAuth.Net.ServiceProvider
         {
             try
             {
-                return ServiceLocator.Current.GetInstance<IRequestIdValidator>();
+                return CurrentServiceLocator.GetInstance<IRequestIdValidator>();
             }
             catch (ActivationException)
             {
@@ -143,7 +159,7 @@ namespace OAuth.Net.ServiceProvider
         {
             try
             {
-                return ServiceLocator.Current.GetInstance<ITokenGenerator>();
+                return CurrentServiceLocator.GetInstance<ITokenGenerator>();
             }
             catch (ActivationException)
             {
@@ -165,7 +181,7 @@ namespace OAuth.Net.ServiceProvider
         {
             try
             {
-                return ServiceLocator.Current.GetInstance<ITokenStore>();
+                return CurrentServiceLocator.GetInstance<ITokenStore>();
             }
             catch (ActivationException)
             {
