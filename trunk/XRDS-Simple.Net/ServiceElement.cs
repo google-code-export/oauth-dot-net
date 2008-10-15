@@ -150,7 +150,7 @@ namespace XRDS_Simple.Net
         /// Returns a sorted by priority enumeration of the LocalID elements
         /// </summary>
         /// <returns></returns>
-        IEnumerable<LocalIDElement> GetLocalIDs()
+        public IEnumerable<LocalIDElement> GetLocalIDs()
         {
             if (localIDElements.Count > 1)
             {
@@ -171,7 +171,7 @@ namespace XRDS_Simple.Net
         /// Returns a sorted list of URI's by priority enumeration of the URi elements
         /// </summary>
         /// <returns></returns>
-        IEnumerable<URIElement> GetURIs()
+        public IEnumerable<URIElement> GetURIs()
         {
             if (uriElements.Count > 1)
             {
