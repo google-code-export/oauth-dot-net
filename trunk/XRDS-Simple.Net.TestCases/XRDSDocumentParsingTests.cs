@@ -7,9 +7,9 @@ using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 
-using XRDS_Simple.Net;
+using XrdsSimple.Net;
 
-namespace XRDS_Simple.Net.TestCases
+namespace XrdsSimple.Net.TestCases
 {
     [TestFixture]
     public class XRDSDocumentParsingTests
@@ -19,7 +19,7 @@ namespace XRDS_Simple.Net.TestCases
         {
             XRDSDocument document = null;
 
-            using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("XRDS_Simple.Net.TestCases.OAUTHDiscoveryExample.xml"))
+            using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("XrdsSimple.Net.TestCases.OAUTHDiscoveryExample.xml"))
             {
                 document = XRDSDocument.Parse(s);
             }
