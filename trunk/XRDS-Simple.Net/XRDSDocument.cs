@@ -39,7 +39,7 @@ using System.Net;
 using System.Xml.Serialization;
 using System.Xml.XPath;
 
-namespace XRDS_Simple.Net
+namespace XrdsSimple.Net
 {
     /// <summary>
     /// Representation of an XRDSSimple Document that is used to discover services

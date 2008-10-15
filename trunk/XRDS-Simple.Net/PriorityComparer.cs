@@ -37,7 +37,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace XRDS_Simple.Net
+namespace XrdsSimple.Net
 {
     /// <summary>
     /// Compares IPriority Elements to provide the correct ordering in 6.4 of the specification.

@@ -38,7 +38,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace XRDS_Simple.Net
+namespace XrdsSimple.Net
 {
     /// <summary>
     /// Representation of the LocalID Element in an XRD Service definition.

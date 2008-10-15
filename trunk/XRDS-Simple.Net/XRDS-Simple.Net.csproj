@@ -8,7 +8,7 @@
     <ProjectGuid>{62092966-4CD6-40A6-9761-B322B1122742}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>XRDS_Simple.Net</RootNamespace>
+    <RootNamespace>XrdsSimple.Net</RootNamespace>
     <AssemblyName>XRDS-Simple.Net</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
