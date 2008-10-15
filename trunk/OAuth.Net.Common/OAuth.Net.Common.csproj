@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Consumers\IOutOfBoundConsumerStore.cs" />
     <Compile Include="Consumers\MockConsumer.cs" />
     <Compile Include="OAuthException.cs" />
     <Compile Include="OAuthRequestExceptionParameters.cs" />
