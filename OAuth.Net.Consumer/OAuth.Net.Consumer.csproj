@@ -53,6 +53,7 @@
     <Compile Include="EventArgs\PreProtectedResourceRequestEventArgs.cs" />
     <Compile Include="EventArgs\PreRequestEventArgs.cs" />
     <Compile Include="EventArgs\RequestTokenReceivedEventArgs.cs" />
+    <Compile Include="OAuthEndpoint.cs" />
     <Compile Include="OAuthResponse.cs" />
     <Compile Include="OAuthService.cs" />
     <Compile Include="OAuthRequest.cs" />
