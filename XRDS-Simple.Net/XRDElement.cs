@@ -38,7 +38,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace XRDS_Simple.Net
+namespace XrdsSimple.Net
 {
     /// <summary>
     /// An XRD element in an XRDS document, with the elements supported

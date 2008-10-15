@@ -37,7 +37,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace XRDS_Simple.Net
+namespace XrdsSimple.Net
 {
     /// <summary>
     /// Exceptino to be raised if an error occurs during
