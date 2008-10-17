@@ -73,7 +73,7 @@ namespace OAuth.Net.Common
         }
 
         [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "Exceptions represent certain defined error messages. Static Throw... methods are provided.")]
-        private OAuthRequestException()
+        internal OAuthRequestException()
             : base()
         {
         }
@@ -90,7 +90,7 @@ namespace OAuth.Net.Common
         public string Problem
         {
             get;
-            private set;
+            internal set;
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace OAuth.Net.Common
         public KeyValuePair<string, string> AdditionalParameter
         {
             get;
-            private set;
+            internal set;
         }
 
         /// <summary>
@@ -124,14 +124,14 @@ namespace OAuth.Net.Common
         public string Advice
         {
             get;
-            private set;
+            internal set;
         }
 
-        /// <summary>
+        /// <overloads>
         /// Throws an exception indicating that the 
         /// <see cref="Constants.VersionParameter">oauth_version</see> isn't 
         /// supported. 
-        /// </summary>
+        /// </overloads>
         /// 
         /// <remarks>
         /// <para>
@@ -174,24 +174,13 @@ namespace OAuth.Net.Common
         /// <exception cref="OAuth.Net.Common.OAuthRequestException">
         /// On success
         /// </exception>
+        [Obsolete("Use OAuthRequestExceptionFactory.ThrowVersionRejected instead")]
         public static void ThrowVersionRejected(string minVersion, string maxVersion, string advice)
         {
-            if (string.IsNullOrEmpty(minVersion))
-                throw new ArgumentException("minVersion argument cannot be null or empty", "minVersion");
-            if (string.IsNullOrEmpty(maxVersion))
-                throw new ArgumentException("maxVersion argument cannot be null or empty", "maxVersion");
-
-            throw new OAuthRequestException()
-            {
-                Problem = OAuthRequestExceptionProblemTypes.VersionRejected,
-
-                AdditionalParameter = new KeyValuePair<string, string>(
-                    OAuthRequestExceptionParameters.AcceptableVersions, minVersion + '-' + maxVersion),
-
-                Advice = advice,
-
-                Source = OAuthRequestExceptionSources.Local
-            };
+            new OAuthRequestExceptionFactory().ThrowVersionRejected(
+                minVersion,
+                maxVersion,
+                advice);
         }
 
         /// <summary>
@@ -231,35 +220,12 @@ namespace OAuth.Net.Common
         /// <exception cref="OAuth.Net.Common.OAuthRequestException">
         /// On success
         /// </exception>
+        [Obsolete("Use OAuthRequestExceptionFactory.ThrowParametersAbsent instead")]
         public static void ThrowParametersAbsent(string[] parameters, string advice)
         {
-            if (parameters == null || parameters.Length == 0)
-                throw new ArgumentException("parameters argument cannot be null or of length 0", "parameters");
-
-            StringBuilder absentParameters = new StringBuilder();
-
-            bool first = true;
-            foreach (string parameter in parameters)
-            {
-                if (!first)
-                    absentParameters.Append("&");
-                else
-                    first = false;
-
-                absentParameters.Append(Rfc3986.Encode(parameter));
-            }
-
-            throw new OAuthRequestException()
-            {
-                Problem = OAuthRequestExceptionProblemTypes.ParameterAbsent,
-
-                AdditionalParameter = new KeyValuePair<string, string>(
-                    OAuthRequestExceptionParameters.ParametersAbsent, absentParameters.ToString()),
-
-                Advice = advice,
-
-                Source = OAuthRequestExceptionSources.Local
-            };
+            new OAuthRequestExceptionFactory().ThrowParametersAbsent(
+                parameters,
+                advice);
         }
 
         /// <summary>
@@ -302,35 +268,12 @@ namespace OAuth.Net.Common
         /// <exception cref="OAuth.Net.Common.OAuthRequestException">
         /// On success
         /// </exception>
+        [Obsolete("Use OAuthRequestExceptionFactory.ThrowParametersRejected instead")]
         public static void ThrowParametersRejected(string[] parameters, string advice)
         {
-            if (parameters == null || parameters.Length == 0)
-                throw new ArgumentException("parameters argument cannot be null or of length 0", "parameters");
-
-            StringBuilder rejectedParameters = new StringBuilder();
-
-            bool first = true;
-            foreach (string parameter in parameters)
-            {
-                if (!first)
-                    rejectedParameters.Append("&");
-                else
-                    first = false;
-
-                rejectedParameters.Append(Rfc3986.Encode(parameter));
-            }
-
-            throw new OAuthRequestException()
-            {
-                Problem = OAuthRequestExceptionProblemTypes.ParameterRejected,
-
-                AdditionalParameter = new KeyValuePair<string, string>(
-                    OAuthRequestExceptionParameters.ParametersRejected, rejectedParameters.ToString()),
-
-                Advice = advice,
-
-                Source = OAuthRequestExceptionSources.Local
-            };
+            new OAuthRequestExceptionFactory().ThrowParametersRejected(
+                parameters,
+                advice);
         }
 
         /// <summary>
@@ -375,25 +318,13 @@ namespace OAuth.Net.Common
         /// <exception cref="OAuth.Net.Common.OAuthRequestException">
         /// On success
         /// </exception>
+        [Obsolete("Use OAuthRequestExceptionFactory.ThrowTimestampRefused instead")]
         public static void ThrowTimestampRefused(long minTimestamp, long maxTimestamp, string advice)
         {
-            if (minTimestamp < 0)
-                throw new ArgumentException("minTimestamp argument must be greater than or equal to 0", "minTimestamp");
-            if (maxTimestamp < 0)
-                throw new ArgumentException("maxTimestamp argument must be greater than or equal to 0", "maxTimestamp");
-
-            throw new OAuthRequestException()
-            {
-                Problem = OAuthRequestExceptionProblemTypes.TimestampRefused,
-
-                AdditionalParameter = new KeyValuePair<string, string>(
-                    OAuthRequestExceptionParameters.AcceptableTimestamps, 
-                    string.Format(CultureInfo.InvariantCulture, "{0}-{1}", minTimestamp, maxTimestamp)),
-
-                Advice = advice,
-
-                Source = OAuthRequestExceptionSources.Local
-            };
+            new OAuthRequestExceptionFactory().ThrowTimestampRefused(
+                minTimestamp,
+                maxTimestamp,
+                advice);
         }
 
         /// <summary>
@@ -423,9 +354,10 @@ namespace OAuth.Net.Common
         /// <exception cref="OAuth.Net.Common.OAuthRequestException">
         /// Always
         /// </exception>
+        [Obsolete("Use OAuthRequestExceptionFactory.ThrowNonceUsed instead")]
         public static void ThrowNonceUsed(string advice)
         {
-            OAuthRequestException.ThrowSimpleReport(OAuthRequestExceptionProblemTypes.NonceUsed, advice);
+            new OAuthRequestExceptionFactory().ThrowNonceUsed(advice);
         }
 
         /// <summary>
@@ -454,9 +386,11 @@ namespace OAuth.Net.Common
         /// <exception cref="OAuth.Net.Common.OAuthRequestException">
         /// Always
         /// </exception>
+        [Obsolete("Use OAuthRequestExceptionFactory.ThrowSignatureMethodRejected instead")]
         public static void ThrowSignatureMethodRejected(string advice)
         {
-            OAuthRequestException.ThrowSimpleReport(OAuthRequestExceptionProblemTypes.SignatureMethodRejected, advice);
+            new OAuthRequestExceptionFactory().ThrowSignatureMethodRejected(
+                advice);
         }
 
         /// <summary>
@@ -486,9 +420,10 @@ namespace OAuth.Net.Common
         /// <exception cref="OAuth.Net.Common.OAuthRequestException">
         /// Always
         /// </exception>
+        [Obsolete("Use OAuthRequestExceptionFactory.ThrowConsumerKeyUnknown instead")]
         public static void ThrowConsumerKeyUnknown(string advice)
         {
-            OAuthRequestException.ThrowSimpleReport(OAuthRequestExceptionProblemTypes.ConsumerKeyUnknown, advice);
+            new OAuthRequestExceptionFactory().ThrowConsumerKeyUnknown(advice);
         }
 
         /// <summary>
@@ -518,9 +453,11 @@ namespace OAuth.Net.Common
         /// <exception cref="OAuth.Net.Common.OAuthRequestException">
         /// Always
         /// </exception>
+        [Obsolete("Use OAuthRequestExceptionFactory.ThrowConsumerKeyRejected instead")]
         public static void ThrowConsumerKeyRejected(string advice)
         {
-            OAuthRequestException.ThrowSimpleReport(OAuthRequestExceptionProblemTypes.ConsumerKeyRejected, advice);
+            new OAuthRequestExceptionFactory().ThrowConsumerKeyRejected(
+                advice);
         }
 
         /// <summary>
@@ -550,9 +487,10 @@ namespace OAuth.Net.Common
         /// <exception cref="OAuth.Net.Common.OAuthRequestException">
         /// Always
         /// </exception>
+        [Obsolete("Use OAuthRequestExceptionFactory.ThrowConsumerKeyRefused instead")]
         public static void ThrowConsumerKeyRefused(string advice)
         {
-            OAuthRequestException.ThrowSimpleReport(OAuthRequestExceptionProblemTypes.ConsumerKeyRefused, advice);
+            new OAuthRequestExceptionFactory().ThrowConsumerKeyRefused(advice);
         }
 
         /// <summary>
@@ -582,9 +520,10 @@ namespace OAuth.Net.Common
         /// <exception cref="OAuth.Net.Common.OAuthRequestException">
         /// Always
         /// </exception>
+        [Obsolete("Use OAuthRequestExceptionFactory.ThrowSignatureInvalid instead")]
         public static void ThrowSignatureInvalid(string advice)
         {
-            OAuthRequestException.ThrowSimpleReport(OAuthRequestExceptionProblemTypes.SignatureInvalid, advice);
+            new OAuthRequestExceptionFactory().ThrowSignatureInvalid(advice);
         }
 
         /// <summary>
@@ -616,9 +555,10 @@ namespace OAuth.Net.Common
         /// <exception cref="OAuth.Net.Common.OAuthRequestException">
         /// Always
         /// </exception>
+        [Obsolete("Use OAuthRequestExceptionFactory.ThrowTokenRejected instead")]
         public static void ThrowTokenRejected(string advice)
         {
-            OAuthRequestException.ThrowSimpleReport(OAuthRequestExceptionProblemTypes.TokenRejected, advice);
+            new OAuthRequestExceptionFactory().ThrowTokenRejected(advice);
         }
 
         /// <summary>
@@ -649,9 +589,10 @@ namespace OAuth.Net.Common
         /// <exception cref="OAuth.Net.Common.OAuthRequestException">
         /// Always
         /// </exception>
+        [Obsolete("Use OAuthRequestExceptionFactory.ThrowTokenUsed instead")]
         public static void ThrowTokenUsed(string advice)
         {
-            OAuthRequestException.ThrowSimpleReport(OAuthRequestExceptionProblemTypes.TokenUsed, advice);
+            new OAuthRequestExceptionFactory().ThrowTokenUsed(advice);
         }
 
         /// <summary>
@@ -681,9 +622,10 @@ namespace OAuth.Net.Common
         /// <exception cref="OAuth.Net.Common.OAuthRequestException">
         /// Always
         /// </exception>
+        [Obsolete("Use OAuthRequestExceptionFactory.ThrowTokenExpired instead")]
         public static void ThrowTokenExpired(string advice)
         {
-            OAuthRequestException.ThrowSimpleReport(OAuthRequestExceptionProblemTypes.TokenExpired, advice);
+            new OAuthRequestExceptionFactory().ThrowTokenExpired(advice);
         }
 
         /// <summary>
@@ -714,15 +656,11 @@ namespace OAuth.Net.Common
         /// <exception cref="OAuth.Net.Common.OAuthRequestException">
         /// Always
         /// </exception>
+        [Obsolete("Use OAuthRequestExceptionFactory.ThrowTokenRevoked instead")]
         public static void ThrowTokenRevoked(string advice)
         {
-            OAuthRequestException.ThrowSimpleReport(OAuthRequestExceptionProblemTypes.TokenRevoked, advice);
+            new OAuthRequestExceptionFactory().ThrowTokenRevoked(advice);
         }
-
-        //// TODO: ThrowAdditionalAuthorizationRequired
-        //// TODO: ThrowPermissionUnknown
-        //// TODO: ThrowPermissionDenied
-        //// TODO: ThrowUserRefused
 
         /// <summary>
         /// Tries to parse an OAuthRequestException from some OAuth parameters. If an exception
@@ -755,59 +693,10 @@ namespace OAuth.Net.Common
         /// <exception cref="OAuth.Net.Common.OAuthRequestException">
         /// If the OAuth parameters indicate an OAuth exception
         /// </exception>
+        [Obsolete("Use OAuthRequestExceptionFactory.TryRethrow instead")]
         public static void TryRethrow(OAuthParameters parameters)
         {
-            if (parameters == null || parameters.AdditionalParameters == null)
-                return;
-
-            if (!string.IsNullOrEmpty(parameters.AdditionalParameters[OAuthRequestExceptionParameters.Problem]))
-            {
-                OAuthRequestException ex = new OAuthRequestException()
-                {
-                    Problem = parameters.AdditionalParameters[OAuthRequestExceptionParameters.Problem],
-                    Advice = parameters.AdditionalParameters[OAuthRequestExceptionParameters.ProblemAdvice],
-                    Source = OAuthRequestExceptionSources.Remote
-                };
-
-                // Load additional parameter for specific types
-                switch (parameters.AdditionalParameters[OAuthRequestExceptionParameters.Problem])
-                {
-                    case OAuthRequestExceptionProblemTypes.VersionRejected:
-                        if (!string.IsNullOrEmpty(parameters.AdditionalParameters[OAuthRequestExceptionParameters.AcceptableVersions]))
-                            ex.AdditionalParameter = new KeyValuePair<string, string>(
-                                OAuthRequestExceptionParameters.AcceptableVersions,
-                                parameters.AdditionalParameters[OAuthRequestExceptionParameters.AcceptableVersions]);
-
-                        break;
-
-                    case OAuthRequestExceptionProblemTypes.ParameterAbsent:
-                        if (!string.IsNullOrEmpty(parameters.AdditionalParameters[OAuthRequestExceptionParameters.ParametersAbsent]))
-                            ex.AdditionalParameter = new KeyValuePair<string, string>(
-                                OAuthRequestExceptionParameters.ParametersAbsent,
-                                parameters.AdditionalParameters[OAuthRequestExceptionParameters.ParametersAbsent]);
-
-                        break;
-
-                    case OAuthRequestExceptionProblemTypes.ParameterRejected:
-                        if (!string.IsNullOrEmpty(parameters.AdditionalParameters[OAuthRequestExceptionParameters.ParametersRejected]))
-                            ex.AdditionalParameter = new KeyValuePair<string, string>(
-                                OAuthRequestExceptionParameters.ParametersRejected,
-                                parameters.AdditionalParameters[OAuthRequestExceptionParameters.ParametersRejected]);
-
-                        break;
-
-                    case OAuthRequestExceptionProblemTypes.TimestampRefused:
-                        if (!string.IsNullOrEmpty(parameters.AdditionalParameters[OAuthRequestExceptionParameters.AcceptableTimestamps]))
-                            ex.AdditionalParameter = new KeyValuePair<string, string>(
-                                OAuthRequestExceptionParameters.AcceptableTimestamps,
-                                parameters.AdditionalParameters[OAuthRequestExceptionParameters.AcceptableTimestamps]);
-
-                        break;
-                }
-
-                // Throw the OAuthRequestException
-                throw ex;
-            }
+            new OAuthRequestExceptionFactory().TryRethrow(parameters);
         }
 
         [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.SerializationFormatter)]
@@ -857,16 +746,6 @@ namespace OAuth.Net.Common
                 header.Append(", ").Append(OAuthRequestExceptionParameters.ProblemAdvice).Append("=\"").Append(Advice.Replace("\"", "\\\"").Replace("\n", "\\n")).Append("\"");
 
             return header.ToString();
-        }
-
-        private static void ThrowSimpleReport(string problem, string advice)
-        {
-            throw new OAuthRequestException()
-            {
-                Problem = problem,
-                Advice = advice,
-                Source = OAuthRequestExceptionSources.Local
-            };
         }
     }
 }

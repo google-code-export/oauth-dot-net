@@ -48,7 +48,9 @@
   <ItemGroup>
     <Compile Include="Consumers\IOutOfBoundConsumerStore.cs" />
     <Compile Include="Consumers\MockConsumer.cs" />
+    <Compile Include="IProblemReportingAdviser.cs" />
     <Compile Include="OAuthException.cs" />
+    <Compile Include="OAuthRequestExceptionFactory.cs" />
     <Compile Include="OAuthRequestExceptionParameters.cs" />
     <Compile Include="OAuthRequestExceptionProblemTypes.cs" />
     <Compile Include="OAuthRequestExceptionSources.cs" />
