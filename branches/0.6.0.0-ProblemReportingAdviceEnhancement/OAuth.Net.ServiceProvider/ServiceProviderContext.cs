@@ -204,19 +204,23 @@ namespace OAuth.Net.ServiceProvider
                     break;
 
                 case TokenStatus.Expired:
-                    OAuthRequestException.ThrowTokenExpired(null);
+                    OAuthRequestExceptionFactory.WithInjectedAdviser()
+                        .ThrowTokenExpired();
                     break;
 
                 case TokenStatus.Revoked:
-                    OAuthRequestException.ThrowTokenRevoked(null);
+                    OAuthRequestExceptionFactory.WithInjectedAdviser()
+                        .ThrowTokenRevoked();
                     break;
 
                 case TokenStatus.Used:
-                    OAuthRequestException.ThrowTokenUsed(null);
+                    OAuthRequestExceptionFactory.WithInjectedAdviser()
+                        .ThrowTokenUsed();
                     break;
 
                 case TokenStatus.Unknown:
-                    OAuthRequestException.ThrowTokenRejected(null);
+                    OAuthRequestExceptionFactory.WithInjectedAdviser()
+                        .ThrowTokenRejected();
                     break;
 
                 case TokenStatus.Unauthorized:
@@ -227,28 +231,33 @@ namespace OAuth.Net.ServiceProvider
             }
 
             if (token.ConsumerKey == null)
-                OAuthRequestException.ThrowTokenRejected("Token must have a consumer key");
+                OAuthRequestExceptionFactory.WithInjectedAdviser()
+                    .ThrowTokenRejected();
 
             IConsumer consumer = ServiceProviderContext.GetConsumerStore().GetByKey(token.ConsumerKey);
 
             if (consumer == null)
-                OAuthRequestException.ThrowConsumerKeyUnknown("Consumer is unknown");
+                OAuthRequestExceptionFactory.WithInjectedAdviser()
+                    .ThrowConsumerKeyUnknown();
 
             switch (consumer.Status)
             {
                 case ConsumerStatus.TemporarilyDisabled:
-                    OAuthRequestException.ThrowConsumerKeyRefused("Consumer is temporarily disabled");
+                    OAuthRequestExceptionFactory.WithInjectedAdviser()
+                        .ThrowConsumerKeyRefused();
                     break;
 
                 case ConsumerStatus.PermanentlyDisabled:
-                    OAuthRequestException.ThrowConsumerKeyRejected("Consumer is permanently disabled");
+                    OAuthRequestExceptionFactory.WithInjectedAdviser()
+                        .ThrowConsumerKeyRejected();
                     break;
 
                 case ConsumerStatus.Valid:
                     break;
 
                 case ConsumerStatus.Unknown:
-                    OAuthRequestException.ThrowConsumerKeyUnknown("Consumer is unknown");
+                    OAuthRequestExceptionFactory.WithInjectedAdviser()
+                        .ThrowConsumerKeyUnknown();
                     break;
 
                 default:

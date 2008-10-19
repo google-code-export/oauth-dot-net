@@ -137,7 +137,10 @@ namespace OAuth.Net.Components
                     || timestamp <= 0
                     || (now - timestamp) > this.HalfWindow)
             {
-                OAuthRequestException.ThrowTimestampRefused(now - this.HalfWindow, now + this.HalfWindow, null);
+                OAuthRequestExceptionFactory.WithInjectedAdviser()
+                    .ThrowTimestampRefused(
+                        now - this.HalfWindow, 
+                        now + this.HalfWindow);
             }
             else
             {
@@ -184,7 +187,8 @@ namespace OAuth.Net.Components
 
             // If we did find a clash, throw a nonce used OAuthRequestException
             if (foundClash)
-                OAuthRequestException.ThrowNonceUsed(null);
+                OAuthRequestExceptionFactory.WithInjectedAdviser()
+                    .ThrowNonceUsed();
 
             return currentId;
         }

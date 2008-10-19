@@ -1,7 +1,42 @@
-﻿using System;
+﻿// Copyright (c) 2008 Madgex
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+// 
+// OAuth.net uses the Common Service Locator interface, released under the MS-PL
+// license. See "CommonServiceLocator License.txt" in the Licenses folder.
+// 
+// The examples and test cases use the Windsor Container from the Castle Project
+// and Common Service Locator Windsor adaptor, released under the Apache License,
+// Version 2.0. See "Castle Project License.txt" in the Licenses folder.
+// 
+// XRDS-Simple.net uses the HTMLAgility Pack. See "HTML Agility Pack License.txt"
+// in the Licenses folder.
+//
+// Authors: Bruce Boughton, Chris Adams
+// Website: http://lab.madgex.com/oauth-net/
+// Email:   oauth-dot-net@madgex.com
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using Microsoft.Practices.ServiceLocation;
 
 namespace OAuth.Net.Common
 {
@@ -20,16 +55,6 @@ namespace OAuth.Net.Common
     public class OAuthRequestExceptionFactory
     {
         /// <summary>
-        /// The <see cref="IProblemReportingAdviser"/> to be called to
-        /// generate user-friendly advice for exceptions thrown by this
-        /// factory.
-        /// </summary>
-        public IProblemReportingAdviser Adviser
-        {
-            get; set;
-        }
-
-        /// <summary>
         /// Creates an OAuthRequestExceptionFactory which creates and
         /// throws instances of <see cref="OAuthRequestException"/>, with
         /// no adviser.
@@ -37,7 +62,7 @@ namespace OAuth.Net.Common
         /// <remarks>
         /// Since no adviser is specified, the exceptions thrown by this 
         /// factory will have their <see cref="OAuthRequestException.Advice"/>
-        /// properties set to the advice passed in to the Throw... methods.
+        /// properties set to <c>null</c>.
         /// </remarks>
         public OAuthRequestExceptionFactory()
         {
@@ -55,6 +80,52 @@ namespace OAuth.Net.Common
             this.Adviser = adviser;
         }
 
+        /// <summary>
+        /// Creates an OAuthRequestExceptionFactory which creates and throws
+        /// instances of <see cref="OAuthRequestException"/>, using the 
+        /// supplied <see cref="ProblemReportingAdviserDelegate"/> to generate
+        /// user-friendly advice for each exception thrown.
+        /// </summary>
+        /// <param name="adviser">Problem Reporting adviser delegate</param>
+        public OAuthRequestExceptionFactory(ProblemReportingAdviserDelegate adviser)
+        {
+            this.Adviser = new DelegatedProblemReportingAdviser(adviser);
+        }
+
+        // A method which returns an exception
+        private delegate TExceptionResult ExceptionBuilder<TExceptionResult>()
+            where TExceptionResult : Exception;
+
+        /// <summary>
+        /// The <see cref="IProblemReportingAdviser"/> to be called to
+        /// generate user-friendly advice for exceptions thrown by this
+        /// factory.
+        /// </summary>
+        public IProblemReportingAdviser Adviser
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Creates a new OAuthRequestExceptionFactory, configured with the 
+        /// default adviser from the current service locator.
+        /// </summary>
+        /// <returns>A new OAuthRequestExceptionFactory</returns>
+        public static OAuthRequestExceptionFactory WithInjectedAdviser()
+        {
+            try
+            {
+                return new OAuthRequestExceptionFactory(
+                    ServiceLocator.Current.GetInstance<IProblemReportingAdviser>());
+            }
+            catch (ActivationException)
+            {
+                // If no IProblemReportingAdviser is set up, don't use one
+                return new OAuthRequestExceptionFactory();
+            }
+        }
+
         /// <overloads>
         /// Throws an exception indicating that the 
         /// <see cref="Constants.VersionParameter">oauth_version</see> isn't 
@@ -64,12 +135,12 @@ namespace OAuth.Net.Common
         /// <remarks>
         /// <para>
         /// The <see cref="OAuthRequestException.Problem">problem type</see> is 
-        /// <see cref="OAuthRequestExceptionProblemTypes.VersionRejected">version_rejected</see>.
+        /// <see cref="ProblemReportingProblemTypes.VersionRejected">version_rejected</see>.
         /// </para>
         /// 
         /// <para>
         /// The <see cref="OAuthRequestException.AdditionalParameter">additional parameter</see>
-        /// (<see cref="OAuthRequestExceptionParameters.AcceptableVersions">oauth_acceptable_versions</see>)
+        /// (<see cref="ProblemReportingParameters.AcceptableVersions">oauth_acceptable_versions</see>)
         /// of the exception indicates the range of versions acceptable to the 
         /// sender. That is, it means the sender will currently accept an 
         /// <see cref="Constants.VersionParameter">oauth_version</see> that's not 
@@ -82,7 +153,7 @@ namespace OAuth.Net.Common
         /// If an <see cref="Adviser"/> is set, and it returns non-<c>null</c>
         /// advise for this exception, this advice will be stored in the 
         /// <see cref="OAuthRequestException.Advice"/> property. Otherwise, 
-        /// the <paramref name="advice"/> supplied will be stored.
+        /// the <see cref="OAuthRequestException.Advice"/> will be <c>null</c>.
         /// </para>
         /// 
         /// <para>
@@ -94,8 +165,6 @@ namespace OAuth.Net.Common
         /// that is accepted</param>
         /// <param name="maxVersion">The maximum version of the OAuth protocol
         /// that is accepted</param>
-        /// <param name="advice">(Optional) Plain text advice for the user 
-        /// of the consumer</param>
         /// 
         /// <exception cref="System.ArgumentException">
         /// If <paramref name="minVersion"/> and/or <paramref name="maxVersion"/> 
@@ -104,21 +173,19 @@ namespace OAuth.Net.Common
         /// <exception cref="OAuth.Net.Common.OAuthRequestException">
         /// On success
         /// </exception>
-        public void ThrowVersionRejected(string minVersion, string maxVersion, string advice)
+        public void ThrowVersionRejected(string minVersion, string maxVersion)
         {
             if (string.IsNullOrEmpty(minVersion))
                 throw new ArgumentException("minVersion argument cannot be null or empty", "minVersion");
             if (string.IsNullOrEmpty(maxVersion))
                 throw new ArgumentException("maxVersion argument cannot be null or empty", "maxVersion");
 
-            throw PostApplyAdviser(() => new OAuthRequestException()
+            throw this.PostApplyAdviser(() => new OAuthRequestException()
                 {
-                    Problem = OAuthRequestExceptionProblemTypes.VersionRejected,
+                    Problem = ProblemReportingProblemTypes.VersionRejected,
 
                     AdditionalParameter = new KeyValuePair<string, string>(
-                        OAuthRequestExceptionParameters.AcceptableVersions, minVersion + '-' + maxVersion),
-
-                    Advice = advice,
+                        ProblemReportingParameters.AcceptableVersions, minVersion + '-' + maxVersion),
 
                     Source = OAuthRequestExceptionSources.Local
                 });
@@ -131,12 +198,12 @@ namespace OAuth.Net.Common
         /// <remarks>
         /// <para>
         /// The <see cref="OAuthRequestException.Problem">problem type</see> is 
-        /// <see cref="OAuthRequestExceptionProblemTypes.ParameterAbsent">parameter_absent</see>.
+        /// <see cref="ProblemReportingProblemTypes.ParameterAbsent">parameter_absent</see>.
         /// </para>
         /// 
         /// <para>
         /// The <see cref="OAuthRequestException.AdditionalParameter">additional parameter</see>
-        /// (<see cref="OAuthRequestExceptionParameters.ParametersAbsent">oauth_parameters_absent</see>)
+        /// (<see cref="ProblemReportingParameters.ParametersAbsent">oauth_parameters_absent</see>)
         /// of the exception indicates the set of parameter names that are absent,
         /// percent-encoded and separated by <c>&amp;</c>.
         /// </para>
@@ -145,7 +212,7 @@ namespace OAuth.Net.Common
         /// If an <see cref="Adviser"/> is set, and it returns non-<c>null</c>
         /// advise for this exception, this advice will be stored in the 
         /// <see cref="OAuthRequestException.Advice"/> property. Otherwise, 
-        /// the <paramref name="advice"/> supplied will be stored.
+        /// the <see cref="OAuthRequestException.Advice"/> will be <c>null</c>.
         /// </para>
         /// 
         /// <para>
@@ -154,8 +221,6 @@ namespace OAuth.Net.Common
         /// </remarks>
         /// 
         /// <param name="parameters">The parameters that are absent</param>
-        /// <param name="advice">(Optional) Plain text advice for the user 
-        /// of the consumer</param>
         /// 
         /// <exception cref="System.ArgumentException">
         /// If <paramref name="parameters"/> is null or empty
@@ -163,7 +228,7 @@ namespace OAuth.Net.Common
         /// <exception cref="OAuth.Net.Common.OAuthRequestException">
         /// On success
         /// </exception>
-        public void ThrowParametersAbsent(string[] parameters, string advice)
+        public void ThrowParametersAbsent(string[] parameters)
         {
             if (parameters == null || parameters.Length == 0)
                 throw new ArgumentException("parameters argument cannot be null or of length 0", "parameters");
@@ -181,14 +246,12 @@ namespace OAuth.Net.Common
                 absentParameters.Append(Rfc3986.Encode(parameter));
             }
 
-            throw PostApplyAdviser(() => new OAuthRequestException()
+            throw this.PostApplyAdviser(() => new OAuthRequestException()
                 {
-                    Problem = OAuthRequestExceptionProblemTypes.ParameterAbsent,
+                    Problem = ProblemReportingProblemTypes.ParameterAbsent,
 
                     AdditionalParameter = new KeyValuePair<string, string>(
-                        OAuthRequestExceptionParameters.ParametersAbsent, absentParameters.ToString()),
-
-                    Advice = advice,
+                        ProblemReportingParameters.ParametersAbsent, absentParameters.ToString()),
 
                     Source = OAuthRequestExceptionSources.Local
                 });
@@ -201,24 +264,24 @@ namespace OAuth.Net.Common
         /// <remarks>
         /// <para>
         /// The <see cref="OAuthRequestException.Problem">problem type</see> is 
-        /// <see cref="OAuthRequestExceptionProblemTypes.ParameterRejected">parameter_rejected</see>.
+        /// <see cref="ProblemReportingProblemTypes.ParameterRejected">parameter_rejected</see>.
         /// </para>
         /// 
         /// <para>
         /// The <see cref="OAuthRequestException.AdditionalParameter">additional parameter</see>
-        /// (<see cref="OAuthRequestExceptionParameters.ParametersRejected">oauth_parameters_rejected</see>)
+        /// (<see cref="ProblemReportingParameters.ParametersRejected">oauth_parameters_rejected</see>)
         /// of the exception consists of a set of parameters, encoded as they would be 
         /// in a URL query string. These are parameters that the sender recently 
         /// received but doesn't understand. Note that these parameters will be 
         /// percent-encoded twice: once to form a query string and again because 
-        /// the query string is the value of <see cref="OAuthRequestExceptionParameters.ParametersRejected">oauth_parameters_rejected</see>.
+        /// the query string is the value of <see cref="ProblemReportingParameters.ParametersRejected">oauth_parameters_rejected</see>.
         /// </para>
         /// 
         /// <para>
         /// If an <see cref="Adviser"/> is set, and it returns non-<c>null</c>
         /// advise for this exception, this advice will be stored in the 
         /// <see cref="OAuthRequestException.Advice"/> property. Otherwise, 
-        /// the <paramref name="advice"/> supplied will be stored.
+        /// the <see cref="OAuthRequestException.Advice"/> will be <c>null</c>.
         /// </para>
         /// 
         /// <para>
@@ -227,8 +290,6 @@ namespace OAuth.Net.Common
         /// </remarks>
         /// 
         /// <param name="parameters">The parameters that are rejected</param>
-        /// <param name="advice">(Optional) Plain text advice for the user 
-        /// of the consumer</param>
         /// 
         /// <exception cref="System.ArgumentException">
         /// If <paramref name="parameters"/> is null or empty.
@@ -236,7 +297,7 @@ namespace OAuth.Net.Common
         /// <exception cref="OAuth.Net.Common.OAuthRequestException">
         /// On success
         /// </exception>
-        public void ThrowParametersRejected(string[] parameters, string advice)
+        public void ThrowParametersRejected(string[] parameters)
         {
             if (parameters == null || parameters.Length == 0)
                 throw new ArgumentException("parameters argument cannot be null or of length 0", "parameters");
@@ -254,14 +315,12 @@ namespace OAuth.Net.Common
                 rejectedParameters.Append(Rfc3986.Encode(parameter));
             }
 
-            throw PostApplyAdviser(() => new OAuthRequestException()
+            throw this.PostApplyAdviser(() => new OAuthRequestException()
                 {
-                    Problem = OAuthRequestExceptionProblemTypes.ParameterRejected,
+                    Problem = ProblemReportingProblemTypes.ParameterRejected,
 
                     AdditionalParameter = new KeyValuePair<string, string>(
-                        OAuthRequestExceptionParameters.ParametersRejected, rejectedParameters.ToString()),
-
-                    Advice = advice,
+                        ProblemReportingParameters.ParametersRejected, rejectedParameters.ToString()),
 
                     Source = OAuthRequestExceptionSources.Local
                 });
@@ -274,12 +333,12 @@ namespace OAuth.Net.Common
         /// <remarks>
         /// <para>
         /// The <see cref="OAuthRequestException.Problem">problem type</see> is 
-        /// <see cref="OAuthRequestExceptionProblemTypes.TimestampRefused">timestamp_refused</see>.
+        /// <see cref="ProblemReportingProblemTypes.TimestampRefused">timestamp_refused</see>.
         /// </para>
         /// 
         /// <para>
         /// The <see cref="OAuthRequestException.AdditionalParameter">additional parameter</see>
-        /// (<see cref="OAuthRequestExceptionParameters.AcceptableTimestamps">oauth_acceptable_timestamps</see>)
+        /// (<see cref="ProblemReportingParameters.AcceptableTimestamps">oauth_acceptable_timestamps</see>)
         /// of the exception consists of two numbers in decimal notation, separated by '-' 
         /// (hyphen). It's the range of timestamps acceptable to the sender. That is, 
         /// it means the sender will currently accept an 
@@ -291,7 +350,7 @@ namespace OAuth.Net.Common
         /// If an <see cref="Adviser"/> is set, and it returns non-<c>null</c>
         /// advise for this exception, this advice will be stored in the 
         /// <see cref="OAuthRequestException.Advice"/> property. Otherwise, 
-        /// the <paramref name="advice"/> supplied will be stored.
+        /// the <see cref="OAuthRequestException.Advice"/> will be <c>null</c>.
         /// </para>
         /// 
         /// <para>
@@ -301,8 +360,6 @@ namespace OAuth.Net.Common
         /// 
         /// <param name="minTimestamp">The minimum allowable timestamp</param>
         /// <param name="maxTimestamp">The maximum allowable timestamp</param>
-        /// <param name="advice">(Optional) Plain text advice for the user 
-        /// of the consumer</param>
         /// 
         /// <exception cref="System.ArgumentException">
         /// If <paramref name="minTimestamp"/> and/or <paramref name="maxTimestamp"/> 
@@ -311,22 +368,20 @@ namespace OAuth.Net.Common
         /// <exception cref="OAuth.Net.Common.OAuthRequestException">
         /// On success
         /// </exception>
-        public void ThrowTimestampRefused(long minTimestamp, long maxTimestamp, string advice)
+        public void ThrowTimestampRefused(long minTimestamp, long maxTimestamp)
         {
             if (minTimestamp < 0)
                 throw new ArgumentException("minTimestamp argument must be greater than or equal to 0", "minTimestamp");
             if (maxTimestamp < 0)
                 throw new ArgumentException("maxTimestamp argument must be greater than or equal to 0", "maxTimestamp");
 
-            throw PostApplyAdviser(() => new OAuthRequestException()
+            throw this.PostApplyAdviser(() => new OAuthRequestException()
                 {
-                    Problem = OAuthRequestExceptionProblemTypes.TimestampRefused,
+                    Problem = ProblemReportingProblemTypes.TimestampRefused,
 
                     AdditionalParameter = new KeyValuePair<string, string>(
-                        OAuthRequestExceptionParameters.AcceptableTimestamps,
+                        ProblemReportingParameters.AcceptableTimestamps,
                         string.Format(CultureInfo.InvariantCulture, "{0}-{1}", minTimestamp, maxTimestamp)),
-
-                    Advice = advice,
 
                     Source = OAuthRequestExceptionSources.Local
                 });
@@ -340,14 +395,14 @@ namespace OAuth.Net.Common
         /// <remarks>
         /// <para>
         /// The <see cref="OAuthRequestException.Problem">problem type</see> is 
-        /// <see cref="OAuthRequestExceptionProblemTypes.NonceUsed">nonce_used</see>.
+        /// <see cref="ProblemReportingProblemTypes.NonceUsed">nonce_used</see>.
         /// </para>
         /// 
         /// <para>
         /// If an <see cref="Adviser"/> is set, and it returns non-<c>null</c>
         /// advise for this exception, this advice will be stored in the 
         /// <see cref="OAuthRequestException.Advice"/> property. Otherwise, 
-        /// the <paramref name="advice"/> supplied will be stored.
+        /// the <see cref="OAuthRequestException.Advice"/> will be <c>null</c>.
         /// </para>
         /// 
         /// <para>
@@ -355,17 +410,13 @@ namespace OAuth.Net.Common
         /// </para>
         /// </remarks>
         /// 
-        /// <param name="advice">(Optional) Plain text advice for the user 
-        /// of the consumer</param>
-        /// 
         /// <exception cref="OAuth.Net.Common.OAuthRequestException">
         /// Always
         /// </exception>
-        public void ThrowNonceUsed(string advice)
+        public void ThrowNonceUsed()
         {
-            throw PostApplyAdviser(() => BuildSimpleReport(
-                OAuthRequestExceptionProblemTypes.NonceUsed, 
-                advice));
+            throw this.PostApplyAdviser(() => BuildSimpleReport(
+                ProblemReportingProblemTypes.NonceUsed));
         }
 
         /// <summary>
@@ -375,14 +426,14 @@ namespace OAuth.Net.Common
         /// <remarks>
         /// <para>
         /// The <see cref="OAuthRequestException.Problem">problem type</see> is 
-        /// <see cref="OAuthRequestExceptionProblemTypes.SignatureMethodRejected">signature_method_rejected</see>.
+        /// <see cref="ProblemReportingProblemTypes.SignatureMethodRejected">signature_method_rejected</see>.
         /// </para>
         /// 
         /// <para>
         /// If an <see cref="Adviser"/> is set, and it returns non-<c>null</c>
         /// advise for this exception, this advice will be stored in the 
         /// <see cref="OAuthRequestException.Advice"/> property. Otherwise, 
-        /// the <paramref name="advice"/> supplied will be stored.
+        /// the <see cref="OAuthRequestException.Advice"/> will be <c>null</c>.
         /// </para>
         /// 
         /// <para>
@@ -390,17 +441,13 @@ namespace OAuth.Net.Common
         /// </para>
         /// </remarks>
         /// 
-        /// <param name="advice">(Optional) Plain text advice for the user 
-        /// of the consumer</param>
-        /// 
         /// <exception cref="OAuth.Net.Common.OAuthRequestException">
         /// Always
         /// </exception>
-        public void ThrowSignatureMethodRejected(string advice)
+        public void ThrowSignatureMethodRejected()
         {
-            throw PostApplyAdviser(() => BuildSimpleReport(
-                OAuthRequestExceptionProblemTypes.SignatureMethodRejected, 
-                advice));
+            throw this.PostApplyAdviser(() => BuildSimpleReport(
+                ProblemReportingProblemTypes.SignatureMethodRejected));
         }
 
         /// <summary>
@@ -411,14 +458,14 @@ namespace OAuth.Net.Common
         /// <remarks>
         /// <para>
         /// The <see cref="OAuthRequestException.Problem">problem type</see> is 
-        /// <see cref="OAuthRequestExceptionProblemTypes.ConsumerKeyUnknown">consumer_key_unknown</see>.
+        /// <see cref="ProblemReportingProblemTypes.ConsumerKeyUnknown">consumer_key_unknown</see>.
         /// </para>
         /// 
         /// <para>
         /// If an <see cref="Adviser"/> is set, and it returns non-<c>null</c>
         /// advise for this exception, this advice will be stored in the 
         /// <see cref="OAuthRequestException.Advice"/> property. Otherwise, 
-        /// the <paramref name="advice"/> supplied will be stored.
+        /// the <see cref="OAuthRequestException.Advice"/> will be <c>null</c>.
         /// </para>
         /// 
         /// <para>
@@ -426,17 +473,13 @@ namespace OAuth.Net.Common
         /// </para>
         /// </remarks>
         /// 
-        /// <param name="advice">(Optional) Plain text advice for the user 
-        /// of the consumer</param>
-        /// 
         /// <exception cref="OAuth.Net.Common.OAuthRequestException">
         /// Always
         /// </exception>
-        public void ThrowConsumerKeyUnknown(string advice)
+        public void ThrowConsumerKeyUnknown()
         {
-            throw PostApplyAdviser(() => BuildSimpleReport(
-                OAuthRequestExceptionProblemTypes.ConsumerKeyUnknown, 
-                advice));
+            throw this.PostApplyAdviser(() => BuildSimpleReport(
+                ProblemReportingProblemTypes.ConsumerKeyUnknown));
         }
 
         /// <summary>
@@ -447,14 +490,14 @@ namespace OAuth.Net.Common
         /// <remarks>
         /// <para>
         /// The <see cref="OAuthRequestException.Problem">problem type</see> is 
-        /// <see cref="OAuthRequestExceptionProblemTypes.ConsumerKeyRejected">consumer_key_rejected</see>.
+        /// <see cref="ProblemReportingProblemTypes.ConsumerKeyRejected">consumer_key_rejected</see>.
         /// </para>
         /// 
         /// <para>
         /// If an <see cref="Adviser"/> is set, and it returns non-<c>null</c>
         /// advise for this exception, this advice will be stored in the 
         /// <see cref="OAuthRequestException.Advice"/> property. Otherwise, 
-        /// the <paramref name="advice"/> supplied will be stored.
+        /// the <see cref="OAuthRequestException.Advice"/> will be <c>null</c>.
         /// </para>
         /// 
         /// <para>
@@ -462,17 +505,13 @@ namespace OAuth.Net.Common
         /// </para>
         /// </remarks>
         /// 
-        /// <param name="advice">(Optional) Plain text advice for the user 
-        /// of the consumer</param>
-        /// 
         /// <exception cref="OAuth.Net.Common.OAuthRequestException">
         /// Always
         /// </exception>
-        public void ThrowConsumerKeyRejected(string advice)
+        public void ThrowConsumerKeyRejected()
         {
-            throw PostApplyAdviser(() => BuildSimpleReport(
-                OAuthRequestExceptionProblemTypes.ConsumerKeyRejected, 
-                advice));
+            throw this.PostApplyAdviser(() => BuildSimpleReport(
+                ProblemReportingProblemTypes.ConsumerKeyRejected));
         }
 
         /// <summary>
@@ -483,14 +522,14 @@ namespace OAuth.Net.Common
         /// <remarks>
         /// <para>
         /// The <see cref="OAuthRequestException.Problem">problem type</see> is 
-        /// <see cref="OAuthRequestExceptionProblemTypes.ConsumerKeyRefused">consumer_key_refused</see>.
+        /// <see cref="ProblemReportingProblemTypes.ConsumerKeyRefused">consumer_key_refused</see>.
         /// </para>
         /// 
         /// <para>
         /// If an <see cref="Adviser"/> is set, and it returns non-<c>null</c>
         /// advise for this exception, this advice will be stored in the 
         /// <see cref="OAuthRequestException.Advice"/> property. Otherwise, 
-        /// the <paramref name="advice"/> supplied will be stored.
+        /// the <see cref="OAuthRequestException.Advice"/> will be <c>null</c>.
         /// </para>
         /// 
         /// <para>
@@ -498,17 +537,13 @@ namespace OAuth.Net.Common
         /// </para>
         /// </remarks>
         /// 
-        /// <param name="advice">(Optional) Plain text advice for the user 
-        /// of the consumer</param>
-        /// 
         /// <exception cref="OAuth.Net.Common.OAuthRequestException">
         /// Always
         /// </exception>
-        public void ThrowConsumerKeyRefused(string advice)
+        public void ThrowConsumerKeyRefused()
         {
-            throw PostApplyAdviser(() => BuildSimpleReport(
-                OAuthRequestExceptionProblemTypes.ConsumerKeyRefused, 
-                advice));
+            throw this.PostApplyAdviser(() => BuildSimpleReport(
+                ProblemReportingProblemTypes.ConsumerKeyRefused));
         }
 
         /// <summary>
@@ -519,14 +554,14 @@ namespace OAuth.Net.Common
         /// <remarks>
         /// <para>
         /// The <see cref="OAuthRequestException.Problem">problem type</see> is 
-        /// <see cref="OAuthRequestExceptionProblemTypes.SignatureInvalid">signature_invalid</see>.
+        /// <see cref="ProblemReportingProblemTypes.SignatureInvalid">signature_invalid</see>.
         /// </para>
         /// 
         /// <para>
         /// If an <see cref="Adviser"/> is set, and it returns non-<c>null</c>
         /// advise for this exception, this advice will be stored in the 
         /// <see cref="OAuthRequestException.Advice"/> property. Otherwise, 
-        /// the <paramref name="advice"/> supplied will be stored.
+        /// the <see cref="OAuthRequestException.Advice"/> will be <c>null</c>.
         /// </para>
         /// 
         /// <para>
@@ -534,17 +569,13 @@ namespace OAuth.Net.Common
         /// </para>
         /// </remarks>
         /// 
-        /// <param name="advice">(Optional) Plain text advice for the user 
-        /// of the consumer</param>
-        /// 
         /// <exception cref="OAuth.Net.Common.OAuthRequestException">
         /// Always
         /// </exception>
-        public void ThrowSignatureInvalid(string advice)
+        public void ThrowSignatureInvalid()
         {
-            throw PostApplyAdviser(() => BuildSimpleReport(
-                OAuthRequestExceptionProblemTypes.SignatureInvalid, 
-                advice));
+            throw this.PostApplyAdviser(() => BuildSimpleReport(
+                ProblemReportingProblemTypes.SignatureInvalid));
         }
 
         /// <summary>
@@ -557,14 +588,14 @@ namespace OAuth.Net.Common
         /// <remarks>
         /// <para>
         /// The <see cref="OAuthRequestException.Problem">problem type</see> is 
-        /// <see cref="OAuthRequestExceptionProblemTypes.TokenRejected">token_rejected</see>.
+        /// <see cref="ProblemReportingProblemTypes.TokenRejected">token_rejected</see>.
         /// </para>
         /// 
         /// <para>
         /// If an <see cref="Adviser"/> is set, and it returns non-<c>null</c>
         /// advise for this exception, this advice will be stored in the 
         /// <see cref="OAuthRequestException.Advice"/> property. Otherwise, 
-        /// the <paramref name="advice"/> supplied will be stored.
+        /// the <see cref="OAuthRequestException.Advice"/> will be <c>null</c>.
         /// </para>
         /// 
         /// <para>
@@ -572,17 +603,13 @@ namespace OAuth.Net.Common
         /// </para>
         /// </remarks>
         /// 
-        /// <param name="advice">(Optional) Plain text advice for the user 
-        /// of the consumer</param>
-        /// 
         /// <exception cref="OAuth.Net.Common.OAuthRequestException">
         /// Always
         /// </exception>
-        public void ThrowTokenRejected(string advice)
+        public void ThrowTokenRejected()
         {
-            throw PostApplyAdviser(() => BuildSimpleReport(
-                OAuthRequestExceptionProblemTypes.TokenRejected, 
-                advice));
+            throw this.PostApplyAdviser(() => BuildSimpleReport(
+                ProblemReportingProblemTypes.TokenRejected));
         }
 
         /// <summary>
@@ -594,14 +621,14 @@ namespace OAuth.Net.Common
         /// <remarks>
         /// <para>
         /// The <see cref="OAuthRequestException.Problem">problem type</see> is 
-        /// <see cref="OAuthRequestExceptionProblemTypes.TokenUsed">token_used</see>.
+        /// <see cref="ProblemReportingProblemTypes.TokenUsed">token_used</see>.
         /// </para>
         /// 
         /// <para>
         /// If an <see cref="Adviser"/> is set, and it returns non-<c>null</c>
         /// advise for this exception, this advice will be stored in the 
         /// <see cref="OAuthRequestException.Advice"/> property. Otherwise, 
-        /// the <paramref name="advice"/> supplied will be stored.
+        /// the <see cref="OAuthRequestException.Advice"/> will be <c>null</c>.
         /// </para>
         /// 
         /// <para>
@@ -609,17 +636,13 @@ namespace OAuth.Net.Common
         /// </para>
         /// </remarks>
         /// 
-        /// <param name="advice">(Optional) Plain text advice for the user 
-        /// of the consumer</param>
-        /// 
         /// <exception cref="OAuth.Net.Common.OAuthRequestException">
         /// Always
         /// </exception>
-        public void ThrowTokenUsed(string advice)
+        public void ThrowTokenUsed()
         {
-            throw PostApplyAdviser(() => BuildSimpleReport(
-                OAuthRequestExceptionProblemTypes.TokenUsed, 
-                advice));
+            throw this.PostApplyAdviser(() => BuildSimpleReport(
+                ProblemReportingProblemTypes.TokenUsed));
         }
 
         /// <summary>
@@ -630,14 +653,14 @@ namespace OAuth.Net.Common
         /// <remarks>
         /// <para>
         /// The <see cref="OAuthRequestException.Problem">problem type</see> is 
-        /// <see cref="OAuthRequestExceptionProblemTypes.TokenExpired">token_expired</see>.
+        /// <see cref="ProblemReportingProblemTypes.TokenExpired">token_expired</see>.
         /// </para>
         /// 
         /// <para>
         /// If an <see cref="Adviser"/> is set, and it returns non-<c>null</c>
         /// advise for this exception, this advice will be stored in the 
         /// <see cref="OAuthRequestException.Advice"/> property. Otherwise, 
-        /// the <paramref name="advice"/> supplied will be stored.
+        /// the <see cref="OAuthRequestException.Advice"/> will be <c>null</c>.
         /// </para>
         /// 
         /// <para>
@@ -645,17 +668,13 @@ namespace OAuth.Net.Common
         /// </para>
         /// </remarks>
         /// 
-        /// <param name="advice">(Optional) Plain text advice for the user 
-        /// of the consumer</param>
-        /// 
         /// <exception cref="OAuth.Net.Common.OAuthRequestException">
         /// Always
         /// </exception>
-        public void ThrowTokenExpired(string advice)
+        public void ThrowTokenExpired()
         {
-            throw PostApplyAdviser(() => BuildSimpleReport(
-                OAuthRequestExceptionProblemTypes.TokenExpired, 
-                advice));
+            throw this.PostApplyAdviser(() => BuildSimpleReport(
+                ProblemReportingProblemTypes.TokenExpired));
         }
 
         /// <summary>
@@ -667,14 +686,10 @@ namespace OAuth.Net.Common
         /// <remarks>
         /// <para>
         /// The <see cref="OAuthRequestException.Problem">problem type</see> is 
-        /// <see cref="OAuthRequestExceptionProblemTypes.TokenRevoked">token_revoked</see>.
+        /// <see cref="ProblemReportingProblemTypes.TokenRevoked">token_revoked</see>.
         /// </para>
         /// 
-        /// <para>
-        /// If an <see cref="Adviser"/> is set, and it returns non-<c>null</c>
-        /// advise for this exception, this advice will be stored in the 
-        /// <see cref="OAuthRequestException.Advice"/> property. Otherwise, 
-        /// the <paramref name="advice"/> supplied will be stored.
+        /// <para>v
         /// </para>
         /// 
         /// <para>
@@ -682,17 +697,13 @@ namespace OAuth.Net.Common
         /// </para>
         /// </remarks>
         /// 
-        /// <param name="advice">(Optional) Plain text advice for the user 
-        /// of the consumer</param>
-        /// 
         /// <exception cref="OAuth.Net.Common.OAuthRequestException">
         /// Always
         /// </exception>
-        public void ThrowTokenRevoked(string advice)
+        public void ThrowTokenRevoked()
         {
-            throw PostApplyAdviser(() => BuildSimpleReport(
-                OAuthRequestExceptionProblemTypes.TokenRevoked, 
-                advice));
+            throw this.PostApplyAdviser(() => BuildSimpleReport(
+                ProblemReportingProblemTypes.TokenRevoked));
         }
 
         //// TODO: ThrowAdditionalAuthorizationRequired
@@ -736,65 +747,62 @@ namespace OAuth.Net.Common
             if (parameters == null || parameters.AdditionalParameters == null)
                 return;
 
-            if (!string.IsNullOrEmpty(parameters.AdditionalParameters[OAuthRequestExceptionParameters.Problem]))
+            if (!string.IsNullOrEmpty(parameters.AdditionalParameters[ProblemReportingParameters.Problem]))
             {
                 OAuthRequestException ex = new OAuthRequestException()
                 {
-                    Problem = parameters.AdditionalParameters[OAuthRequestExceptionParameters.Problem],
-                    Advice = parameters.AdditionalParameters[OAuthRequestExceptionParameters.ProblemAdvice],
+                    Problem = parameters.AdditionalParameters[ProblemReportingParameters.Problem],
+                    Advice = parameters.AdditionalParameters[ProblemReportingParameters.ProblemAdvice],
                     Source = OAuthRequestExceptionSources.Remote
                 };
 
                 // Load additional parameter for specific types
-                switch (parameters.AdditionalParameters[OAuthRequestExceptionParameters.Problem])
+                switch (parameters.AdditionalParameters[ProblemReportingParameters.Problem])
                 {
-                    case OAuthRequestExceptionProblemTypes.VersionRejected:
-                        if (!string.IsNullOrEmpty(parameters.AdditionalParameters[OAuthRequestExceptionParameters.AcceptableVersions]))
+                    case ProblemReportingProblemTypes.VersionRejected:
+                        if (!string.IsNullOrEmpty(parameters.AdditionalParameters[ProblemReportingParameters.AcceptableVersions]))
                             ex.AdditionalParameter = new KeyValuePair<string, string>(
-                                OAuthRequestExceptionParameters.AcceptableVersions,
-                                parameters.AdditionalParameters[OAuthRequestExceptionParameters.AcceptableVersions]);
+                                ProblemReportingParameters.AcceptableVersions,
+                                parameters.AdditionalParameters[ProblemReportingParameters.AcceptableVersions]);
 
                         break;
 
-                    case OAuthRequestExceptionProblemTypes.ParameterAbsent:
-                        if (!string.IsNullOrEmpty(parameters.AdditionalParameters[OAuthRequestExceptionParameters.ParametersAbsent]))
+                    case ProblemReportingProblemTypes.ParameterAbsent:
+                        if (!string.IsNullOrEmpty(parameters.AdditionalParameters[ProblemReportingParameters.ParametersAbsent]))
                             ex.AdditionalParameter = new KeyValuePair<string, string>(
-                                OAuthRequestExceptionParameters.ParametersAbsent,
-                                parameters.AdditionalParameters[OAuthRequestExceptionParameters.ParametersAbsent]);
+                                ProblemReportingParameters.ParametersAbsent,
+                                parameters.AdditionalParameters[ProblemReportingParameters.ParametersAbsent]);
 
                         break;
 
-                    case OAuthRequestExceptionProblemTypes.ParameterRejected:
-                        if (!string.IsNullOrEmpty(parameters.AdditionalParameters[OAuthRequestExceptionParameters.ParametersRejected]))
+                    case ProblemReportingProblemTypes.ParameterRejected:
+                        if (!string.IsNullOrEmpty(parameters.AdditionalParameters[ProblemReportingParameters.ParametersRejected]))
                             ex.AdditionalParameter = new KeyValuePair<string, string>(
-                                OAuthRequestExceptionParameters.ParametersRejected,
-                                parameters.AdditionalParameters[OAuthRequestExceptionParameters.ParametersRejected]);
+                                ProblemReportingParameters.ParametersRejected,
+                                parameters.AdditionalParameters[ProblemReportingParameters.ParametersRejected]);
 
                         break;
 
-                    case OAuthRequestExceptionProblemTypes.TimestampRefused:
-                        if (!string.IsNullOrEmpty(parameters.AdditionalParameters[OAuthRequestExceptionParameters.AcceptableTimestamps]))
+                    case ProblemReportingProblemTypes.TimestampRefused:
+                        if (!string.IsNullOrEmpty(parameters.AdditionalParameters[ProblemReportingParameters.AcceptableTimestamps]))
                             ex.AdditionalParameter = new KeyValuePair<string, string>(
-                                OAuthRequestExceptionParameters.AcceptableTimestamps,
-                                parameters.AdditionalParameters[OAuthRequestExceptionParameters.AcceptableTimestamps]);
+                                ProblemReportingParameters.AcceptableTimestamps,
+                                parameters.AdditionalParameters[ProblemReportingParameters.AcceptableTimestamps]);
 
                         break;
                 }
 
                 // Throw the OAuthRequestException
-                throw PostApplyAdviser(() => ex);
+                throw this.PostApplyAdviser(() => ex);
             }
         }
 
         // Builds OAuthRequestExceptions without additional parameters
-        private static OAuthRequestException BuildSimpleReport(
-            string problem, 
-            string advice)
+        private static OAuthRequestException BuildSimpleReport(string problem)
         {
             return new OAuthRequestException()
             {
                 Problem = problem,
-                Advice = advice,
                 Source = OAuthRequestExceptionSources.Local
             };
         }
@@ -808,16 +816,9 @@ namespace OAuth.Net.Common
             if (this.Adviser == null)
                 return ex;
 
-            string advice = this.Adviser.AdviseUpon(ex);
-
-            if (advice != null)
-                ex.Advice = advice;
+            ex.Advice = this.Adviser.AdviseUpon(ex);
 
             return ex;
         }
-
-        // A method which returns an exception
-        private delegate TExceptionResult ExceptionBuilder<TExceptionResult>()
-            where TExceptionResult : Exception;
     }
 }

@@ -142,19 +142,18 @@ namespace OAuth.Net.ServiceProvider
              */
             ISigningProvider signingProvider = ServiceProviderContext.GetSigningProvider(context.Parameters.SignatureMethod);
 
-            if (signingProvider == null)
+            if (signingProvider == null ||
+                !signingProvider.SignatureMethod.Equals(
+                    context.Parameters.SignatureMethod))
             {
-                // There is no signing provider for this signature method
-                OAuthRequestException.ThrowSignatureMethodRejected(null);
+                OAuthRequestExceptionFactory.WithInjectedAdviser()
+                    .ThrowSignatureMethodRejected();
             }
-
-            // Double check the signing provider declares that it can handle the signature method
-            if (!signingProvider.SignatureMethod.Equals(context.Parameters.SignatureMethod))
-                OAuthRequestException.ThrowSignatureMethodRejected(null);
 
             // Ask the signing provider to check the request for pre-conditions
             if (!signingProvider.CheckRequest(httpContext.Request))
-                OAuthRequestException.ThrowSignatureMethodRejected(null);
+                OAuthRequestExceptionFactory.WithInjectedAdviser()
+                    .ThrowSignatureMethodRejected();
 
             context.SigningProvider = signingProvider;
         }
@@ -169,7 +168,8 @@ namespace OAuth.Net.ServiceProvider
                 IConsumer consumer = ServiceProviderContext.GetConsumerStore().GetByKey(context.Parameters.ConsumerKey);
 
                 if (consumer == null)
-                    OAuthRequestException.ThrowConsumerKeyUnknown(null);
+                    OAuthRequestExceptionFactory.WithInjectedAdviser()
+                        .ThrowConsumerKeyUnknown();
                 else
                     switch (consumer.Status)
                     {
@@ -178,21 +178,25 @@ namespace OAuth.Net.ServiceProvider
                             break;
 
                         case ConsumerStatus.TemporarilyDisabled:
-                            OAuthRequestException.ThrowConsumerKeyRefused(null);
+                            OAuthRequestExceptionFactory.WithInjectedAdviser()
+                                .ThrowConsumerKeyRefused();
                             break;
 
                         case ConsumerStatus.PermanentlyDisabled:
-                            OAuthRequestException.ThrowConsumerKeyRejected(null);
+                            OAuthRequestExceptionFactory.WithInjectedAdviser()
+                                .ThrowConsumerKeyRejected();
                             break;
 
                         case ConsumerStatus.Unknown:
                         default:
-                            OAuthRequestException.ThrowConsumerKeyUnknown(null);
+                            OAuthRequestExceptionFactory.WithInjectedAdviser()
+                                .ThrowConsumerKeyUnknown();
                             break;
                     }
             }
             else
-                OAuthRequestException.ThrowConsumerKeyUnknown(null);
+                OAuthRequestExceptionFactory.WithInjectedAdviser()
+                    .ThrowConsumerKeyUnknown();
         }
         
         public static void SetRequestId(OAuthRequestContext context)
@@ -231,7 +235,8 @@ namespace OAuth.Net.ServiceProvider
                 tokenSecret);
 
             if (!isValid)
-                OAuthRequestException.ThrowSignatureInvalid(null);
+                OAuthRequestExceptionFactory.WithInjectedAdviser()
+                    .ThrowSignatureInvalid();
             else
                 requestContext.IsSignatureValid = true;
         }

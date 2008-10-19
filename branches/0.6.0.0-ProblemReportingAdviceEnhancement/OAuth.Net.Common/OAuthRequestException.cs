@@ -35,7 +35,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Text;
@@ -51,7 +50,7 @@ namespace OAuth.Net.Common
     /// <remarks>
     /// <p>
     /// An OAuth exception can be serialized to a HTTP response using the parameters
-    /// in the nested <see cref="OAuthRequestExceptionParameters">Parameters</see> class.
+    /// in the nested <see cref="ProblemReportingParameters">Parameters</see> class.
     /// </p>
     /// 
     /// <p>
@@ -60,22 +59,22 @@ namespace OAuth.Net.Common
     /// </p>
     /// </remarks>
     [Serializable]
-    [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "Exceptions represent certain defined error messages. Static Throw... methods are provided.")]
+    [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "Exceptions represent certain defined error messages. An OAuthRequestExceptionFactory should be used to build these.")]
     public class OAuthRequestException
         : OAuthException
     {
+        [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "Exceptions represent certain defined error messages. An OAuthRequestExceptionFactory should be used to build these.")]
+        internal OAuthRequestException()
+            : base()
+        {
+        }
+
         protected OAuthRequestException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
             this.Problem = info.GetString("Problem");
             this.Advice = info.GetString("Advice");
             this.AdditionalParameter = (KeyValuePair<string, string>)info.GetValue("AdditionalParameter", typeof(KeyValuePair<string, string>));
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "Exceptions represent certain defined error messages. Static Throw... methods are provided.")]
-        internal OAuthRequestException()
-            : base()
-        {
         }
 
         /// <summary>
@@ -136,12 +135,12 @@ namespace OAuth.Net.Common
         /// <remarks>
         /// <para>
         /// The <see cref="Problem">problem type</see> is 
-        /// <see cref="OAuthRequestExceptionProblemTypes.VersionRejected">version_rejected</see>.
+        /// <see cref="ProblemReportingProblemTypes.VersionRejected">version_rejected</see>.
         /// </para>
         /// 
         /// <para>
         /// The <see cref="AdditionalParameter">additional parameter</see>
-        /// (<see cref="OAuthRequestExceptionParameters.AcceptableVersions">oauth_acceptable_versions</see>)
+        /// (<see cref="ProblemReportingParameters.AcceptableVersions">oauth_acceptable_versions</see>)
         /// of the exception indicates the range of versions acceptable to the 
         /// sender. That is, it means the sender will currently accept an 
         /// <see cref="Constants.VersionParameter">oauth_version</see> that's not 
@@ -177,10 +176,8 @@ namespace OAuth.Net.Common
         [Obsolete("Use OAuthRequestExceptionFactory.ThrowVersionRejected instead")]
         public static void ThrowVersionRejected(string minVersion, string maxVersion, string advice)
         {
-            new OAuthRequestExceptionFactory().ThrowVersionRejected(
-                minVersion,
-                maxVersion,
-                advice);
+            new OAuthRequestExceptionFactory(ex => advice)
+                .ThrowVersionRejected(minVersion, maxVersion);
         }
 
         /// <summary>
@@ -190,12 +187,12 @@ namespace OAuth.Net.Common
         /// <remarks>
         /// <para>
         /// The <see cref="Problem">problem type</see> is 
-        /// <see cref="OAuthRequestExceptionProblemTypes.ParameterAbsent">parameter_absent</see>.
+        /// <see cref="ProblemReportingProblemTypes.ParameterAbsent">parameter_absent</see>.
         /// </para>
         /// 
         /// <para>
         /// The <see cref="AdditionalParameter">additional parameter</see>
-        /// (<see cref="OAuthRequestExceptionParameters.ParametersAbsent">oauth_parameters_absent</see>)
+        /// (<see cref="ProblemReportingParameters.ParametersAbsent">oauth_parameters_absent</see>)
         /// of the exception indicates the set of parameter names that are absent,
         /// percent-encoded and separated by <c>&amp;</c>.
         /// </para>
@@ -223,9 +220,8 @@ namespace OAuth.Net.Common
         [Obsolete("Use OAuthRequestExceptionFactory.ThrowParametersAbsent instead")]
         public static void ThrowParametersAbsent(string[] parameters, string advice)
         {
-            new OAuthRequestExceptionFactory().ThrowParametersAbsent(
-                parameters,
-                advice);
+            new OAuthRequestExceptionFactory(ex => advice)
+                .ThrowParametersAbsent(parameters);
         }
 
         /// <summary>
@@ -235,17 +231,17 @@ namespace OAuth.Net.Common
         /// <remarks>
         /// <para>
         /// The <see cref="Problem">problem type</see> is 
-        /// <see cref="OAuthRequestExceptionProblemTypes.ParameterRejected">parameter_rejected</see>.
+        /// <see cref="ProblemReportingProblemTypes.ParameterRejected">parameter_rejected</see>.
         /// </para>
         /// 
         /// <para>
         /// The <see cref="AdditionalParameter">additional parameter</see>
-        /// (<see cref="OAuthRequestExceptionParameters.ParametersRejected">oauth_parameters_rejected</see>)
+        /// (<see cref="ProblemReportingParameters.ParametersRejected">oauth_parameters_rejected</see>)
         /// of the exception consists of a set of parameters, encoded as they would be 
         /// in a URL query string. These are parameters that the sender recently 
         /// received but doesn't understand. Note that these parameters will be 
         /// percent-encoded twice: once to form a query string and again because 
-        /// the query string is the value of <see cref="OAuthRequestExceptionParameters.ParametersRejected">oauth_parameters_rejected</see>.
+        /// the query string is the value of <see cref="ProblemReportingParameters.ParametersRejected">oauth_parameters_rejected</see>.
         /// </para>
         /// 
         /// <para>
@@ -271,9 +267,8 @@ namespace OAuth.Net.Common
         [Obsolete("Use OAuthRequestExceptionFactory.ThrowParametersRejected instead")]
         public static void ThrowParametersRejected(string[] parameters, string advice)
         {
-            new OAuthRequestExceptionFactory().ThrowParametersRejected(
-                parameters,
-                advice);
+            new OAuthRequestExceptionFactory(ex => advice)
+                .ThrowParametersRejected(parameters);
         }
 
         /// <summary>
@@ -283,12 +278,12 @@ namespace OAuth.Net.Common
         /// <remarks>
         /// <para>
         /// The <see cref="Problem">problem type</see> is 
-        /// <see cref="OAuthRequestExceptionProblemTypes.TimestampRefused">timestamp_refused</see>.
+        /// <see cref="ProblemReportingProblemTypes.TimestampRefused">timestamp_refused</see>.
         /// </para>
         /// 
         /// <para>
         /// The <see cref="AdditionalParameter">additional parameter</see>
-        /// (<see cref="OAuthRequestExceptionParameters.AcceptableTimestamps">oauth_acceptable_timestamps</see>)
+        /// (<see cref="ProblemReportingParameters.AcceptableTimestamps">oauth_acceptable_timestamps</see>)
         /// of the exception consists of two numbers in decimal notation, separated by '-' 
         /// (hyphen). It's the range of timestamps acceptable to the sender. That is, 
         /// it means the sender will currently accept an 
@@ -321,10 +316,8 @@ namespace OAuth.Net.Common
         [Obsolete("Use OAuthRequestExceptionFactory.ThrowTimestampRefused instead")]
         public static void ThrowTimestampRefused(long minTimestamp, long maxTimestamp, string advice)
         {
-            new OAuthRequestExceptionFactory().ThrowTimestampRefused(
-                minTimestamp,
-                maxTimestamp,
-                advice);
+            new OAuthRequestExceptionFactory(ex => advice)
+                .ThrowTimestampRefused(minTimestamp, maxTimestamp);
         }
 
         /// <summary>
@@ -335,7 +328,7 @@ namespace OAuth.Net.Common
         /// <remarks>
         /// <para>
         /// The <see cref="Problem">problem type</see> is 
-        /// <see cref="OAuthRequestExceptionProblemTypes.NonceUsed">nonce_used</see>.
+        /// <see cref="ProblemReportingProblemTypes.NonceUsed">nonce_used</see>.
         /// </para>
         /// 
         /// <para>
@@ -357,7 +350,7 @@ namespace OAuth.Net.Common
         [Obsolete("Use OAuthRequestExceptionFactory.ThrowNonceUsed instead")]
         public static void ThrowNonceUsed(string advice)
         {
-            new OAuthRequestExceptionFactory().ThrowNonceUsed(advice);
+            new OAuthRequestExceptionFactory(ex => advice).ThrowNonceUsed();
         }
 
         /// <summary>
@@ -367,7 +360,7 @@ namespace OAuth.Net.Common
         /// <remarks>
         /// <para>
         /// The <see cref="Problem">problem type</see> is 
-        /// <see cref="OAuthRequestExceptionProblemTypes.SignatureMethodRejected">signature_method_rejected</see>.
+        /// <see cref="ProblemReportingProblemTypes.SignatureMethodRejected">signature_method_rejected</see>.
         /// </para>
         /// 
         /// <para>
@@ -389,8 +382,8 @@ namespace OAuth.Net.Common
         [Obsolete("Use OAuthRequestExceptionFactory.ThrowSignatureMethodRejected instead")]
         public static void ThrowSignatureMethodRejected(string advice)
         {
-            new OAuthRequestExceptionFactory().ThrowSignatureMethodRejected(
-                advice);
+            new OAuthRequestExceptionFactory(ex => advice)
+                .ThrowSignatureMethodRejected();
         }
 
         /// <summary>
@@ -401,7 +394,7 @@ namespace OAuth.Net.Common
         /// <remarks>
         /// <para>
         /// The <see cref="Problem">problem type</see> is 
-        /// <see cref="OAuthRequestExceptionProblemTypes.ConsumerKeyUnknown">consumer_key_unknown</see>.
+        /// <see cref="ProblemReportingProblemTypes.ConsumerKeyUnknown">consumer_key_unknown</see>.
         /// </para>
         /// 
         /// <para>
@@ -423,7 +416,8 @@ namespace OAuth.Net.Common
         [Obsolete("Use OAuthRequestExceptionFactory.ThrowConsumerKeyUnknown instead")]
         public static void ThrowConsumerKeyUnknown(string advice)
         {
-            new OAuthRequestExceptionFactory().ThrowConsumerKeyUnknown(advice);
+            new OAuthRequestExceptionFactory(ex => advice)
+                .ThrowConsumerKeyUnknown();
         }
 
         /// <summary>
@@ -434,7 +428,7 @@ namespace OAuth.Net.Common
         /// <remarks>
         /// <para>
         /// The <see cref="Problem">problem type</see> is 
-        /// <see cref="OAuthRequestExceptionProblemTypes.ConsumerKeyRejected">consumer_key_rejected</see>.
+        /// <see cref="ProblemReportingProblemTypes.ConsumerKeyRejected">consumer_key_rejected</see>.
         /// </para>
         /// 
         /// <para>
@@ -456,8 +450,8 @@ namespace OAuth.Net.Common
         [Obsolete("Use OAuthRequestExceptionFactory.ThrowConsumerKeyRejected instead")]
         public static void ThrowConsumerKeyRejected(string advice)
         {
-            new OAuthRequestExceptionFactory().ThrowConsumerKeyRejected(
-                advice);
+            new OAuthRequestExceptionFactory(ex => advice)
+                .ThrowConsumerKeyRejected();
         }
 
         /// <summary>
@@ -468,7 +462,7 @@ namespace OAuth.Net.Common
         /// <remarks>
         /// <para>
         /// The <see cref="Problem">problem type</see> is 
-        /// <see cref="OAuthRequestExceptionProblemTypes.ConsumerKeyRefused">consumer_key_refused</see>.
+        /// <see cref="ProblemReportingProblemTypes.ConsumerKeyRefused">consumer_key_refused</see>.
         /// </para>
         /// 
         /// <para>
@@ -490,7 +484,8 @@ namespace OAuth.Net.Common
         [Obsolete("Use OAuthRequestExceptionFactory.ThrowConsumerKeyRefused instead")]
         public static void ThrowConsumerKeyRefused(string advice)
         {
-            new OAuthRequestExceptionFactory().ThrowConsumerKeyRefused(advice);
+            new OAuthRequestExceptionFactory(ex => advice)
+                .ThrowConsumerKeyRefused();
         }
 
         /// <summary>
@@ -501,7 +496,7 @@ namespace OAuth.Net.Common
         /// <remarks>
         /// <para>
         /// The <see cref="Problem">problem type</see> is 
-        /// <see cref="OAuthRequestExceptionProblemTypes.SignatureInvalid">signature_invalid</see>.
+        /// <see cref="ProblemReportingProblemTypes.SignatureInvalid">signature_invalid</see>.
         /// </para>
         /// 
         /// <para>
@@ -523,7 +518,8 @@ namespace OAuth.Net.Common
         [Obsolete("Use OAuthRequestExceptionFactory.ThrowSignatureInvalid instead")]
         public static void ThrowSignatureInvalid(string advice)
         {
-            new OAuthRequestExceptionFactory().ThrowSignatureInvalid(advice);
+            new OAuthRequestExceptionFactory(ex => advice)
+                .ThrowSignatureInvalid();
         }
 
         /// <summary>
@@ -536,7 +532,7 @@ namespace OAuth.Net.Common
         /// <remarks>
         /// <para>
         /// The <see cref="Problem">problem type</see> is 
-        /// <see cref="OAuthRequestExceptionProblemTypes.TokenRejected">token_rejected</see>.
+        /// <see cref="ProblemReportingProblemTypes.TokenRejected">token_rejected</see>.
         /// </para>
         /// 
         /// <para>
@@ -558,7 +554,8 @@ namespace OAuth.Net.Common
         [Obsolete("Use OAuthRequestExceptionFactory.ThrowTokenRejected instead")]
         public static void ThrowTokenRejected(string advice)
         {
-            new OAuthRequestExceptionFactory().ThrowTokenRejected(advice);
+            new OAuthRequestExceptionFactory(ex => advice)
+                .ThrowTokenRejected();
         }
 
         /// <summary>
@@ -570,7 +567,7 @@ namespace OAuth.Net.Common
         /// <remarks>
         /// <para>
         /// The <see cref="Problem">problem type</see> is 
-        /// <see cref="OAuthRequestExceptionProblemTypes.TokenUsed">token_used</see>.
+        /// <see cref="ProblemReportingProblemTypes.TokenUsed">token_used</see>.
         /// </para>
         /// 
         /// <para>
@@ -592,7 +589,8 @@ namespace OAuth.Net.Common
         [Obsolete("Use OAuthRequestExceptionFactory.ThrowTokenUsed instead")]
         public static void ThrowTokenUsed(string advice)
         {
-            new OAuthRequestExceptionFactory().ThrowTokenUsed(advice);
+            new OAuthRequestExceptionFactory(ex => advice)
+                .ThrowTokenUsed();
         }
 
         /// <summary>
@@ -603,7 +601,7 @@ namespace OAuth.Net.Common
         /// <remarks>
         /// <para>
         /// The <see cref="Problem">problem type</see> is 
-        /// <see cref="OAuthRequestExceptionProblemTypes.TokenExpired">token_expired</see>.
+        /// <see cref="ProblemReportingProblemTypes.TokenExpired">token_expired</see>.
         /// </para>
         /// 
         /// <para>
@@ -625,7 +623,8 @@ namespace OAuth.Net.Common
         [Obsolete("Use OAuthRequestExceptionFactory.ThrowTokenExpired instead")]
         public static void ThrowTokenExpired(string advice)
         {
-            new OAuthRequestExceptionFactory().ThrowTokenExpired(advice);
+            new OAuthRequestExceptionFactory(ex => advice)
+                .ThrowTokenExpired();
         }
 
         /// <summary>
@@ -637,7 +636,7 @@ namespace OAuth.Net.Common
         /// <remarks>
         /// <para>
         /// The <see cref="Problem">problem type</see> is 
-        /// <see cref="OAuthRequestExceptionProblemTypes.TokenRevoked">token_revoked</see>.
+        /// <see cref="ProblemReportingProblemTypes.TokenRevoked">token_revoked</see>.
         /// </para>
         /// 
         /// <para>
@@ -659,7 +658,8 @@ namespace OAuth.Net.Common
         [Obsolete("Use OAuthRequestExceptionFactory.ThrowTokenRevoked instead")]
         public static void ThrowTokenRevoked(string advice)
         {
-            new OAuthRequestExceptionFactory().ThrowTokenRevoked(advice);
+            new OAuthRequestExceptionFactory(ex => advice)
+                .ThrowTokenRevoked();
         }
 
         /// <summary>
@@ -734,7 +734,7 @@ namespace OAuth.Net.Common
             header.Append(OAuth.Net.Common.Constants.RealmParameter).Append("=\"").Append(realm.Replace("\"", "\\\"")).Append("\"");
 
             // Problem
-            header.Append(", ").Append(OAuthRequestExceptionParameters.Problem).Append("=\"").Append(Problem).Append("\"");
+            header.Append(", ").Append(ProblemReportingParameters.Problem).Append("=\"").Append(Problem).Append("\"");
 
             // Additional parameter
             if (!string.IsNullOrEmpty(this.AdditionalParameter.Key)
@@ -743,7 +743,7 @@ namespace OAuth.Net.Common
 
             // Advice
             if (!string.IsNullOrEmpty(this.Advice))
-                header.Append(", ").Append(OAuthRequestExceptionParameters.ProblemAdvice).Append("=\"").Append(Advice.Replace("\"", "\\\"").Replace("\n", "\\n")).Append("\"");
+                header.Append(", ").Append(ProblemReportingParameters.ProblemAdvice).Append("=\"").Append(Advice.Replace("\"", "\\\"").Replace("\n", "\\n")).Append("\"");
 
             return header.ToString();
         }

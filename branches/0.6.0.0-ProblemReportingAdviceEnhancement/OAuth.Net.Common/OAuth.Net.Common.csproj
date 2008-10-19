@@ -48,12 +48,14 @@
   <ItemGroup>
     <Compile Include="Consumers\IOutOfBoundConsumerStore.cs" />
     <Compile Include="Consumers\MockConsumer.cs" />
-    <Compile Include="IProblemReportingAdviser.cs" />
+    <Compile Include="ProblemReporting\DelegatedProblemReportingAdviser.cs" />
+    <Compile Include="ProblemReporting\IProblemReportingAdviser.cs" />
     <Compile Include="OAuthException.cs" />
     <Compile Include="OAuthRequestExceptionFactory.cs" />
-    <Compile Include="OAuthRequestExceptionParameters.cs" />
-    <Compile Include="OAuthRequestExceptionProblemTypes.cs" />
+    <Compile Include="ProblemReporting\ProblemReportingParameters.cs" />
+    <Compile Include="ProblemReporting\ProblemReportingProblemTypes.cs" />
     <Compile Include="OAuthRequestExceptionSources.cs" />
+    <Compile Include="ProblemReporting\ProblemReportingAdviserBase.cs" />
     <Compile Include="Properties\ProductInfo.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Consumers\ConsumerStatus.cs" />

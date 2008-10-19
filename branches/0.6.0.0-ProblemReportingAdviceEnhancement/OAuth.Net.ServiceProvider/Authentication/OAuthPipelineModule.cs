@@ -144,7 +144,8 @@ namespace OAuth.Net.ServiceProvider
                 IAccessToken accessToken = ServiceProviderContext.GetTokenStore().GetAccessToken(context.Parameters.Token);
 
                 if (accessToken == null)
-                    OAuthRequestException.ThrowTokenRejected(null);
+                    OAuthRequestExceptionFactory.WithInjectedAdviser()
+                        .ThrowTokenRejected();
                 else
                 {
                     /*
@@ -152,7 +153,8 @@ namespace OAuth.Net.ServiceProvider
                      * to be from.
                      */
                     if (!accessToken.ConsumerKey.Equals(context.Parameters.ConsumerKey))
-                        OAuthRequestException.ThrowTokenRejected(null);
+                        OAuthRequestExceptionFactory.WithInjectedAdviser()
+                            .ThrowTokenRejected();
 
                     switch (accessToken.Status)
                     {
@@ -161,27 +163,32 @@ namespace OAuth.Net.ServiceProvider
                             break;
 
                         case TokenStatus.Expired:
-                            OAuthRequestException.ThrowTokenExpired(null);
+                            OAuthRequestExceptionFactory.WithInjectedAdviser()
+                                .ThrowTokenExpired();
                             break;
 
                         case TokenStatus.Used:
-                            OAuthRequestException.ThrowTokenUsed(null);
+                            OAuthRequestExceptionFactory.WithInjectedAdviser()
+                                .ThrowTokenUsed();
                             break;
 
                         case TokenStatus.Revoked:
-                            OAuthRequestException.ThrowTokenRevoked(null);
+                            OAuthRequestExceptionFactory.WithInjectedAdviser()
+                                .ThrowTokenRevoked();
                             break;
 
                         case TokenStatus.Unauthorized:
                         case TokenStatus.Unknown:
                         default:
-                            OAuthRequestException.ThrowTokenRejected(null);
+                            OAuthRequestExceptionFactory.WithInjectedAdviser()
+                                .ThrowTokenRejected();
                             break;
                     }
                 }
             }
             else
-                OAuthRequestException.ThrowTokenRejected(null);
+                OAuthRequestExceptionFactory.WithInjectedAdviser()
+                    .ThrowTokenRejected();
         }
 
         protected virtual void SetRequestId(HttpApplication application, OAuthRequestContext context)

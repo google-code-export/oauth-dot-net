@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-using  OAuth.Net.Common;
+using OAuth.Net.Common;
 
 namespace OAuth.Net.Consumer
 {
