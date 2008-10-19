@@ -40,7 +40,7 @@ namespace OAuth.Net.Common
     /// <see cref="OAuthRequestException.Problem">Problem</see> property of 
     /// <see cref="OAuthRequestException">OAuthRequestException</see>.
     /// </summary>
-    public static class OAuthRequestExceptionProblemTypes
+    public static class ProblemReportingProblemTypes
     {
         /// <summary>
         /// <c>version_rejected</c>: 

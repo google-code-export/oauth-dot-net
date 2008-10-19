@@ -361,7 +361,8 @@ namespace OAuth.Net.Consumer
 
                     // Parse the parameters and re-throw any OAuthRequestException from the service provider
                     responseParameters = OAuthParameters.Parse(resource);
-                    OAuthRequestException.TryRethrow(responseParameters);
+                    OAuthRequestExceptionFactory.WithInjectedAdviser()
+                        .TryRethrow(responseParameters);
 
                     // If nothing is thrown then we should have a valid resource.
                     response = new OAuthResponse(this.AccessToken ?? this.RequestToken, resource);
@@ -370,7 +371,8 @@ namespace OAuth.Net.Consumer
                 {
                     // Parse the parameters and re-throw any OAuthRequestException from the service provider
                     responseParameters = OAuthParameters.Parse(e.Response as HttpWebResponse);
-                    OAuthRequestException.TryRethrow(responseParameters);
+                    OAuthRequestExceptionFactory.WithInjectedAdviser()
+                        .TryRethrow(responseParameters);
 
                     // If no OAuthRequestException, rethrow the WebException
                     #warning TODO: We have consumer the WebException's body so rethrowing it is pretty pointless; wrap the WebException in an OAuthProtocolException and store the body (create an OAuthResource before parsing parameters)
@@ -450,13 +452,15 @@ namespace OAuth.Net.Consumer
 
                 // Parse the parameters and re-throw any OAuthRequestException from the service provider
                 responseParameters = OAuthParameters.Parse(response);
-                OAuthRequestException.TryRethrow(responseParameters);
+                OAuthRequestExceptionFactory.WithInjectedAdviser()
+                    .TryRethrow(responseParameters);
             }
             catch (WebException e)
             {
                 // Parse the parameters and re-throw any OAuthRequestException from the service provider
                 responseParameters = OAuthParameters.Parse(e.Response as HttpWebResponse);
-                OAuthRequestException.TryRethrow(responseParameters);
+                OAuthRequestExceptionFactory.WithInjectedAdviser()
+                    .TryRethrow(responseParameters);
 
                 // If no OAuthRequestException, rethrow the WebException
                 throw;
@@ -531,13 +535,15 @@ namespace OAuth.Net.Consumer
 
                 // Parse the parameters and re-throw any OAuthRequestException from the service provider
                 responseParameters = OAuthParameters.Parse(response);
-                OAuthRequestException.TryRethrow(responseParameters);
+                OAuthRequestExceptionFactory.WithInjectedAdviser()
+                    .TryRethrow(responseParameters);
             }
             catch (WebException e)
             {
                 // Parse the parameters and re-throw any OAuthRequestException from the service provider
                 responseParameters = OAuthParameters.Parse(e.Response as HttpWebResponse);
-                OAuthRequestException.TryRethrow(responseParameters);
+                OAuthRequestExceptionFactory.WithInjectedAdviser()
+                    .TryRethrow(responseParameters);
 
                 // If no OAuthRequestException, rethrow the WebException
                 throw;
@@ -616,15 +622,13 @@ namespace OAuth.Net.Consumer
             // Check there is a signing provider for the signature method
             ISigningProvider signingProvider = this.Service.ComponentLocator.GetInstance<ISigningProvider>(Constants.SigningProviderIdPrefix + this.Service.SignatureMethod);
 
-            if (signingProvider == null)
+            if (signingProvider == null || 
+                !signingProvider.SignatureMethod.Equals(
+                            this.Service.SignatureMethod))
             {
-                // There is no signing provider for this signature method
-                OAuthRequestException.ThrowSignatureMethodRejected(null);
+                OAuthRequestExceptionFactory.WithInjectedAdviser()
+                    .ThrowSignatureMethodRejected();
             }
-
-            // Double check the signing provider declares that it can handle the signature method
-            if (!signingProvider.SignatureMethod.Equals(this.Service.SignatureMethod))
-                OAuthRequestException.ThrowSignatureMethodRejected(null);
 
             // Compute the signature
             authParameters.Signature = signingProvider.ComputeSignature(

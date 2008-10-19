@@ -43,6 +43,7 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
+using Microsoft.Practices.ServiceLocation;
 
 namespace OAuth.Net.Common
 {
@@ -424,7 +425,8 @@ namespace OAuth.Net.Common
                     missing.Add(requiredParameter);
 
             if (missing.Count > 0)
-                OAuthRequestException.ThrowParametersAbsent(missing.ToArray(), null);
+                OAuthRequestExceptionFactory.WithInjectedAdviser()
+                        .ThrowParametersAbsent(missing.ToArray());
         }
 
         /// <summary>
@@ -453,7 +455,8 @@ namespace OAuth.Net.Common
                         invalid.Add(parameter);
 
             if (invalid.Count > 0)
-                OAuthRequestException.ThrowParametersRejected(invalid.ToArray(), null);
+                OAuthRequestExceptionFactory.WithInjectedAdviser()
+                    .ThrowParametersRejected(invalid.ToArray());
         }
 
         /// <summary>
@@ -479,7 +482,10 @@ namespace OAuth.Net.Common
                     if (allowedVersion.Equals(this.parameters[Constants.VersionParameter]))
                         return;
 
-            OAuthRequestException.ThrowVersionRejected(allowedVersions[0], allowedVersions[allowedVersions.Length - 1], null);
+            OAuthRequestExceptionFactory.WithInjectedAdviser()
+                .ThrowVersionRejected(
+                    allowedVersions[0], 
+                    allowedVersions[allowedVersions.Length - 1]);
         }
 
         /// <summary>
@@ -552,7 +558,8 @@ namespace OAuth.Net.Common
                         authHeaderParams, wwwAuthHeaderParams, postParams, queryStringParams);
 
                 if (!result)
-                    OAuthRequestException.ThrowParametersRejected(result, null);
+                    OAuthRequestExceptionFactory.WithInjectedAdviser()
+                        .ThrowParametersRejected(result);
 
                 /*
                  * Check for non-reserved parameters prefixed with oauth_
@@ -560,7 +567,8 @@ namespace OAuth.Net.Common
                 result = CheckForInvalidParameterNames(authHeaderParams, wwwAuthHeaderParams, postParams, queryStringParams);
 
                 if (!result)
-                    OAuthRequestException.ThrowParametersRejected(result, null);
+                    OAuthRequestExceptionFactory.WithInjectedAdviser()
+                        .ThrowParametersRejected(result);
             }
 
             return new OAuthParameters()

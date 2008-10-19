@@ -39,7 +39,7 @@ namespace OAuth.Net.Common
     /// Problem Reporting extension</a>. These are used by 
     /// <see cref="OAuthRequestException">OAuthRequestException</see>.
     /// </summary>
-    public static class OAuthRequestExceptionParameters
+    public static class ProblemReportingParameters
     {
         /// <summary>
         /// <c>oauth_problem</c>:
@@ -61,7 +61,7 @@ namespace OAuth.Net.Common
         /// </summary>
         /// 
         /// <remarks>
-        /// Applicable to the <see cref="OAuthRequestExceptionProblemTypes.VersionRejected">version_rejected</see> 
+        /// Applicable to the <see cref="ProblemReportingProblemTypes.VersionRejected">version_rejected</see> 
         /// problem type.
         /// </remarks>
         /// 
@@ -74,7 +74,7 @@ namespace OAuth.Net.Common
         /// </summary>
         /// 
         /// <remarks>
-        /// Applicable to the <see cref="OAuthRequestExceptionProblemTypes.TimestampRefused">timestamp_refused</see>
+        /// Applicable to the <see cref="ProblemReportingProblemTypes.TimestampRefused">timestamp_refused</see>
         /// problem type.
         /// </remarks>
         /// 
@@ -87,7 +87,7 @@ namespace OAuth.Net.Common
         /// </summary>
         /// 
         /// <remarks>
-        /// Applicable to the <see cref="OAuthRequestExceptionProblemTypes.ParameterAbsent">parameter_absent</see>
+        /// Applicable to the <see cref="ProblemReportingProblemTypes.ParameterAbsent">parameter_absent</see>
         /// problem type.
         /// </remarks>
         /// 
@@ -100,7 +100,7 @@ namespace OAuth.Net.Common
         /// </summary>
         /// 
         /// <remarks>
-        /// Applicable to the <see cref="OAuthRequestExceptionProblemTypes.ParameterRejected">parameter_rejected</see>
+        /// Applicable to the <see cref="ProblemReportingProblemTypes.ParameterRejected">parameter_rejected</see>
         /// problem type.
         /// </remarks>
         /// 

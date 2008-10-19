@@ -175,13 +175,15 @@ namespace OAuth.Net.ServiceProvider
                  * to be from.
                  */
                 if (!token.ConsumerKey.Equals(requestContext.Parameters.ConsumerKey))
-                    OAuthRequestException.ThrowTokenRejected(null);
+                    OAuthRequestExceptionFactory.WithInjectedAdviser()
+                        .ThrowTokenRejected();
 
                 /*
                  * Ensure the token is valid
                  */
                 if (token == null)
-                    OAuthRequestException.ThrowTokenRejected(null);
+                    OAuthRequestExceptionFactory.WithInjectedAdviser()
+                        .ThrowTokenRejected();
                 else
                     switch (token.Status)
                     {
@@ -190,26 +192,31 @@ namespace OAuth.Net.ServiceProvider
                             break;
 
                         case TokenStatus.Expired:
-                            OAuthRequestException.ThrowTokenExpired(null);
+                            OAuthRequestExceptionFactory.WithInjectedAdviser()
+                                .ThrowTokenExpired();
                             break;
 
                         case TokenStatus.Used:
-                            OAuthRequestException.ThrowTokenUsed(null);
+                            OAuthRequestExceptionFactory.WithInjectedAdviser()
+                                .ThrowTokenUsed();
                             break;
 
                         case TokenStatus.Revoked:
-                            OAuthRequestException.ThrowTokenRevoked(null);
+                            OAuthRequestExceptionFactory.WithInjectedAdviser()
+                                .ThrowTokenRevoked();
                             break;
 
                         case TokenStatus.Unauthorized:
                         case TokenStatus.Unknown:
                         default:
-                            OAuthRequestException.ThrowTokenRejected(null);
+                            OAuthRequestExceptionFactory.WithInjectedAdviser()
+                                .ThrowTokenRejected();
                             break;
                     }
             }
             else
-                OAuthRequestException.ThrowTokenRejected(null);
+                OAuthRequestExceptionFactory.WithInjectedAdviser()
+                    .ThrowTokenRejected();
         }
 
         protected virtual void SetSignature(HttpContext httpContext, OAuthRequestContext requestContext)
