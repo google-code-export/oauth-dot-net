@@ -36,6 +36,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Text;
+using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.XPath;
 
@@ -342,9 +344,67 @@ namespace XrdsSimple.Net
         /// <returns></returns>
         public static XRDSDocument Parse(System.IO.Stream stream)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(XRDSDocument));
+            return XRDSDocument.Parse(stream, true);
+        }
 
-            return (XRDSDocument)serializer.Deserialize(stream);
+        /// <summary>
+        /// Deserializes an XML stream into an instance of an XRDSDocument.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        public static XRDSDocument Parse(System.IO.Stream stream, bool checkNameSpace)
+        {
+            XRDSDocument xrdsDocument = new XRDSDocument();
+
+            XmlDocument document = new XmlDocument();
+            document.Load(stream);
+            XmlNode baseNode = document.DocumentElement;
+
+            if (baseNode.LocalName.ToLower() == "xrds")
+            {
+                foreach (XmlNode node in baseNode.ChildNodes)
+                    if (node.LocalName.ToLower() == "xrd")
+                        if ((checkNameSpace && node.NamespaceURI.ToLower() == Constants.XRD_Namespace.ToLower()) || (!checkNameSpace))
+                            xrdsDocument.xrdElements.Add(XRDElement.Parse(node, checkNameSpace));
+
+            }
+
+            return xrdsDocument;
+
+            //// Old method did not work with some valid XML structures
+            // XmlSerializer serializer = new XmlSerializer(typeof(XRDSDocument));
+            // return (XRDSDocument)serializer.Deserialize(stream);
+        }
+
+        /// <summary>
+        /// Serializes an instance of an XRDSDocument into a XML string
+        /// </summary>
+        /// <param name="xrdsDocument"></param>
+        /// <returns></returns>
+        public static string ToXmlString(XRDSDocument xrdsDocument)
+        {
+
+            String XmlizedString = null;
+            MemoryStream memoryStream = new MemoryStream();
+            XmlSerializer xs = new XmlSerializer(typeof(XRDSDocument));
+            XmlTextWriter xmlTextWriter = new XmlTextWriter(memoryStream, Encoding.UTF8);
+            xmlTextWriter.Formatting = Formatting.Indented;
+            xmlTextWriter.IndentChar = ' ';
+            xmlTextWriter.Indentation = 4;
+
+            xs.Serialize(xmlTextWriter, xrdsDocument);
+            memoryStream = (MemoryStream)xmlTextWriter.BaseStream;
+
+            UTF8Encoding encoding = new UTF8Encoding();
+            XmlizedString = encoding.GetString(memoryStream.ToArray());
+
+            // XML corrections
+            XmlizedString = XmlizedString.Replace(" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"", "");
+            XmlizedString = XmlizedString.Replace("        <Expires xsi:nil=\"true\" />\r\n", "");
+            XmlizedString = XmlizedString.Replace(" xmlns=\"xri://$XRD*($v*2.0)\"", " xmlns=\"xri://$XRD*($v*2.0)\" xmlns:simple=\"http://xrds-simple.net/core/1.0\"");
+
+            return XmlizedString;
+
         }
 
         #endregion
