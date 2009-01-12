@@ -88,6 +88,7 @@ namespace XrdsSimple.Net
         /// Returns a list of all those XRDElements that have 
         /// not expired.
         /// </summary>
+        [XmlIgnore]
         public List<XRDElement> ValidXRDElements
         {
             get
