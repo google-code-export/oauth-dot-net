@@ -36,6 +36,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace XrdsSimple.Net
@@ -51,6 +52,7 @@ namespace XrdsSimple.Net
         private List<string> typeElements = new List<string>();
         private List<string> mediaTypeElements = new List<string>();
         private List<URIElement> uriElements = new List<URIElement>();
+        private List<URIElement> uriTemplateElements = new List<URIElement>();
         private List<LocalIDElement> localIDElements = new List<LocalIDElement>();
         private List<string> mustSupportElements = new List<string>();
 
@@ -108,6 +110,21 @@ namespace XrdsSimple.Net
                 uriElements.Clear();
                 if (value != null)
                     uriElements.AddRange(value);
+            }
+        }
+
+        /// <summary>
+        /// Array of the URI-Template's this service can be obtained at.
+        /// </summary>
+        [XmlElement(ElementName = "URI-Template", Namespace = Constants.OpenSocial_Namespace)]
+        public URIElement[] URITemplates
+        {
+            get { return uriTemplateElements.ToArray(); }
+            set
+            {
+                uriTemplateElements.Clear();
+                if (value != null)
+                    uriTemplateElements.AddRange(value);
             }
         }
 
@@ -185,6 +202,54 @@ namespace XrdsSimple.Net
             }
             else
                 return uriElements;
+        }
+
+        /// <summary>
+        /// Deserializes an XMLNode into an instance of an ServiceElement.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        public static ServiceElement Parse(XmlNode node, bool checkNameSpace)
+        {
+            ServiceElement serviceElement = new ServiceElement();
+
+            foreach (XmlAttribute attribute in node.Attributes)
+            {
+                if (attribute.LocalName.ToLower() == "priority")
+                    serviceElement.Priority = attribute.Value;
+
+            }
+
+
+            foreach (XmlNode childNode in node.ChildNodes)
+            {
+                if (childNode.LocalName.ToLower() == "type")
+                    if ((checkNameSpace && childNode.NamespaceURI.ToLower() == Constants.XRD_Namespace.ToLower()) || (!checkNameSpace))
+                        serviceElement.typeElements.Add(childNode.InnerText);
+
+                if (childNode.LocalName.ToLower() == "uri")
+                    if ((checkNameSpace && childNode.NamespaceURI.ToLower() == Constants.XRD_Namespace.ToLower()) || (!checkNameSpace))
+                        serviceElement.uriElements.Add(URIElement.Parse(childNode, checkNameSpace));
+
+                if (childNode.LocalName.ToLower() == "uri-template")
+                    if ((checkNameSpace && childNode.NamespaceURI.ToLower() == Constants.OpenSocial_Namespace.ToLower()) || (!checkNameSpace))
+                        serviceElement.uriTemplateElements.Add(URIElement.Parse(childNode, checkNameSpace));
+
+                if (childNode.LocalName.ToLower() == "mediatype")
+                    if ((checkNameSpace && childNode.NamespaceURI.ToLower() == Constants.XRD_Namespace.ToLower()) || (!checkNameSpace))
+                        serviceElement.mediaTypeElements.Add(childNode.InnerText);
+
+                if (childNode.LocalName.ToLower() == "localid")
+                    if ((checkNameSpace && childNode.NamespaceURI.ToLower() == Constants.XRD_Namespace.ToLower()) || (!checkNameSpace))
+                        serviceElement.localIDElements.Add(LocalIDElement.Parse(childNode));
+
+                if (childNode.LocalName.ToLower() == "mustsupport")
+                    if ((checkNameSpace && childNode.NamespaceURI.ToLower() == Constants.XRDSimple_Namespace.ToLower()) || (!checkNameSpace))
+                        serviceElement.mustSupportElements.Add(childNode.InnerText);
+
+            }
+
+            return serviceElement;
         }
 
         #endregion

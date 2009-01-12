@@ -49,6 +49,10 @@ namespace XrdsSimple.Net
         /// </summary>
         public const string XRDS_Version = "2.0";
 
+        /// The XML namespace.
+        /// </summary>
+        public const string XML_Namespace = "http://www.w3.org/XML/1998/namespace";
+
         /// <summary>
         /// The XML namespace of the XRDS document node.
         /// </summary>
@@ -65,9 +69,19 @@ namespace XrdsSimple.Net
         public const string XRDSimple_Namespace = "http://xrds-simple.net/core/1.0";
 
         /// <summary>
+        /// The XML Open Social Namespace extension
+        /// </summary>
+        public const string OpenSocial_Namespace = "http://ns.opensocial.org/";
+
+        /// <summary>
         /// XRDSimple XRI Used in the Type declaration.
         /// </summary>
         public const string XRDSimple_XRI = "xri://$xrds*simple";
+
+        /// <summary>
+        /// XML HTTP ContentType
+        /// </summary>
+        public const string TextXML_ContentType = "text/xml";
 
         /// <summary>
         /// XRDS+XML HTTP ContentType

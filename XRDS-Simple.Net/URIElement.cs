@@ -36,6 +36,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace XrdsSimple.Net
@@ -76,6 +77,30 @@ namespace XrdsSimple.Net
         {
             get;
             set;
+        }
+
+        /// <summary>
+        /// Deserializes an XMLNode into an instance of an URIElement.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        public static URIElement Parse(XmlNode node, bool checkNameSpace)
+        {
+            URIElement uriElement = new URIElement();
+
+            foreach (XmlAttribute attribute in node.Attributes)
+            {
+                if (attribute.LocalName.ToLower() == "priority")
+                    uriElement.Priority = attribute.Value;
+
+                if (attribute.LocalName.ToLower() == "httpmethod")
+                    if ((checkNameSpace && attribute.NamespaceURI.ToLower() == Constants.XRDSimple_Namespace.ToLower()) || (!checkNameSpace))
+                        uriElement.HttpMethod = attribute.Value;
+            }
+
+            uriElement.Text = node.InnerText;
+
+            return uriElement;
         }
     }
 }

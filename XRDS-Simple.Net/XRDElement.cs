@@ -36,6 +36,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace XrdsSimple.Net
@@ -169,6 +170,45 @@ namespace XrdsSimple.Net
             }
             else
                 return filteredList;
+        }
+
+        /// <summary>
+        /// Deserializes an XMLNode into an instance of an XRDElement.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        public static XRDElement Parse(XmlNode node, bool checkNameSpace)
+        {
+            XRDElement xrdElement = new XRDElement();
+
+            foreach (XmlAttribute attribute in node.Attributes)
+            {
+                if (attribute.LocalName.ToLower() == "id")
+                    if ((checkNameSpace && attribute.NamespaceURI.ToLower() == Constants.XML_Namespace.ToLower()) || (!checkNameSpace))
+                        xrdElement.ID = attribute.Value;
+
+                if (attribute.LocalName.ToLower() == "version")
+                    xrdElement.Version = attribute.Value;
+            }
+
+            foreach (XmlNode childNode in node.ChildNodes)
+            {
+
+                if (childNode.LocalName.ToLower() == "expires")
+                    if ((checkNameSpace && childNode.NamespaceURI.ToLower() == Constants.XRD_Namespace.ToLower()) || (!checkNameSpace))
+                        xrdElement.Expires = Convert.ToDateTime(childNode.InnerText);
+
+                if (childNode.LocalName.ToLower() == "type")
+                    if ((checkNameSpace && childNode.NamespaceURI.ToLower() == Constants.XRD_Namespace.ToLower()) || (!checkNameSpace))
+                        xrdElement.typeElements.Add(childNode.InnerText);
+
+                if (childNode.LocalName.ToLower() == "service")
+                    if ((checkNameSpace && childNode.NamespaceURI.ToLower() == Constants.XRD_Namespace.ToLower()) || (!checkNameSpace))
+                        xrdElement.serviceElements.Add(ServiceElement.Parse(childNode, checkNameSpace));
+
+            }
+
+            return xrdElement;
         }
 
     }

@@ -36,6 +36,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace XrdsSimple.Net
@@ -65,6 +66,24 @@ namespace XrdsSimple.Net
         {
             get;
             set;
+        }
+
+        /// <summary>
+        /// Deserializes an XMLNode into an instance of an LocalIDElement.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        public static LocalIDElement Parse(XmlNode node)
+        {
+            LocalIDElement localIDElement = new LocalIDElement();
+
+            foreach (XmlAttribute attribute in node.Attributes)
+                if (attribute.LocalName.ToLower() == "priority")
+                    localIDElement.Priority = attribute.Value;
+
+            localIDElement.Text = node.InnerText;
+
+            return localIDElement;
         }
 
     }
