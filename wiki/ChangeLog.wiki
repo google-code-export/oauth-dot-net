@@ -1,4 +1,18 @@
 #labels Featured
+= XRDS-Simple 0.6.0.0=
+
+===12th Januray 2009===
+ * Initial release of XRDS-Simple.net library for OAuth discovery
+
+Source:
+ * [http://oauth-dot-net.googlecode.com/files/XRDSSimpleNet-source-0.6.0.0.zip& Download XRDS-Simple.net Source Code 0.6.0.0]
+
+Binaries:
+ * [http://oauth-dot-net.googlecode.com/files/XRDSSimpleNet-Release-0.6.0.0.zip& Download XRDS-Simple.net Release 0.6.0.0] 
+
+
+--------------------------
+
 = OAuth.net 0.5.1.0=
 
 ===26th September 2008===
