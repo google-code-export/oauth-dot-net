@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="PackageBinaries" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- MSBuild community tasks -->
+  <PropertyGroup>
+	<MSBuildCommunityTasksPath>Libraries</MSBuildCommunityTasksPath>
+  </PropertyGroup>
+  <Import Project="MSBuild.Community.Tasks.Targets" />
+  
+  <Target Name="PackageBinaries">
+	<!-- Package debug -->
+	<MSBuild Projects="$(MSBuildProjectFile)" Targets="DoPackageBinariesForConfig" Properties="Configuration=Debug"/>
+	
+	<!-- Package release -->
+	<MSBuild Projects="$(MSBuildProjectFile)" Targets="DoPackageBinariesForConfig" Properties="Configuration=Release"/>
+	
+	<Message Text="Created binary packages in .\Binaries" />
+  </Target>
+  
+  <!-- Package release binaries -->
+  <Target Name="DoPackageBinariesForConfig">
+	<Message Text="Config: $(Configuration)" />
+  
+	<!-- Projects to build -->
+	<ItemGroup>
+		<OAuthNetProjects Include="OAuth.Net.Common\OAuth.Net.Common.csproj" />
+		<OAuthNetProjects Include="OAuth.Net.Components\OAuth.Net.Components.csproj" />
+		<OAuthNetProjects Include="OAuth.Net.Consumer\OAuth.Net.Consumer.csproj" />
+		<OAuthNetProjects Include="OAuth.Net.ServiceProvider\OAuth.Net.ServiceProvider.csproj" />
+		<OAuthNetProjects Include="XRDS-Simple.Net\XRDS-Simple.Net.csproj" />
+	</ItemGroup>
+  
+	<!-- Build the projects -->	
+	<MSBuild Projects="@(OAuthNetProjects)" Targets="Build" Properties="Configuration=$(Configuration);SignAssemblies=true">
+		 <Output TaskParameter="TargetOutputs" ItemName="OAuthNetAssemblies" />
+	</MSBuild>
+	
+	<!-- Fetch XML and PDB files too -->
+	<ItemGroup>
+		<BuildFiles Include="@(OAuthNetAssemblies)" />
+		
+		<!-- Frig to include PDB and XML for OAuth.Net.Common if present -->
+		<BuildFiles Include="OAuth.Net.Common\bin\$(Configuration)\OAuth.Net.Common.pdb" Condition=" '$(Configuration)' == 'Debug' And Exists('OAuth.Net.Common\bin\$(Configuration)\OAuth.Net.Common.pdb')"/>
+		<BuildFiles Include="OAuth.Net.Common\bin\$(Configuration)\OAuth.Net.Common.xml" Condition="Exists('OAuth.Net.Common\bin\$(Configuration)\OAuth.Net.Common.xml')"/>
+		
+		<!-- Frig to include PDB and XML for OAuth.Net.Components if present -->
+		<BuildFiles Include="OAuth.Net.Components\bin\$(Configuration)\OAuth.Net.Components.pdb" Condition=" '$(Configuration)' == 'Debug' And Exists('OAuth.Net.Components\bin\$(Configuration)\OAuth.Net.Components.pdb')"/>
+		<BuildFiles Include="OAuth.Net.Components\bin\$(Configuration)\OAuth.Net.Components.xml" Condition="Exists('OAuth.Net.Components\bin\$(Configuration)\OAuth.Net.Components.xml')"/>
+		
+		<!-- Frig to include PDB and XML for OAuth.Net.Consumer if present -->
+		<BuildFiles Include="OAuth.Net.Consumer\bin\$(Configuration)\OAuth.Net.Consumer.pdb" Condition=" '$(Configuration)' == 'Debug'  And Exists('OAuth.Net.Consumer\bin\$(Configuration)\OAuth.Net.Consumer.pdb')"/>
+		<BuildFiles Include="OAuth.Net.Consumer\bin\$(Configuration)\OAuth.Net.Consumer.xml" Condition="Exists('OAuth.Net.Consumer\bin\$(Configuration)\OAuth.Net.Consumer.xml')"/>
+		
+		<!-- Frig to include PDB and XML for OAuth.Net.ServiceProvider if present -->
+		<BuildFiles Include="OAuth.Net.ServiceProvider\bin\$(Configuration)\OAuth.Net.ServiceProvider.pdb" Condition=" '$(Configuration)' == 'Debug'  And Exists('OAuth.Net.ServiceProvider\bin\$(Configuration)\OAuth.Net.ServiceProvider.pdb')"/>
+		<BuildFiles Include="OAuth.Net.ServiceProvider\bin\$(Configuration)\OAuth.Net.ServiceProvider.xml" Condition="Exists('OAuth.Net.ServiceProvider\bin\$(Configuration)\OAuth.Net.ServiceProvider.xml')"/>
+		
+		<!-- Frig to include PDB and XML for XRDS-Simple.Net if present -->
+		<BuildFiles Include="XRDS-Simple.Net\bin\$(Configuration)\XRDS-Simple.Net.pdb" Condition=" '$(Configuration)' == 'Debug'  And Exists('XRDS-Simple.Net\bin\$(Configuration)\XRDS-Simple.Net.pdb')"/>
+		<BuildFiles Include="XRDS-Simple.Net\bin\$(Configuration)\XRDS-Simple.Net.xml" Condition="Exists('XRDS-Simple.Net\bin\$(Configuration)\XRDS-Simple.Net.xml')"/>
+	</ItemGroup>
+  
+  
+    <!-- Include files from build, documentation, licenses -->
+    <ItemGroup>
+      <ContentFiles Include="@(BuildFiles); Libraries\*; Documentation\OAuthNet.chm; Licenses\*.txt" Exclude="Libraries\nunit.*;Libraries\MSBuild*;Libraries\ICSharp*;Libraries\Castle*;Libraries\*Windsor*;Licenses\Castle*" />
+    </ItemGroup>
+	
+	<!-- Make temp directory -->	
+	<RemoveDir Directories="tmp" Condition="Exists('tmp')"/>
+	<MakeDir Directories="tmp\OAuth.Net-$(Configuration)" />
+	
+	<!-- Copy to temp directory -->
+	<Copy SourceFiles="@(ContentFiles)" DestinationFolder="tmp\OAuth.Net-$(Configuration)" />
+	
+	<!-- Make binaries directory if needed -->
+    <MakeDir Directories="Binaries" Condition="!Exists('Binaries')" />
+	
+	<!-- Find the assembly version (for Common but should all be the same) -->
+	<GetAssemblyIdentity AssemblyFiles="tmp\OAuth.Net-$(Configuration)\OAuth.Net.Common.dll">
+		<Output TaskParameter="Assemblies" ItemName="AssemblyInfo" />
+	</GetAssemblyIdentity>
+
+	<!-- Items to zip from temp directory -->
+	<ItemGroup>
+      <!-- All files copied to tmp directory -->
+      <ZipFiles Include="tmp\OAuth.Net-$(Configuration)\**\*.*"/>
+	</ItemGroup>
+	
+	<!-- Create the zip file -->
+	<Delete Files="Binaries\OAuthNet-$(Configuration)-%(AssemblyInfo.Version).zip" Condition="Exists('Binaries\OAuthNet-$(Configuration)-%(AssemblyInfo.Version).zip')"/>    
+    <Zip Files="@(ZipFiles)" Flatten="true" ZipFileName="Binaries\OAuthNet-$(Configuration)-%(AssemblyInfo.Version).zip" ZipLevel="9" />
+	
+	<!-- Clean up tmp directory -->
+	<RemoveDir Directories="tmp" Condition="Exists('tmp')"/>
+  </Target>
+</Project>
