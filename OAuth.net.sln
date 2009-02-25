@@ -19,6 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{
 		Libraries\Castle.Windsor.xml = Libraries\Castle.Windsor.xml
 		Libraries\CommonServiceLocator.WindsorAdapter.dll = Libraries\CommonServiceLocator.WindsorAdapter.dll
 		Libraries\HtmlAgilityPack.dll = Libraries\HtmlAgilityPack.dll
+		Libraries\HtmlAgilityPack.xml = Libraries\HtmlAgilityPack.xml
 		Libraries\Microsoft.Practices.ServiceLocation.dll = Libraries\Microsoft.Practices.ServiceLocation.dll
 		Libraries\nunit.framework.dll = Libraries\nunit.framework.dll
 	EndProjectSection
