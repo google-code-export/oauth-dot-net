@@ -101,6 +101,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="OAuth.Net.TestCases.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="WikiTests\testcase.rsa.certificate.pem" />
     <None Include="WikiTests\testcase.rsa.key.pem" />
     <None Include="WikiTests\testcase.rsa.pfx">
