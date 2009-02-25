@@ -11,7 +11,7 @@ using XrdsSimple.Net;
 
 namespace XrdsSimple.Net.TestCases
 {
-    [TestFixture]
+    [TestFixture, Ignore("Out of date")]
     public class XRDElementFindTests
     {
         [Test]
