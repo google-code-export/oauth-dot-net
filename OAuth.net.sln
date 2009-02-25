@@ -27,7 +27,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Maintenance", "Maintenance", "{25EA3BF2-606C-441B-8495-71C155CB7B53}"
 	ProjectSection(SolutionItems) = preProject
 		docproject.sandcastle.shfb = docproject.sandcastle.shfb
-		nunit-tests.config = nunit-tests.config
 		nunit-tests.nunit = nunit-tests.nunit
 		OAuth.Net.fxcop = OAuth.Net.fxcop
 		oauth.net.strongname.pfx = oauth.net.strongname.pfx
