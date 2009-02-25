@@ -55,9 +55,7 @@ namespace OAuth.Net.TestCases.Consumer
         public void SetLocatorProvider()
         {
             ServiceLocator.SetLocatorProvider(() => new WindsorServiceLocator(
-                    new WindsorContainer(
-                        new XmlInterpreter(
-                            new ConfigResource("oauth.net.components")))));
+                    new WindsorContainer()));
         }
 
         [Test]

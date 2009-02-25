@@ -9,6 +9,5 @@
     <assembly path="XRDS-Simple.Net\bin\Debug\XRDS-Simple.Net.dll" />
     <assembly path="XRDS-Simple.Net.TestCases\bin\Debug\XRDS-Simple.Net.TestCases.dll" />
   </Config>
-  <Config name="Release" binpathtype="Auto">
-  </Config>
+  <Config name="Release" binpathtype="Auto" />
 </NUnitProject>
