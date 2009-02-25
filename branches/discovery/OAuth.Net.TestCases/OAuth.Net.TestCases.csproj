@@ -101,6 +101,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="WikiTests\testcase.rsa.certificate.pem" />
     <None Include="WikiTests\testcase.rsa.key.pem" />
     <None Include="WikiTests\testcase.rsa.pfx">
@@ -115,4 +118,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PostBuildEvent>copy /Y $(TargetDir)$(TargetFileName).config $(SolutionDir)nunit-tests.config</PostBuildEvent>
+  </PropertyGroup>
 </Project>
