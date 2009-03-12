@@ -717,9 +717,14 @@ namespace OAuth.Net.Common
             foreach (NameValueCollection paramCollection in paramCollections)
                 if (paramCollection != null)
                     foreach (string param in paramCollection.Keys)
-                        if (param.StartsWith(Constants.OAuthParameterPrefix, StringComparison.Ordinal)
-                                && Constants.ReservedParameterNames.IndexOf(param) < 0)
+                    {
+                        if (param != null && 
+                                param.StartsWith(Constants.OAuthParameterPrefix, StringComparison.Ordinal)
+                                     && Constants.ReservedParameterNames.IndexOf(param) < 0)
+                        {
                             invalid.Add(param);
+                        }
+                    }
 
             return invalid.Count > 0
                 ? new ResultInfo<string[]>(false, invalid.ToArray())
