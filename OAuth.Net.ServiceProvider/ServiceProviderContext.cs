@@ -6,10 +6,10 @@
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -17,17 +17,10 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-// 
-// OAuth.net uses the Common Service Locator interface, released under the MS-PL
-// license. See "CommonServiceLocator License.txt" in the Licenses folder.
-// 
-// The examples and test cases use the Windsor Container from the Castle Project
-// and Common Service Locator Windsor adaptor, released under the Apache License,
-// Version 2.0. See "Castle Project License.txt" in the Licenses folder.
-// 
-// XRDS-Simple.net uses the HTMLAgility Pack. See "HTML Agility Pack License.txt"
-// in the Licenses folder.
 //
+// OAuth.net uses the Windsor Container from the Castle Project. See "Castle 
+// Project License.txt" in the Licenses folder.
+// 
 // Authors: Bruce Boughton, Chris Adams
 // Website: http://lab.madgex.com/oauth-net/
 // Email:   oauth-dot-net@madgex.com
@@ -35,7 +28,9 @@
 using System;
 using System.Configuration;
 using System.Security.Principal;
-using Microsoft.Practices.ServiceLocation;
+using Castle.Core.Resource;
+using Castle.Windsor;
+using Castle.Windsor.Configuration.Interpreters;
 using OAuth.Net.Common;
 
 namespace OAuth.Net.ServiceProvider
@@ -44,10 +39,24 @@ namespace OAuth.Net.ServiceProvider
     {
         static ServiceProviderContext()
         {
-            Settings = ConfigurationManager.GetSection("oauth.net.serviceprovider") as ServiceProviderSettings;
+            Settings = ConfigurationManager.GetSection("OAuthServiceProvider") as ServiceProviderSettings;
 
             if (!string.IsNullOrEmpty(Settings.DummyIdentity))
                 DummyIdentity = new GenericIdentity(Settings.DummyIdentity);
+
+            if (!string.IsNullOrEmpty(Settings.ComponentsSection))
+            {
+                // TODO: Move loading into IServiceLocator abstraction
+                ServiceLocator = new WindsorAdaptor(
+                    new WindsorContainer(
+                        new XmlInterpreter(
+                            new ConfigResource(Settings.ComponentsSection))));
+
+                ConsumerStore = ServiceLocator.TryGetInstance<IConsumerStore>();
+                RequestIdValidator = ServiceLocator.TryGetInstance<IRequestIdValidator>();
+                TokenGenerator = ServiceLocator.TryGetInstance<ITokenGenerator>();
+                TokenStore = ServiceLocator.TryGetInstance<ITokenStore>();
+            }
         }
 
         /// <summary>
@@ -57,6 +66,48 @@ namespace OAuth.Net.ServiceProvider
         {
             get;
             private set;
+        }
+
+        public static IServiceLocator ServiceLocator
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The consumer store
+        /// </summary>
+        public static IConsumerStore ConsumerStore
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The request info cache
+        /// </summary>
+        public static IRequestIdValidator RequestIdValidator
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The token generator
+        /// </summary>
+        public static ITokenGenerator TokenGenerator
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The token store
+        /// </summary>
+        public static ITokenStore TokenStore
+        {
+            get;
+            set;
         }
 
         public static IIdentity DummyIdentity
@@ -75,106 +126,7 @@ namespace OAuth.Net.ServiceProvider
         /// provider can be found for the given signature method.</returns>
         public static ISigningProvider GetSigningProvider(string signatureMethod)
         {
-            try
-            {
-                return ServiceLocator.Current.GetInstance<ISigningProvider>(Constants.SigningProviderIdPrefix + signatureMethod);
-            }
-            catch (ActivationException)
-            {
-                return null;
-            }
-            catch (NullReferenceException)
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Get an instance of a consumer store. Returns <c>null</c> if 
-        /// no consumer store component is registered.
-        /// </summary>
-        /// <returns>The consumer store or <c>null</c> if no consumer 
-        /// store has been registered.</returns>
-        public static IConsumerStore GetConsumerStore()
-        {
-            try
-            {
-                return ServiceLocator.Current.GetInstance<IConsumerStore>();
-            }
-            catch (ActivationException)
-            {
-                return null;
-            }
-            catch (NullReferenceException)
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Get an instance of a request ID validator. Returns <c>null</c> if 
-        /// no request ID validator component is registered.
-        /// </summary>
-        /// <returns>The request ID validator or <c>null</c> if no request ID
-        /// validator has been registered.</returns>
-        public static IRequestIdValidator GetRequestIdValidator()
-        {
-            try
-            {
-                return ServiceLocator.Current.GetInstance<IRequestIdValidator>();
-            }
-            catch (ActivationException)
-            {
-                return null;
-            }
-            catch (NullReferenceException)
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Get an instance of a token generator. Returns <c>null</c> if 
-        /// no token generator component is registered.
-        /// </summary>
-        /// <returns>The token generator or <c>null</c> if no token 
-        /// generator has been registered.</returns>
-        public static ITokenGenerator GetTokenGenerator()
-        {
-            try
-            {
-                return ServiceLocator.Current.GetInstance<ITokenGenerator>();
-            }
-            catch (ActivationException)
-            {
-                return null;
-            }
-            catch (NullReferenceException)
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Get an instance of a token store. Returns <c>null</c> if 
-        /// no token store component is registered.
-        /// </summary>
-        /// <returns>The token store or <c>null</c> if no token 
-        /// store has been registered.</returns>
-        public static ITokenStore GetTokenStore()
-        {
-            try
-            {
-                return ServiceLocator.Current.GetInstance<ITokenStore>();
-            }
-            catch (ActivationException)
-            {
-                return null;
-            }
-            catch (NullReferenceException)
-            {
-                return null;
-            }
+            return ServiceLocator.TryGetInstance<ISigningProvider>(Constants.SigningProviderIdPrefix + signatureMethod);
         }
 
         /// <summary>
@@ -229,7 +181,7 @@ namespace OAuth.Net.ServiceProvider
             if (token.ConsumerKey == null)
                 OAuthRequestException.ThrowTokenRejected("Token must have a consumer key");
 
-            IConsumer consumer = ServiceProviderContext.GetConsumerStore().GetByKey(token.ConsumerKey);
+            IConsumer consumer = ConsumerStore.GetByKey(token.ConsumerKey);
 
             if (consumer == null)
                 OAuthRequestException.ThrowConsumerKeyUnknown("Consumer is unknown");
@@ -258,7 +210,7 @@ namespace OAuth.Net.ServiceProvider
             token.Status = TokenStatus.Authorized;
             token.AuthenticatedUser = authenticatedUser;
 
-            if (ServiceProviderContext.GetTokenStore().Update(token))
+            if (ServiceProviderContext.TokenStore.Update(token))
                 return true;
             else
             {
@@ -279,7 +231,7 @@ namespace OAuth.Net.ServiceProvider
         {
             token.Status = TokenStatus.Revoked;
 
-            if (ServiceProviderContext.GetTokenStore().Update(token))
+            if (ServiceProviderContext.TokenStore.Update(token))
                 return true;
             else
             {

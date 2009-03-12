@@ -6,10 +6,10 @@
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -17,17 +17,10 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-// 
-// OAuth.net uses the Common Service Locator interface, released under the MS-PL
-// license. See "CommonServiceLocator License.txt" in the Licenses folder.
-// 
-// The examples and test cases use the Windsor Container from the Castle Project
-// and Common Service Locator Windsor adaptor, released under the Apache License,
-// Version 2.0. See "Castle Project License.txt" in the Licenses folder.
-// 
-// XRDS-Simple.net uses the HTMLAgility Pack. See "HTML Agility Pack License.txt"
-// in the Licenses folder.
 //
+// OAuth.net uses the Windsor Container from the Castle Project. See "Castle 
+// Project License.txt" in the Licenses folder.
+// 
 // Authors: Bruce Boughton, Chris Adams
 // Website: http://lab.madgex.com/oauth-net/
 // Email:   oauth-dot-net@madgex.com
@@ -262,14 +255,14 @@ namespace OAuth.Net.Common
                 if (!String.IsNullOrEmpty(response.ContentEncoding))
                     bodyEncoding = Encoding.GetEncoding(response.ContentEncoding);
 
-                string responseBody = bodyEncoding.GetString(ms.ToArray());
+                string decodedBody = HttpUtility.UrlDecode(ms.ToArray(), bodyEncoding);
 
-                string[] nameValuePairs = responseBody.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] nameValuePairs = decodedBody.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string nameValuePair in nameValuePairs)
                 {
                     string[] nameValuePairParts = nameValuePair.Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
                     if (nameValuePairParts.Length == 2)
-                        bodyParams.Add(HttpUtility.UrlDecode(nameValuePairParts[0]), HttpUtility.UrlDecode(nameValuePairParts[1]));
+                        bodyParams.Add(nameValuePairParts[0], nameValuePairParts[1]);
                 }
             }
 
@@ -305,14 +298,14 @@ namespace OAuth.Net.Common
                 if (!String.IsNullOrEmpty(response.ContentEncoding))
                     bodyEncoding = Encoding.GetEncoding(response.ContentEncoding);
 
-                string responseBody = bodyEncoding.GetString(ms.ToArray());
+                string decodedBody = HttpUtility.UrlDecode(ms.ToArray(), bodyEncoding);
 
-                string[] nameValuePairs = responseBody.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] nameValuePairs = decodedBody.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string nameValuePair in nameValuePairs)
                 {
                     string[] nameValuePairParts = nameValuePair.Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
                     if (nameValuePairParts.Length == 2)
-                        bodyParams.Add(HttpUtility.UrlDecode(nameValuePairParts[0]), HttpUtility.UrlDecode(nameValuePairParts[1]));
+                        bodyParams.Add(nameValuePairParts[0], nameValuePairParts[1]);
                 }
 
                 // Reset the stream
@@ -717,14 +710,9 @@ namespace OAuth.Net.Common
             foreach (NameValueCollection paramCollection in paramCollections)
                 if (paramCollection != null)
                     foreach (string param in paramCollection.Keys)
-                    {
-                        if (param != null && 
-                                param.StartsWith(Constants.OAuthParameterPrefix, StringComparison.Ordinal)
-                                     && Constants.ReservedParameterNames.IndexOf(param) < 0)
-                        {
+                        if (param.StartsWith(Constants.OAuthParameterPrefix, StringComparison.Ordinal)
+                                && Constants.ReservedParameterNames.IndexOf(param) < 0)
                             invalid.Add(param);
-                        }
-                    }
 
             return invalid.Count > 0
                 ? new ResultInfo<string[]>(false, invalid.ToArray())
