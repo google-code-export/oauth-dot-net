@@ -86,6 +86,15 @@ namespace OAuth.Net.Components
             return Rfc3986.Encode(signature);
         }
 
+        /// <summary>
+        /// Checks the signature provided is the same as that which would be generated
+        /// for the consumerSecret, tokenSecret and signatureBase.
+        /// </summary>
+        /// <param name="signatureBase">The signature base string (see OAuth Core 1.0 §9.1)</param>
+        /// <param name="signature">The signature to check.</param>
+        /// <param name="consumerSecret">The consumer secret</param>
+        /// <param name="tokenSecret">The token secret, if present</param>
+        /// <returns></returns>
         public virtual bool CheckSignature(string signatureBase, string signature, string consumerSecret, string tokenSecret)
         {
             string expectedSignature = this.ComputeSignature(
@@ -93,9 +102,7 @@ namespace OAuth.Net.Components
                 consumerSecret,
                 tokenSecret);
 
-            string actualSignature = Rfc3986.Decode(signature);
-
-            return expectedSignature == actualSignature;
+            return expectedSignature == signature;
         }
     }
 }

@@ -473,7 +473,7 @@ namespace OAuth.Net.Components
                         matches.Add(token);
             }
 
-            if (matches.Count > 0)
+            if (matches.Count == 0)
                 return null;
             else
                 return new ReadOnlyCollection<IToken>(matches);

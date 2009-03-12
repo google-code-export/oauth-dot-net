@@ -255,14 +255,14 @@ namespace OAuth.Net.Common
                 if (!String.IsNullOrEmpty(response.ContentEncoding))
                     bodyEncoding = Encoding.GetEncoding(response.ContentEncoding);
 
-                string decodedBody = HttpUtility.UrlDecode(ms.ToArray(), bodyEncoding);
+                string responseBody = bodyEncoding.GetString(ms.ToArray());
 
-                string[] nameValuePairs = decodedBody.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] nameValuePairs = responseBody.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string nameValuePair in nameValuePairs)
                 {
                     string[] nameValuePairParts = nameValuePair.Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
                     if (nameValuePairParts.Length == 2)
-                        bodyParams.Add(nameValuePairParts[0], nameValuePairParts[1]);
+                        bodyParams.Add(HttpUtility.UrlDecode(nameValuePairParts[0]), HttpUtility.UrlDecode(nameValuePairParts[1]));
                 }
             }
 
@@ -298,14 +298,14 @@ namespace OAuth.Net.Common
                 if (!String.IsNullOrEmpty(response.ContentEncoding))
                     bodyEncoding = Encoding.GetEncoding(response.ContentEncoding);
 
-                string decodedBody = HttpUtility.UrlDecode(ms.ToArray(), bodyEncoding);
+                string responseBody = bodyEncoding.GetString(ms.ToArray());
 
-                string[] nameValuePairs = decodedBody.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] nameValuePairs = responseBody.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string nameValuePair in nameValuePairs)
                 {
                     string[] nameValuePairParts = nameValuePair.Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
                     if (nameValuePairParts.Length == 2)
-                        bodyParams.Add(nameValuePairParts[0], nameValuePairParts[1]);
+                        bodyParams.Add(HttpUtility.UrlDecode(nameValuePairParts[0]), HttpUtility.UrlDecode(nameValuePairParts[1]));
                 }
 
                 // Reset the stream
@@ -710,9 +710,14 @@ namespace OAuth.Net.Common
             foreach (NameValueCollection paramCollection in paramCollections)
                 if (paramCollection != null)
                     foreach (string param in paramCollection.Keys)
-                        if (param.StartsWith(Constants.OAuthParameterPrefix, StringComparison.Ordinal)
-                                && Constants.ReservedParameterNames.IndexOf(param) < 0)
+                    {
+                        if (param != null && 
+                                param.StartsWith(Constants.OAuthParameterPrefix, StringComparison.Ordinal)
+                                     && Constants.ReservedParameterNames.IndexOf(param) < 0)
+                        {
                             invalid.Add(param);
+                        }
+                    }
 
             return invalid.Count > 0
                 ? new ResultInfo<string[]>(false, invalid.ToArray())
