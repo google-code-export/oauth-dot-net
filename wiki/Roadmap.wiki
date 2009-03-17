@@ -12,7 +12,7 @@ Due: Mid April 2009
 Release the current trunk as v0.6.  Changes in trunk relate to moving to the Microsoft IoC interface and removing the dependency on Castle.
 
 Items Needed Before Release:
-   * Re-factor code to reduce number of breaking changes from 0.5.* to 0.6
+   * Re-factor code to reduce number of breaking changes from 0.5.`*` to 0.6
    * Remove XRDS projects from trunk.
    * Remove experimental IOutOfBounds interface
    * Update configuration documentation
