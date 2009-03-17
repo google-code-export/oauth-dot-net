@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{27F0F1C7-42D6-4F55-BEDB-39458A1661F9}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -73,6 +73,7 @@
     <Compile Include="Common\Rfc3986Tests.cs" />
     <Compile Include="Common\SignatureBaseTests.cs" />
     <Compile Include="Components\HmacSha1SigningProviderTests.cs" />
+    <Compile Include="Components\PlainTextSigningProviderTests.cs" />
     <Compile Include="WikiTests\ConcatenateRequestElementsTests.cs" />
     <Compile Include="WikiTests\HmacSha1Tests.cs" />
     <Compile Include="WikiTests\NormalizeRequestParameterTests.cs" />
