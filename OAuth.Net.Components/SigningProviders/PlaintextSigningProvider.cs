@@ -33,6 +33,7 @@
 // Email:   oauth-dot-net@madgex.com
 
 using System.Web;
+using System.Text;
 using OAuth.Net.Common;
 
 namespace OAuth.Net.Components
@@ -77,8 +78,8 @@ namespace OAuth.Net.Components
 
         /// <summary>
         /// Computes the PLAINTEXT signature as 
-        /// <paramref name="consumerSecret"/>&amp;<paramref name="tokenSecret"/> parameter 
-        /// encoded.
+        /// <paramref name="consumerSecret"/>&amp;<paramref name="tokenSecret"/>. The 
+        /// consumerSecret and tokenSecret are encoded ( see OAuth Editors Cut 1.0 § 3.3.4)
         /// </summary>
         /// <param name="signatureBase">The signature base string (see OAuth Core 1.0 §9.1)</param>
         /// <param name="consumerSecret">The consumer secret</param>
@@ -86,9 +87,17 @@ namespace OAuth.Net.Components
         /// <returns>The computed signature</returns>
         public virtual string ComputeSignature(string signatureBase, string consumerSecret, string tokenSecret)
         {
-            string signature = consumerSecret + "&" + tokenSecret;
+            StringBuilder signature = new StringBuilder();
 
-            return Rfc3986.Encode(signature);
+            if (!string.IsNullOrEmpty(consumerSecret))
+                signature.Append(Rfc3986.Encode(consumerSecret));
+
+            signature.Append("&");
+
+            if (!string.IsNullOrEmpty(tokenSecret))
+                signature.Append(Rfc3986.Encode(tokenSecret));
+
+            return signature.ToString();
         }
 
         /// <summary>
