@@ -1,0 +1,50 @@
+#summary How to configure OAuth.net Consumers.
+#labels Draft
+
+= Configuring OAuth.net Consumer Applications in v0.6 =
+
+In version 0.6 the method of loading the OAuth.NET components changed from a hard reliance  on the Castle Windsor IoC to implement the Microsoft Common Service Locator.  The decision was made to make this breaking change as it was recognised that users may already be using different IoC implementations within their existing applications to which they are adding an OAuth layer.
+
+The following documentation will assume that you will be using the Castle Windsor IoC implementation.  If you intend to use an alternative IoC the examples will need to be changed to follow you IoC configuration requirements.
+
+
+=Configuring OAuth.net Consumer Applications=
+
+When writing a consumer application using OAuth.net, you need to specify which components to use for certain services. You do this through the IoC config mechanism.  Castle supports your application's *Web.config* or *App.config* file and the examples given here are for loading through these files.   Please refer to the Windsor documentation on how to load the configuration from an alternative source.
+
+The OAuth.Net.Components assembly contains some default implementations of these services, but you may need to create your own. In both cases, configuration happens in the same way.
+
+For consumer applications, you must provide implementations of:
+
+ * Signing providers to handle signing for each signature method you use (implementing _ISigningProvider_) 
+ * A nonce provider to generate unique values for each OAuth request (implementing _INonceProvider_)
+
+There may be more than one component for the _ISigningProvider_ service (for multiple signature methods). The signature method implemented by the signing provider is stored in the component key. 
+
+For the other services, only one component will be used, usually the first registered.
+
+
+= Specifying The Microsoft Common Service Locator =
+
+For the components to be loaded through the Microsoft Common Service Locator during the application start up you need to provide to the ServiceLocator an instance of the IoC container.
+
+The following code specifies the Windsor container so that it loads the config from the web.config.  It specifies that the configuration will be found in a section called oauth.net.components.
+
+{{{
+    public class Global : HttpApplication
+    {
+        public override void Init()
+        {
+            IServiceLocator injector =
+                new WindsorServiceLocator(
+                    new WindsorContainer(
+                        new XmlInterpreter(
+                            new ConfigResource("oauth.net.components"))));
+
+            ServiceLocator.SetLocatorProvider(() => injector);
+        }
+    }
+}}}
+
+This section of code was from the global.aspx file of a web application.
+
