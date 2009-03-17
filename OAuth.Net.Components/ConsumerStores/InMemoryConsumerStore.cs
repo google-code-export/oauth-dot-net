@@ -6,10 +6,10 @@
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -17,17 +17,10 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-// 
-// OAuth.net uses the Common Service Locator interface, released under the MS-PL
-// license. See "CommonServiceLocator License.txt" in the Licenses folder.
-// 
-// The examples and test cases use the Windsor Container from the Castle Project
-// and Common Service Locator Windsor adaptor, released under the Apache License,
-// Version 2.0. See "Castle Project License.txt" in the Licenses folder.
-// 
-// XRDS-Simple.net uses the HTMLAgility Pack. See "HTML Agility Pack License.txt"
-// in the Licenses folder.
 //
+// OAuth.net uses the Windsor Container from the Castle Project. See "Castle 
+// Project License.txt" in the Licenses folder.
+// 
 // Authors: Bruce Boughton, Chris Adams
 // Website: http://lab.madgex.com/oauth-net/
 // Email:   oauth-dot-net@madgex.com
@@ -35,6 +28,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Castle.Core;
 using OAuth.Net.Common;
 
 namespace OAuth.Net.Components
@@ -43,8 +37,9 @@ namespace OAuth.Net.Components
     /// An thread-safe, in-memory implementation of IConsumerStore. Items are not persisted across
     /// application restarts.
     /// </summary>
+    [Singleton]
     public class InMemoryConsumerStore
-        : IConsumerStore, IOutOfBoundConsumerStore
+        : IConsumerStore
     {
         protected static readonly object SyncRoot = new object();
 
@@ -54,7 +49,6 @@ namespace OAuth.Net.Components
         public InMemoryConsumerStore()
         {
             this.ConsumerDictionary = new Dictionary<string, IConsumer>();
-            this.UriDictionary = new Dictionary<Uri, string>();
         }
 
         /// <summary>
@@ -97,15 +91,6 @@ namespace OAuth.Net.Components
         }
 
         /// <summary>
-        /// The store to map Uri with Consumer keys
-        /// </summary>
-        protected IDictionary<Uri, string> UriDictionary
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
         /// Adds the supplied consumer to the consumer store. If the consumer conflicts with a 
         /// consumer already in the store, then <c>false</c> is returned.
         /// </summary>
@@ -125,27 +110,6 @@ namespace OAuth.Net.Components
             }
 
             return true;
-        }
-
-        /// <summary>
-        /// Adds the supplied consumer to the consumer store. If the consumer conflicts with a 
-        /// consumer already in the store, then <c>false</c> is returned.
-        /// Associates the provided uri to the consumer
-        /// </summary>
-        /// <param name="consumer">The consumer to store</param>
-        /// <param name="uri">The uri to assocaite the consumer with</param>
-        /// <returns><c>true</c>, iff the consumer was stored</returns>
-        public virtual bool Add(IConsumer consumer, Uri uri)
-        {
-            bool wasAdded = Add(consumer);
-
-            lock (SyncRoot)
-            {
-                if (!this.UriDictionary.Keys.Contains(uri))
-                    this.UriDictionary[uri] = consumer.Key;
-            }
-
-            return wasAdded;
         }
 
         /// <summary>
@@ -189,27 +153,6 @@ namespace OAuth.Net.Components
             }
         }
 
-
-        /// <summary>
-        /// Gets the consumer associated to the given Uri
-        /// </summary>
-        /// <param name="uri">uri</param>
-        /// <returns>The consumer registered with the consumer key if successful, or
-        /// <c>null</c> if there is no consumer registered with the supplied key</returns>
-        public virtual IConsumer GetByUri(Uri uri)
-        {
-            if (uri == null)
-                throw new ArgumentException("uri argument is mandatory", "uri");
-
-            lock (SyncRoot)
-            {
-                if (!this.UriDictionary.Keys.Contains(uri))
-                    return null;
-                else
-                    return GetByKey(this.UriDictionary[uri]);
-            }
-        }
-
         /// <summary>
         /// Updates the given consumer in the store.
         /// </summary>
@@ -236,7 +179,7 @@ namespace OAuth.Net.Components
         /// Removes the specified consumer from the store.
         /// </summary>
         /// <param name="consumer">The consumer to remove</param>
-        /// <returns><c>true</c>, if the consumer was successfully removed
+        /// <returns><c>true</c>, iff the consumer was successfully removed
         /// from the store. This will return <c>false</c> if the consumer 
         /// did not exist in the store.</returns>
         public virtual bool Remove(IConsumer consumer)
@@ -249,69 +192,8 @@ namespace OAuth.Net.Components
                 if (!this.Contains(consumer.Key))
                     return false;
                 else
-                {
-                    if (this.UriDictionary.Values.Contains(consumer.Key))
-                    {
-                        Uri uriToRemove = null;
-
-                        //There must be a better way to do this.
-                        foreach (Uri key in this.UriDictionary.Keys)
-                        {
-                            if (this.UriDictionary[key].Equals(consumer))
-                            {
-                                uriToRemove = key;
-                                break;
-                            }
-                        }
-
-                        this.UriDictionary.Remove(uriToRemove);
-                    }
-
                     return this.ConsumerDictionary.Remove(consumer.Key);
-                }
             }
         }
-
-        /// <summary>
-        /// Remove the association between an URI an a consumer in the store
-        /// </summary>
-        /// <param name="uri">The uri to remove.</param>
-        /// <param name="removeConsumer"><c>true</c> if to remove the consumer from the dictionary.</param>
-        /// <returns></returns>
-        public virtual bool Remove(Uri uri, bool removeConsumer)
-        {
-            if (uri == null)
-                throw new ArgumentNullException("uri is a mandatory argument", "uri");
-
-            lock (SyncRoot)
-            {
-                if (!this.UriDictionary.Keys.Contains(uri))
-                    return false;
-                else
-                {
-                    if (removeConsumer)
-                    {
-                        IConsumer consumer = this.GetByKey(this.UriDictionary[uri]);
-                        return Remove(consumer);
-                    }
-                    else
-                        return this.UriDictionary.Remove(uri);
-                }
-            }
-
-        }
-
-        /// <summary>
-        /// Remove the association between an URI an a consumer in the store, removing the 
-        /// consumer completly from the store.
-        /// </summary>
-        /// <param name="uri">The uri to remove.</param>
-        /// <param name="removeConsumer"><c>true</c> if to remove the consumer from the dictionary.</param>
-        /// <returns></returns>
-        public virtual bool Remove(Uri uri)
-        {
-            return Remove(uri, true);
-        }
-
     }
 }

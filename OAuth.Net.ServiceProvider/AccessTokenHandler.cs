@@ -6,10 +6,10 @@
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -17,17 +17,10 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-// 
-// OAuth.net uses the Common Service Locator interface, released under the MS-PL
-// license. See "CommonServiceLocator License.txt" in the Licenses folder.
-// 
-// The examples and test cases use the Windsor Container from the Castle Project
-// and Common Service Locator Windsor adaptor, released under the Apache License,
-// Version 2.0. See "Castle Project License.txt" in the Licenses folder.
-// 
-// XRDS-Simple.net uses the HTMLAgility Pack. See "HTML Agility Pack License.txt"
-// in the Licenses folder.
 //
+// OAuth.net uses the Windsor Container from the Castle Project. See "Castle 
+// Project License.txt" in the Licenses folder.
+// 
 // Authors: Bruce Boughton, Chris Adams
 // Website: http://lab.madgex.com/oauth-net/
 // Email:   oauth-dot-net@madgex.com
@@ -166,9 +159,9 @@ namespace OAuth.Net.ServiceProvider
              * Check the token
              */
             IRequestToken token;
-            if (ServiceProviderContext.GetTokenStore().ContainsRequestToken(requestContext.Parameters.Token))
+            if (ServiceProviderContext.TokenStore.ContainsRequestToken(requestContext.Parameters.Token))
             {
-                token = ServiceProviderContext.GetTokenStore().GetRequestToken(requestContext.Parameters.Token);
+                token = ServiceProviderContext.TokenStore.GetRequestToken(requestContext.Parameters.Token);
 
                 /*
                  * Ensure the token was issued to the same consumer as this request purports
@@ -226,11 +219,11 @@ namespace OAuth.Net.ServiceProvider
             accessToken.Status = TokenStatus.Authorized;
 
             // Store the token
-            ServiceProviderContext.GetTokenStore().Add(accessToken);
+            ServiceProviderContext.TokenStore.Add(accessToken);
 
             // Mark the request token as used
             requestContext.RequestToken.Status = TokenStatus.Used;
-            ServiceProviderContext.GetTokenStore().Update(requestContext.RequestToken);
+            ServiceProviderContext.TokenStore.Update(requestContext.RequestToken);
 
             // Add to the response
             requestContext.ResponseParameters[Constants.TokenParameter] = accessToken.Token;
@@ -242,9 +235,9 @@ namespace OAuth.Net.ServiceProvider
             IAccessToken accessToken;
             do
             {
-                accessToken = ServiceProviderContext.GetTokenGenerator().CreateAccessToken(requestContext.Consumer, requestContext.RequestToken);
+                accessToken = ServiceProviderContext.TokenGenerator.CreateAccessToken(requestContext.Consumer, requestContext.RequestToken);
             }
-            while (ServiceProviderContext.GetTokenStore().Contains(accessToken.Token));
+            while (ServiceProviderContext.TokenStore.Contains(accessToken.Token));
 
             return accessToken;
         }

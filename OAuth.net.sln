@@ -17,16 +17,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{
 		Libraries\Castle.MicroKernel.xml = Libraries\Castle.MicroKernel.xml
 		Libraries\Castle.Windsor.dll = Libraries\Castle.Windsor.dll
 		Libraries\Castle.Windsor.xml = Libraries\Castle.Windsor.xml
-		Libraries\CommonServiceLocator.WindsorAdapter.dll = Libraries\CommonServiceLocator.WindsorAdapter.dll
-		Libraries\HtmlAgilityPack.dll = Libraries\HtmlAgilityPack.dll
-		Libraries\HtmlAgilityPack.xml = Libraries\HtmlAgilityPack.xml
-		Libraries\Microsoft.Practices.ServiceLocation.dll = Libraries\Microsoft.Practices.ServiceLocation.dll
 		Libraries\nunit.framework.dll = Libraries\nunit.framework.dll
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Maintenance", "Maintenance", "{25EA3BF2-606C-441B-8495-71C155CB7B53}"
 	ProjectSection(SolutionItems) = preProject
 		docproject.sandcastle.shfb = docproject.sandcastle.shfb
+		nunit-tests.config = nunit-tests.config
 		nunit-tests.nunit = nunit-tests.nunit
 		OAuth.Net.fxcop = OAuth.Net.fxcop
 		oauth.net.strongname.pfx = oauth.net.strongname.pfx
@@ -40,8 +37,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Licenses", "Licenses", "{29F5B41F-415D-45E6-AAC9-E2E0662D00BE}"
 	ProjectSection(SolutionItems) = preProject
 		Licenses\Castle Project License.txt = Licenses\Castle Project License.txt
-		Licenses\CommonServiceLocator License.txt = Licenses\CommonServiceLocator License.txt
-		Licenses\HTML Agility Pack License.txt = Licenses\HTML Agility Pack License.txt
 		Licenses\OAuth.Net License.txt = Licenses\OAuth.Net License.txt
 	EndProjectSection
 EndProject
@@ -57,12 +52,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Examples.FireEagleConsumer", "Examples\OAuth.Net.Examples.FireEagleConsumer\OAuth.Net.Examples.FireEagleConsumer.csproj", "{73D326B1-79CF-4E3B-BB28-F902FEF34957}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Examples.EchoServiceProvider", "Examples\OAuth.Net.Examples.EchoServiceProvider\OAuth.Net.Examples.EchoServiceProvider.csproj", "{70CBEA9B-51EE-4529-AD92-5EDD09617DDA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRDS-Simple.Net", "XRDS-Simple.Net\XRDS-Simple.Net.csproj", "{62092966-4CD6-40A6-9761-B322B1122742}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRDS-Simple.Net.TestCases", "XRDS-Simple.Net.TestCases\XRDS-Simple.Net.TestCases.csproj", "{9BEC321E-5A9D-43A0-AA1C-EDD8D4FE76AB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Discovery", "OAuth.Net.Discovery\OAuth.Net.Discovery.csproj", "{3860F39E-1313-4B7D-A4B0-60D6A4EBF47F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -98,18 +87,6 @@ Global
 		{70CBEA9B-51EE-4529-AD92-5EDD09617DDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70CBEA9B-51EE-4529-AD92-5EDD09617DDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70CBEA9B-51EE-4529-AD92-5EDD09617DDA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{62092966-4CD6-40A6-9761-B322B1122742}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{62092966-4CD6-40A6-9761-B322B1122742}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{62092966-4CD6-40A6-9761-B322B1122742}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{62092966-4CD6-40A6-9761-B322B1122742}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9BEC321E-5A9D-43A0-AA1C-EDD8D4FE76AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9BEC321E-5A9D-43A0-AA1C-EDD8D4FE76AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9BEC321E-5A9D-43A0-AA1C-EDD8D4FE76AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9BEC321E-5A9D-43A0-AA1C-EDD8D4FE76AB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3860F39E-1313-4B7D-A4B0-60D6A4EBF47F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3860F39E-1313-4B7D-A4B0-60D6A4EBF47F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3860F39E-1313-4B7D-A4B0-60D6A4EBF47F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3860F39E-1313-4B7D-A4B0-60D6A4EBF47F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
