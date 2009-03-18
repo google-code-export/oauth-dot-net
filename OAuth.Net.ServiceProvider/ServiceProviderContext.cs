@@ -90,90 +90,102 @@ namespace OAuth.Net.ServiceProvider
         }
 
         /// <summary>
-        /// Get an instance of a consumer store. Returns <c>null</c> if 
-        /// no consumer store component is registered.
+        /// An instance of a consumer store. 
         /// </summary>
-        /// <returns>The consumer store or <c>null</c> if no consumer 
-        /// store has been registered.</returns>
-        public static IConsumerStore GetConsumerStore()
+        /// <value>
+        /// <c>null</c> if no consumer store component is registered.
+        /// </value>
+        public static IConsumerStore ConsumerStore
         {
-            try
+            get
             {
-                return ServiceLocator.Current.GetInstance<IConsumerStore>();
-            }
-            catch (ActivationException)
-            {
-                return null;
-            }
-            catch (NullReferenceException)
-            {
-                return null;
+                try
+                {
+                    return ServiceLocator.Current.GetInstance<IConsumerStore>();
+                }
+                catch (ActivationException)
+                {
+                    return null;
+                }
+                catch (NullReferenceException)
+                {
+                    return null;
+                }
             }
         }
 
         /// <summary>
-        /// Get an instance of a request ID validator. Returns <c>null</c> if 
-        /// no request ID validator component is registered.
+        /// An instance of a request ID validator. 
         /// </summary>
-        /// <returns>The request ID validator or <c>null</c> if no request ID
-        /// validator has been registered.</returns>
-        public static IRequestIdValidator GetRequestIdValidator()
+        /// <value>
+        /// <c>null</c> if no request ID validator component is registered.
+        /// </value>
+        public static IRequestIdValidator RequestIdValidator
         {
-            try
+            get
             {
-                return ServiceLocator.Current.GetInstance<IRequestIdValidator>();
-            }
-            catch (ActivationException)
-            {
-                return null;
-            }
-            catch (NullReferenceException)
-            {
-                return null;
+                try
+                {
+                    return ServiceLocator.Current.GetInstance<IRequestIdValidator>();
+                }
+                catch (ActivationException)
+                {
+                    return null;
+                }
+                catch (NullReferenceException)
+                {
+                    return null;
+                }
             }
         }
 
         /// <summary>
-        /// Get an instance of a token generator. Returns <c>null</c> if 
-        /// no token generator component is registered.
+        /// An instance of a token generator. 
         /// </summary>
-        /// <returns>The token generator or <c>null</c> if no token 
-        /// generator has been registered.</returns>
-        public static ITokenGenerator GetTokenGenerator()
+        /// <value>
+        /// <c>null</c> if no token generator component is registered.
+        /// </value>
+        public static ITokenGenerator TokenGenerator
         {
-            try
+            get
             {
-                return ServiceLocator.Current.GetInstance<ITokenGenerator>();
-            }
-            catch (ActivationException)
-            {
-                return null;
-            }
-            catch (NullReferenceException)
-            {
-                return null;
+                try
+                {
+                    return ServiceLocator.Current.GetInstance<ITokenGenerator>();
+                }
+                catch (ActivationException)
+                {
+                    return null;
+                }
+                catch (NullReferenceException)
+                {
+                    return null;
+                }
             }
         }
 
         /// <summary>
-        /// Get an instance of a token store. Returns <c>null</c> if 
-        /// no token store component is registered.
+        /// An instance of a token store. 
         /// </summary>
-        /// <returns>The token store or <c>null</c> if no token 
-        /// store has been registered.</returns>
-        public static ITokenStore GetTokenStore()
+        /// <value>
+        /// <c>null</c> if no token store component is registered.
+        /// </value>
+        public static ITokenStore TokenStore
         {
-            try
+            get
             {
-                return ServiceLocator.Current.GetInstance<ITokenStore>();
-            }
-            catch (ActivationException)
-            {
-                return null;
-            }
-            catch (NullReferenceException)
-            {
-                return null;
+                try
+                {
+                    return ServiceLocator.Current.GetInstance<ITokenStore>();
+                }
+                catch (ActivationException)
+                {
+                    return null;
+                }
+                catch (NullReferenceException)
+                {
+                    return null;
+                }
             }
         }
 
@@ -229,7 +241,7 @@ namespace OAuth.Net.ServiceProvider
             if (token.ConsumerKey == null)
                 OAuthRequestException.ThrowTokenRejected("Token must have a consumer key");
 
-            IConsumer consumer = ServiceProviderContext.GetConsumerStore().GetByKey(token.ConsumerKey);
+            IConsumer consumer = ServiceProviderContext.ConsumerStore.GetByKey(token.ConsumerKey);
 
             if (consumer == null)
                 OAuthRequestException.ThrowConsumerKeyUnknown("Consumer is unknown");
@@ -258,7 +270,7 @@ namespace OAuth.Net.ServiceProvider
             token.Status = TokenStatus.Authorized;
             token.AuthenticatedUser = authenticatedUser;
 
-            if (ServiceProviderContext.GetTokenStore().Update(token))
+            if (ServiceProviderContext.TokenStore.Update(token))
                 return true;
             else
             {
@@ -279,7 +291,7 @@ namespace OAuth.Net.ServiceProvider
         {
             token.Status = TokenStatus.Revoked;
 
-            if (ServiceProviderContext.GetTokenStore().Update(token))
+            if (ServiceProviderContext.TokenStore.Update(token))
                 return true;
             else
             {

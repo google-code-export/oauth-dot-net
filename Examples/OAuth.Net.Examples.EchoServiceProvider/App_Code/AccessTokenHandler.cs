@@ -63,7 +63,7 @@ namespace OAuth.Net.Examples.EchoServiceProvider
             OAuthRequestContext requestContext)
         {
             // Don't check to see if the token already exists... it will do!
-            return ServiceProviderContext.GetTokenGenerator().CreateAccessToken(requestContext.Consumer, requestContext.RequestToken);
+            return ServiceProviderContext.TokenGenerator.CreateAccessToken(requestContext.Consumer, requestContext.RequestToken);
         }
     }
 }
