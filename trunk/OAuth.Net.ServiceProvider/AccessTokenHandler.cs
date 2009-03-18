@@ -166,9 +166,9 @@ namespace OAuth.Net.ServiceProvider
              * Check the token
              */
             IRequestToken token;
-            if (ServiceProviderContext.GetTokenStore().ContainsRequestToken(requestContext.Parameters.Token))
+            if (ServiceProviderContext.TokenStore.ContainsRequestToken(requestContext.Parameters.Token))
             {
-                token = ServiceProviderContext.GetTokenStore().GetRequestToken(requestContext.Parameters.Token);
+                token = ServiceProviderContext.TokenStore.GetRequestToken(requestContext.Parameters.Token);
 
                 /*
                  * Ensure the token was issued to the same consumer as this request purports
@@ -226,11 +226,11 @@ namespace OAuth.Net.ServiceProvider
             accessToken.Status = TokenStatus.Authorized;
 
             // Store the token
-            ServiceProviderContext.GetTokenStore().Add(accessToken);
+            ServiceProviderContext.TokenStore.Add(accessToken);
 
             // Mark the request token as used
             requestContext.RequestToken.Status = TokenStatus.Used;
-            ServiceProviderContext.GetTokenStore().Update(requestContext.RequestToken);
+            ServiceProviderContext.TokenStore.Update(requestContext.RequestToken);
 
             // Add to the response
             requestContext.ResponseParameters[Constants.TokenParameter] = accessToken.Token;
@@ -242,9 +242,9 @@ namespace OAuth.Net.ServiceProvider
             IAccessToken accessToken;
             do
             {
-                accessToken = ServiceProviderContext.GetTokenGenerator().CreateAccessToken(requestContext.Consumer, requestContext.RequestToken);
+                accessToken = ServiceProviderContext.TokenGenerator.CreateAccessToken(requestContext.Consumer, requestContext.RequestToken);
             }
-            while (ServiceProviderContext.GetTokenStore().Contains(accessToken.Token));
+            while (ServiceProviderContext.TokenStore.Contains(accessToken.Token));
 
             return accessToken;
         }

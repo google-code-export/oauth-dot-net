@@ -164,9 +164,9 @@ namespace OAuth.Net.ServiceProvider
             /*
              * Get the consumer by its consumer key
              */
-            if (ServiceProviderContext.GetConsumerStore().Contains(context.Parameters.ConsumerKey))
+            if (ServiceProviderContext.ConsumerStore.Contains(context.Parameters.ConsumerKey))
             {
-                IConsumer consumer = ServiceProviderContext.GetConsumerStore().GetByKey(context.Parameters.ConsumerKey);
+                IConsumer consumer = ServiceProviderContext.ConsumerStore.GetByKey(context.Parameters.ConsumerKey);
 
                 if (consumer == null)
                     OAuthRequestException.ThrowConsumerKeyUnknown(null);
@@ -200,7 +200,7 @@ namespace OAuth.Net.ServiceProvider
             /*
              * Check the timestamp and nonce
              */
-            context.RequestId = ServiceProviderContext.GetRequestIdValidator().CheckRequest(
+            context.RequestId = ServiceProviderContext.RequestIdValidator.CheckRequest(
                 context.Parameters.Nonce,
                 context.Parameters.Timestamp,
                 context.Parameters.ConsumerKey);
