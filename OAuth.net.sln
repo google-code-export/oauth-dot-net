@@ -21,7 +21,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{
 		Libraries\HtmlAgilityPack.dll = Libraries\HtmlAgilityPack.dll
 		Libraries\HtmlAgilityPack.xml = Libraries\HtmlAgilityPack.xml
 		Libraries\Microsoft.Practices.ServiceLocation.dll = Libraries\Microsoft.Practices.ServiceLocation.dll
-		Libraries\nunit.framework.dll = Libraries\nunit.framework.dll
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Maintenance", "Maintenance", "{25EA3BF2-606C-441B-8495-71C155CB7B53}"
