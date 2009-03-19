@@ -32,7 +32,6 @@
 // Website: http://lab.madgex.com/oauth-net/
 // Email:   oauth-dot-net@madgex.com
 
-
 using System;
 
 namespace OAuth.Net.Common

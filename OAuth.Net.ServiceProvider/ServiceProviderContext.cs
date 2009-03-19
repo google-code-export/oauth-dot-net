@@ -66,30 +66,6 @@ namespace OAuth.Net.ServiceProvider
         }
 
         /// <summary>
-        /// Get a signing provider for the given signature method. Returns 
-        /// <c>null</c> if no signing provider can be found for the 
-        /// given signature method.
-        /// </summary>
-        /// <param name="signatureMethod">The signature method</param>
-        /// <returns>The signing provider or <c>null</c> if no signing 
-        /// provider can be found for the given signature method.</returns>
-        public static ISigningProvider GetSigningProvider(string signatureMethod)
-        {
-            try
-            {
-                return ServiceLocator.Current.GetInstance<ISigningProvider>(Constants.SigningProviderIdPrefix + signatureMethod);
-            }
-            catch (ActivationException)
-            {
-                return null;
-            }
-            catch (NullReferenceException)
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
         /// An instance of a consumer store. 
         /// </summary>
         /// <value>
@@ -186,6 +162,30 @@ namespace OAuth.Net.ServiceProvider
                 {
                     return null;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Get a signing provider for the given signature method. Returns 
+        /// <c>null</c> if no signing provider can be found for the 
+        /// given signature method.
+        /// </summary>
+        /// <param name="signatureMethod">The signature method</param>
+        /// <returns>The signing provider or <c>null</c> if no signing 
+        /// provider can be found for the given signature method.</returns>
+        public static ISigningProvider GetSigningProvider(string signatureMethod)
+        {
+            try
+            {
+                return ServiceLocator.Current.GetInstance<ISigningProvider>(Constants.SigningProviderIdPrefix + signatureMethod);
+            }
+            catch (ActivationException)
+            {
+                return null;
+            }
+            catch (NullReferenceException)
+            {
+                return null;
             }
         }
 
