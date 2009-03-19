@@ -532,10 +532,10 @@ namespace OAuth.Net.Common
             if (sources == OAuthParameterSources.None)
                 throw new ArgumentException("sources must not be OAuthParameterSources.None", "sources");
 
-            bool useAuthHeader = ((sources & OAuthParameterSources.HttpAuthorizationHeader) == OAuthParameterSources.HttpAuthorizationHeader);
-            bool useWwwAuthHeader = ((sources & OAuthParameterSources.HttpWwwAuthenticateHeader) == OAuthParameterSources.HttpWwwAuthenticateHeader);
+            bool useAuthHeader = (sources & OAuthParameterSources.HttpAuthorizationHeader) == OAuthParameterSources.HttpAuthorizationHeader;
+            bool useWwwAuthHeader = (sources & OAuthParameterSources.HttpWwwAuthenticateHeader) == OAuthParameterSources.HttpWwwAuthenticateHeader;
             bool usePost = (sources & OAuthParameterSources.HttpPostBody) == OAuthParameterSources.HttpPostBody;
-            bool useQueryString = ((sources & OAuthParameterSources.HttpQueryString) == OAuthParameterSources.HttpQueryString);
+            bool useQueryString = (sources & OAuthParameterSources.HttpQueryString) == OAuthParameterSources.HttpQueryString;
 
             NameValueCollection authHeaderParams = useAuthHeader ? ParseAuthHeader(authHeader) : null;
             NameValueCollection wwwAuthHeaderParams = useWwwAuthHeader ? ParseAuthHeader(wwwAuthHeader) : null;

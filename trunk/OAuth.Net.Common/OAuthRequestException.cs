@@ -845,7 +845,7 @@ namespace OAuth.Net.Common
             header.Append(OAuth.Net.Common.Constants.RealmParameter).Append("=\"").Append(realm.Replace("\"", "\\\"")).Append("\"");
 
             // Problem
-            header.Append(", ").Append(OAuthRequestExceptionParameters.Problem).Append("=\"").Append(Problem).Append("\"");
+            header.Append(", ").Append(OAuthRequestExceptionParameters.Problem).Append("=\"").Append(this.Problem).Append("\"");
 
             // Additional parameter
             if (!string.IsNullOrEmpty(this.AdditionalParameter.Key)
@@ -854,7 +854,7 @@ namespace OAuth.Net.Common
 
             // Advice
             if (!string.IsNullOrEmpty(this.Advice))
-                header.Append(", ").Append(OAuthRequestExceptionParameters.ProblemAdvice).Append("=\"").Append(Advice.Replace("\"", "\\\"").Replace("\n", "\\n")).Append("\"");
+                header.Append(", ").Append(OAuthRequestExceptionParameters.ProblemAdvice).Append("=\"").Append(this.Advice.Replace("\"", "\\\"").Replace("\n", "\\n")).Append("\"");
 
             return header.ToString();
         }

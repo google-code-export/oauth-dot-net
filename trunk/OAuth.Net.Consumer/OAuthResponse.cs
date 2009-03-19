@@ -53,7 +53,7 @@ namespace OAuth.Net.Consumer
         {
             this.Token = token;
             this.ProtectedResource = resource;
-            this.HasProtectedResource = (resource != null);
+            this.HasProtectedResource = resource != null;
         }
 
         /// <summary>

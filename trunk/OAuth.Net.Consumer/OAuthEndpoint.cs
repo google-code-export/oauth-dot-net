@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-using  OAuth.Net.Common;
+using OAuth.Net.Common;
 
 namespace OAuth.Net.Consumer
 {
@@ -11,20 +8,22 @@ namespace OAuth.Net.Consumer
     /// </summary>
     public struct OAuthEndpoint
     {        
-        public OAuthEndpoint(Uri url, string httpMethod, string signatureMethod, OAuthParameterSources acceptedOAuthParameterMethods) : this()
-        {            
-            Url = url;
-            HttpMethod = httpMethod;
-            SignatureMethod = signatureMethod;
-            AcceptedOAuthParameterMethods = acceptedOAuthParameterMethods;
+        public OAuthEndpoint(Uri url, string httpMethod, string signatureMethod, OAuthParameterSources acceptedOAuthParameterMethods) 
+            : this()
+        {
+            this.Url = url;
+            this.HttpMethod = httpMethod;
+            this.SignatureMethod = signatureMethod;
+            this.AcceptedOAuthParameterMethods = acceptedOAuthParameterMethods;
         }
 
-        public OAuthEndpoint(Uri url, string httpMethod, OAuthParameterSources acceptedOAuthParameterMethods ) : this()
+        public OAuthEndpoint(Uri url, string httpMethod, OAuthParameterSources acceptedOAuthParameterMethods) 
+            : this()
         {
-            Url = url;
-            HttpMethod = httpMethod;
-            SignatureMethod = String.Empty;
-            AcceptedOAuthParameterMethods = acceptedOAuthParameterMethods;
+            this.Url = url;
+            this.HttpMethod = httpMethod;
+            this.SignatureMethod = String.Empty;
+            this.AcceptedOAuthParameterMethods = acceptedOAuthParameterMethods;
         }
         
         /// <summary>
