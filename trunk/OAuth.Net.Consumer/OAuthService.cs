@@ -493,6 +493,12 @@ namespace OAuth.Net.Consumer
         /// <returns><c>true</c>, if they are equal; otherwise <c>false</c></returns>
         public static bool operator ==(OAuthService left, OAuthService right)
         {
+            if (object.ReferenceEquals(left, right))
+                return true;
+
+            if (((object)left) == null && ((object)right) == null)
+                return true;
+
             return left.Equals(right);
         }
 
@@ -504,7 +510,7 @@ namespace OAuth.Net.Consumer
         /// <returns><c>true</c>, if they are not equal; otherwise <c>false</c></returns>
         public static bool operator !=(OAuthService left, OAuthService right)
         {
-            return !left.Equals(right);
+            return !(left == right);
         }
 
         /// <summary>
