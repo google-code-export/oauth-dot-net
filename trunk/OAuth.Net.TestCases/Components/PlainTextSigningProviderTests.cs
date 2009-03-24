@@ -33,11 +33,10 @@
 // Email:   oauth-dot-net@madgex.com
 
 #if DEBUG
-using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using OAuth.Net.Components;
 using OAuth.Net.Common;
+using OAuth.Net.Components;
 
 namespace OAuth.Net.TestCases.Components
 {
