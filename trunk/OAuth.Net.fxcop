@@ -22,10 +22,11 @@
  </ProjectOptions>
  <Targets>
   <AssemblyReferenceDirectories>
-    <Directory>$(ProjectDir)/Libraries/</Directory>
+   <Directory>$(ProjectDir)/Libraries/</Directory>
   </AssemblyReferenceDirectories>
   <Target Name="$(ProjectDir)/Examples/OAuth.Net.Examples.EchoServiceProvider/bin/OAuth.Net.Examples.EchoServiceProvider.dll" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/Examples/OAuth.Net.Examples.FireEagleConsumer/bin/OAuth.Net.Examples.FireEagleConsumer.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/Examples/OAuth.Net.Examples.TwitterClient/bin/OAuth.Net.Examples.TwitterClient.dll" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/OAuth.Net.Common/bin/Debug/OAuth.Net.Common.dll" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/OAuth.Net.Components/bin/Debug/OAuth.Net.Components.dll" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/OAuth.Net.Consumer/bin/Debug/OAuth.Net.Consumer.dll" Analyze="True" AnalyzeAllChildren="True" />
@@ -47,5 +48,103 @@
   <Settings />
  </Rules>
  <FxCopReport Version="1.36">
+  <Targets>
+   <Target Name="$(ProjectDir)/Examples/OAuth.Net.Examples.EchoServiceProvider/bin/OAuth.Net.Examples.EchoServiceProvider.dll">
+    <Modules>
+     <Module Name="oauth.net.examples.echoserviceprovider.dll">
+      <Messages>
+       <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2009-03-23 23:42:08Z">
+        <Issue Name="NoStrongName">
+         <Item>'OAuth.Net.Examples.EchoServiceProvider.dll'</Item>
+        </Issue>
+       </Message>
+      </Messages>
+     </Module>
+    </Modules>
+   </Target>
+   <Target Name="$(ProjectDir)/Examples/OAuth.Net.Examples.FireEagleConsumer/bin/OAuth.Net.Examples.FireEagleConsumer.dll">
+    <Modules>
+     <Module Name="oauth.net.examples.fireeagleconsumer.dll">
+      <Messages>
+       <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2009-03-23 23:42:08Z">
+        <Issue Name="NoStrongName">
+         <Item>'OAuth.Net.Examples.FireEagleConsumer.dll'</Item>
+        </Issue>
+       </Message>
+      </Messages>
+     </Module>
+    </Modules>
+   </Target>
+   <Target Name="$(ProjectDir)/Examples/OAuth.Net.Examples.TwitterClient/bin/OAuth.Net.Examples.TwitterClient.dll">
+    <Modules>
+     <Module Name="oauth.net.examples.twitterclient.dll">
+      <Messages>
+       <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2009-03-23 23:42:08Z">
+        <Issue Name="NoStrongName">
+         <Item>'OAuth.Net.Examples.TwitterClient.dll'</Item>
+        </Issue>
+       </Message>
+      </Messages>
+     </Module>
+    </Modules>
+   </Target>
+   <Target Name="$(ProjectDir)/OAuth.Net.Common/bin/Debug/OAuth.Net.Common.dll">
+    <Modules>
+     <Module Name="oauth.net.common.dll">
+      <Messages>
+       <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2009-03-23 23:42:08Z">
+        <Issue Name="NoStrongName">
+         <Item>'OAuth.Net.Common.dll'</Item>
+        </Issue>
+       </Message>
+      </Messages>
+     </Module>
+    </Modules>
+   </Target>
+   <Target Name="$(ProjectDir)/OAuth.Net.Components/bin/Debug/OAuth.Net.Components.dll">
+    <Modules>
+     <Module Name="oauth.net.components.dll">
+      <Messages>
+       <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2009-03-23 23:42:08Z">
+        <Issue Name="NoStrongName">
+         <Item>'OAuth.Net.Components.dll'</Item>
+        </Issue>
+       </Message>
+      </Messages>
+     </Module>
+    </Modules>
+   </Target>
+   <Target Name="$(ProjectDir)/OAuth.Net.Consumer/bin/Debug/OAuth.Net.Consumer.dll">
+    <Modules>
+     <Module Name="oauth.net.consumer.dll">
+      <Messages>
+       <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2009-03-23 23:42:08Z">
+        <Issue Name="NoStrongName">
+         <Item>'OAuth.Net.Consumer.dll'</Item>
+        </Issue>
+       </Message>
+      </Messages>
+     </Module>
+    </Modules>
+   </Target>
+   <Target Name="$(ProjectDir)/OAuth.Net.ServiceProvider/bin/Debug/OAuth.Net.ServiceProvider.dll">
+    <Modules>
+     <Module Name="oauth.net.serviceprovider.dll">
+      <Messages>
+       <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2009-03-23 23:42:08Z">
+        <Issue Name="NoStrongName">
+         <Item>'OAuth.Net.ServiceProvider.dll'</Item>
+        </Issue>
+       </Message>
+      </Messages>
+     </Module>
+    </Modules>
+   </Target>
+  </Targets>
+  <Rules>
+   <Rule TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210">
+    <Resolution Name="NoStrongName">Sign {0} with a strong name key.</Resolution>
+   </Rule>
+  </Rules>
  </FxCopReport>
 </FxCopProject>
