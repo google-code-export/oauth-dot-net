@@ -1,11 +1,7 @@
-The current source trunk is under active development, and may be unstable.  The latest stable release is 0.5.1 available from the [http://code.google.com/p/oauth-dot-net/downloads/list download section] (or browse the [http://code.google.com/p/oauth-dot-net/source/browse/#svn/tags/0.5.1.0-release 0.5.1.0 release source]).
+The current source trunk is under active development, and may be unstable.  The latest stable release is 0.6.0 available from the [http://code.google.com/p/oauth-dot-net/downloads/list download section] (or browse the [http://code.google.com/p/oauth-dot-net/source/browse/#svn/tags/0.6.0.0-release 0.6.0.0 release source]).
 
 [http://code.google.com/p/oauth-dot-net/source/browse/ Continue to browse source...]
 
 = New On The Trunk =
 
- * Additional work is being performed on OAUTH Discovery with XRDS-Simple parsing.  These libraries are experimental and may change between versions.
-
- * The dependency on the Windsor container has been removed and replaced with the Common Service Locator interface ([http://code.google.com/p/oauth-dot-net/source/browse/?r=22#svn/trunk r22])
-
- * Tests have been moved out of the core assemblies ([http://code.google.com/p/oauth-dot-net/source/browse/?r=19#svn/trunk r19])
+ * Work to implement the [http://oauth.googlecode.com/svn/spec/ext/consumer_request/1.0/drafts/2/spec.html Consumer Request Extension]
