@@ -1,5 +1,5 @@
 #summary How to configure OAuth.net Consumers
-#labels Featured
+#labels Deprecated,0.5..
 
 =Configuring OAuth.net Consumer Applications=
 
