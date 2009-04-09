@@ -25,8 +25,7 @@
 		<OAuthNetProjects Include="OAuth.Net.Common\OAuth.Net.Common.csproj" />
 		<OAuthNetProjects Include="OAuth.Net.Components\OAuth.Net.Components.csproj" />
 		<OAuthNetProjects Include="OAuth.Net.Consumer\OAuth.Net.Consumer.csproj" />
-		<OAuthNetProjects Include="OAuth.Net.ServiceProvider\OAuth.Net.ServiceProvider.csproj" />
-		<OAuthNetProjects Include="XRDS-Simple.Net\XRDS-Simple.Net.csproj" />
+		<OAuthNetProjects Include="OAuth.Net.ServiceProvider\OAuth.Net.ServiceProvider.csproj" />		
 	</ItemGroup>
   
 	<!-- Build the projects -->	
@@ -53,10 +52,7 @@
 		<!-- Frig to include PDB and XML for OAuth.Net.ServiceProvider if present -->
 		<BuildFiles Include="OAuth.Net.ServiceProvider\bin\$(Configuration)\OAuth.Net.ServiceProvider.pdb" Condition=" '$(Configuration)' == 'Debug'  And Exists('OAuth.Net.ServiceProvider\bin\$(Configuration)\OAuth.Net.ServiceProvider.pdb')"/>
 		<BuildFiles Include="OAuth.Net.ServiceProvider\bin\$(Configuration)\OAuth.Net.ServiceProvider.xml" Condition="Exists('OAuth.Net.ServiceProvider\bin\$(Configuration)\OAuth.Net.ServiceProvider.xml')"/>
-		
-		<!-- Frig to include PDB and XML for XRDS-Simple.Net if present -->
-		<BuildFiles Include="XRDS-Simple.Net\bin\$(Configuration)\XRDS-Simple.Net.pdb" Condition=" '$(Configuration)' == 'Debug'  And Exists('XRDS-Simple.Net\bin\$(Configuration)\XRDS-Simple.Net.pdb')"/>
-		<BuildFiles Include="XRDS-Simple.Net\bin\$(Configuration)\XRDS-Simple.Net.xml" Condition="Exists('XRDS-Simple.Net\bin\$(Configuration)\XRDS-Simple.Net.xml')"/>
+				
 	</ItemGroup>
   
   
