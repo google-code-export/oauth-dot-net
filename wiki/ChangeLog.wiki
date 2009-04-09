@@ -11,15 +11,15 @@ Consumer:
 Switch to Common Service Locator:
 
  * OAuthService no longer takes the config section to load Castle from; 
- ** instead uses ServiceLocator.Current (overloads allow you to specify a different ServiceLocatorProvider)
+  * instead uses ServiceLocator.Current (overloads allow you to specify a different ServiceLocatorProvider)
 
  * Applications should set ServiceLocator.Current on startup 
- ** i.e. in Global.asax as per example apps
+  * i.e. in Global.asax as per example apps
 
  * Custom config section no longer used; 
- ** use whatever registration mechanism your ServiceLocator supports. 
- ** For Windsor, this just means changing the section type (and optionally name). 
- ** Examples use Windsor with section name “oauth.net.components” 
+  * use whatever registration mechanism your ServiceLocator supports. 
+  * For Windsor, this just means changing the section type (and optionally name). 
+  * Examples use Windsor with section name “oauth.net.components” 
 
 Service Provider:
 
@@ -28,11 +28,11 @@ Switch to Common Service Locator:
  * ServiceProviderContext: uses ServiceLocator.Currrent rather than ServiceLocator property
 
  * Applications must register ServiceLocator.Current on startup
- ** i.e. in Global.asax as per example apps
+  * i.e. in Global.asax as per example apps
 
  * Windsor config section called “oauth.net.serviceprovider” no longer used (conflicting breaking change).
- ** Use whatever registration mechanism your ServiceLocator supports
- ** Examples use Windsor with section name “oauth.net.components”
+  * Use whatever registration mechanism your ServiceLocator supports
+  * Examples use Windsor with section name “oauth.net.components”
 
  * ComponentsSection attribute removed from settings section as this is no longer the registration mechanism
 
