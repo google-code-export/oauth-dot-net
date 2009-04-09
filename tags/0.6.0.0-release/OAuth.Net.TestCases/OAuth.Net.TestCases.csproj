@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{27F0F1C7-42D6-4F55-BEDB-39458A1661F9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>OAuth.Net.TestCases</RootNamespace>
+    <AssemblyName>OAuth.Net.TestCases</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Castle.Core, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libraries\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.DynamicProxy, Version=1.1.5.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libraries\Castle.DynamicProxy.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.DynamicProxy2, Version=2.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libraries\Castle.DynamicProxy2.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.MicroKernel, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libraries\Castle.MicroKernel.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libraries\Castle.Windsor.dll</HintPath>
+    </Reference>
+    <Reference Include="CommonServiceLocator.WindsorAdapter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libraries\CommonServiceLocator.WindsorAdapter.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libraries\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.4.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Tools\nunit-2.4.8\bin\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\OAuthParametersTests.cs" />
+    <Compile Include="Common\ResultInfoTests.cs" />
+    <Compile Include="Common\Rfc3986Tests.cs" />
+    <Compile Include="Common\SignatureBaseTests.cs" />
+    <Compile Include="Components\HmacSha1SigningProviderTests.cs" />
+    <Compile Include="Components\PlainTextSigningProviderTests.cs" />
+    <Compile Include="WikiTests\ConcatenateRequestElementsTests.cs" />
+    <Compile Include="WikiTests\HmacSha1Tests.cs" />
+    <Compile Include="WikiTests\NormalizeRequestParameterTests.cs" />
+    <Compile Include="Consumer\OAuthServiceTests.cs" />
+    <Compile Include="WikiTests\ParameterEncodingTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WikiTests\RsaSha1Tests.cs" />
+    <Compile Include="ServiceProvider\IocTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OAuth.Net.Common\OAuth.Net.Common.csproj">
+      <Project>{EE739EF0-FD95-48CC-86AB-BCD873981949}</Project>
+      <Name>OAuth.Net.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OAuth.Net.Components\OAuth.Net.Components.csproj">
+      <Project>{BCF0E325-B557-4D2C-9092-25A9E97490C3}</Project>
+      <Name>OAuth.Net.Components</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OAuth.Net.Consumer\OAuth.Net.Consumer.csproj">
+      <Project>{AB7712BB-ADFB-48B5-AD8A-420683C2D7E9}</Project>
+      <Name>OAuth.Net.Consumer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OAuth.Net.ServiceProvider\OAuth.Net.ServiceProvider.csproj">
+      <Project>{A6D845EE-20BE-4754-A70A-7DDF0B8FA953}</Project>
+      <Name>OAuth.Net.ServiceProvider</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="WikiTests\testcase.rsa.certificate.pem" />
+    <None Include="WikiTests\testcase.rsa.key.pem" />
+    <None Include="WikiTests\testcase.rsa.pfx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>copy /Y $(TargetDir)$(TargetFileName).config $(SolutionDir)nunit-tests.config
+"$(ProjectDir)\..\Tools\Microsoft FxCop 1.36\FxCopCmd.exe" /project:"$(SolutionDir)\OAuth.Net.fxcop" /console
+"$(ProjectDir)\..\Tools\nunit-2.4.8\bin\nunit-console" /nologo /nodots /transform:"$(ProjectDir)\..\Tools\nunit-2.4.8\nunit-vsout.xslt" "$(ProjectDir)\..\nunit-tests.nunit"</PostBuildEvent>
+  </PropertyGroup>
+</Project>
