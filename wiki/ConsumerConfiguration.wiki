@@ -18,7 +18,7 @@ For the other services, only one component will be used, usually the first regis
 
 ==Registering a Config Section==
 
-To register components for your consumer application, you must first register a config section. Config sections are registered in the `<configSections>` element, which must be the first child of the `<configuration>` element, before any other elements.
+To register components for your consumer application, you must first register a config section. Config sections are registered in the `<configSections`>` element, which must be the first child of the `<configuration`>  element, before any other elements.
 
 By convention, consumer applications load components from a section called `oauth.net.consumer` of type `"OAuth.Net.Consumer.ConfigSectionHandler, OAuth.Net.Consumer"`. 
 
