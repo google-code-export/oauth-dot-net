@@ -49,7 +49,7 @@ The following code specifies the Windsor container so that it loads the config f
 This section of code was from the global.aspx file of a web application.
 
 = Registering a Config Section =
-Config sections are registered in the '<configSections>' element, which must be the first child of the '<configuration>' element, before any other elements.
+Config sections are registered in the `<configSections`> element, which must be the first child of the `<configuration`> element, before any other elements.
 
 {{{
 <configuration>
