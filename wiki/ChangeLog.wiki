@@ -40,7 +40,7 @@ Source:
  * `svn checkout http://oauth-dot-net.googlecode.com/svn/tags/0.6.0.0-release/ oauth-0.6.0.0-release`
 
 Binaries:
- * [http://code.google.com/p/oauth-dot-net/downloads/detail?name=OAuthNet-Release-0.6.0.0.zip& Download OAuthNet-Release-0.5.2.0.zip] 
+ * [http://code.google.com/p/oauth-dot-net/downloads/detail?name=OAuthNet-Release-0.6.0.0.zip& Download OAuthNet-Release-0.6.0.0.zip] 
 
 = OAuth.net 0.5.2.0=
 
