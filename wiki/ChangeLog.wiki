@@ -3,39 +3,40 @@
 
 ===9th April 2009==
 *Breaking Changes*
+
 The method of loading components was changed from a hard reliance on the Castle Windsor IoC to implement the Microsoft Common Service Locator instead.  This is a breaking change to the configuration of your applications and application initialization.
 
 Consumer:
                 
 Switch to Common Service Locator:
 
-*OAuthService no longer takes the config section to load Castle from; 
-**instead uses ServiceLocator.Current (overloads allow you to specify a different ServiceLocatorProvider)
+* OAuthService no longer takes the config section to load Castle from; 
+** instead uses ServiceLocator.Current (overloads allow you to specify a different ServiceLocatorProvider)
 
-*Applications should set ServiceLocator.Current on startup 
-**i.e. in Global.asax as per example apps
+* Applications should set ServiceLocator.Current on startup 
+** i.e. in Global.asax as per example apps
 
-*Custom config section no longer used; 
-**use whatever registration mechanism your ServiceLocator supports. 
-**For Windsor, this just means changing the section type (and optionally name). 
-**Examples use Windsor with section name “oauth.net.components” 
+* Custom config section no longer used; 
+** use whatever registration mechanism your ServiceLocator supports. 
+** For Windsor, this just means changing the section type (and optionally name). 
+** Examples use Windsor with section name “oauth.net.components” 
 
 Service Provider:
 
 Switch to Common Service Locator:
 
-*ServiceProviderContext: uses ServiceLocator.Currrent rather than ServiceLocator property
+* ServiceProviderContext: uses ServiceLocator.Currrent rather than ServiceLocator property
 
-*Applications must register ServiceLocator.Current on startup
-**i.e. in Global.asax as per example apps
+* Applications must register ServiceLocator.Current on startup
+** i.e. in Global.asax as per example apps
 
-*Windsor config section called “oauth.net.serviceprovider” no longer used (conflicting breaking change).
-**Use whatever registration mechanism your ServiceLocator supports
-**Examples use Windsor with section name “oauth.net.components”
+* Windsor config section called “oauth.net.serviceprovider” no longer used (conflicting breaking change).
+** Use whatever registration mechanism your ServiceLocator supports
+** Examples use Windsor with section name “oauth.net.components”
 
-*ComponentsSection attribute removed from settings section as this is no longer the registration mechanism
+* ComponentsSection attribute removed from settings section as this is no longer the registration mechanism
 
-*Settings section renamed from "OAuthServiceProvider" to "oauth.net.serviceprovider" (to be consistent with framework)
+* Settings section renamed from "OAuthServiceProvider" to "oauth.net.serviceprovider" (to be consistent with framework)
 
 
 = OAuth.net 0.5.2.0=
