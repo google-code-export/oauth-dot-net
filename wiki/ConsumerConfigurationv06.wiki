@@ -49,7 +49,7 @@ The following code specifies the Windsor container so that it loads the config f
 This section of code was from the global.aspx file of a web application.
 
 = Registering a Config Section =
-Config sections are registered in the <configSections> element, which must be the first child of the <configuration> element, before any other elements.
+Config sections are registered in the '<configSections>' element, which must be the first child of the '<configuration>' element, before any other elements.
 
 {{{
 <configuration>
@@ -108,6 +108,7 @@ For signing providers, the id should be the signature method string prefixed wit
 This example is taken from the Fire Eagle consumer's [http://code.google.com/p/oauth-dot-net/source/browse/trunk/Examples/OAuth.Net.Examples.FireEagleConsumer/Web.config Web.config]:
 
 {{{
+<configuration>
         <configSections>
 		<section name="oauth.net.components" type="Castle.Windsor.Configuration.AppDomain.CastleSectionHandler, Castle.Windsor"/>
 	</configSections>
