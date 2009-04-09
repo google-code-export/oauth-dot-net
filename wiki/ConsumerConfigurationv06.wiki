@@ -1,5 +1,5 @@
 #summary How to configure OAuth.net Consumers.
-#labels Draft
+#labels Featured
 
 = Configuring OAuth.net Consumer Applications in v0.6 =
 
