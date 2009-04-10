@@ -5,6 +5,8 @@
 
 In version 0.6 the method of loading the OAuth.net components changed from a hard reliance  on the [http://castleproject.org/container/ Castle Windsor] inversion of control (IoC) container to use the [http://www.codeplex.com/CommonServiceLocator Common Service Locator].  The decision was made to make this breaking change as it was recognised that users may already be using different IoC implementations within their existing applications to which they are adding an OAuth layer, or may not want to use the Castle Windsor implementation.
 
+For more information about the Common Service Locator and choosing a service location framework, see ServiceLocatorFrameworks.
+
 The following documentation will assume that you will be using the Castle Windsor IoC implementation.  If you intend to use an alternative IoC the examples will need to be changed to follow you IoC configuration requirements.
 
 
