@@ -36,6 +36,8 @@ Another popular framework is [http://ninject.org/ Ninject]. Ninject does not cur
  
 NB: This list is correct at the time of writing (April 2009).
 
+See also: [http://www.hanselman.com/blog/ListOfNETDependencyInjectionContainersIOC.aspx List of .NET Dependency Injection Containers] by Scott Hanselman and commenters
+
 = Which framework should I use? =
 
 If you are already using a service location framework in your application and it supports CSL, use that! If it doesn't support CSL, it may be a simple matter to [http://commonservicelocator.codeplex.com/Wiki/View.aspx?title=Implementing%20the%20Interface write your own CSL adaptor] for it.
