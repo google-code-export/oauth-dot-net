@@ -39,6 +39,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using OAuth.Net.Common;
+using OAuth.Net.Common.Tokens;
 
 namespace OAuth.Net.Consumer
 {
@@ -217,6 +218,17 @@ namespace OAuth.Net.Consumer
         }
 
         /// <summary>
+        /// Set's if this request for an OAuth protected resource
+        /// should follow the two legged Consumer Request extension
+        /// http://oauth.googlecode.com/svn/spec/ext/consumer_request/1.0/drafts/2/spec.htm
+        /// </summary>
+        public bool IsConsumerRequest
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// This delegate, if not <c>null</c>, is called when the request token
         /// requires authorization.
         /// </summary>
@@ -262,12 +274,38 @@ namespace OAuth.Net.Consumer
         /// <param name="settings">Service settings</param>
         /// <returns>An OAuth protected request for the protected resource</returns>
         public static OAuthRequest Create(Uri resourceUri, OAuthService settings)
-        {
+        {            
             return new OAuthRequest()
             {
                 ResourceUri = resourceUri,
-                Service = settings
+                Service = settings,
+                IsConsumerRequest = false
             };
+        }
+
+
+        /// <summary>
+        /// Creates a new OAuthRequest for either a 3 legged core or 2 legged Consumer Request.
+        /// </summary>
+        /// <param name="resourceUri">Protected resource URI</param>
+        /// <param name="settings">Service settings</param>
+        /// <param name="isConsumerRequest">If the request should follow the Consumer Request Extension  
+        /// http://oauth.googlecode.com/svn/spec/ext/consumer_request/1.0/drafts/2/spec.html
+        /// </param>
+        /// <returns>An OAuth protected request for the protected resource</returns>
+        public static OAuthRequest Create(Uri resourceUri, OAuthService settings, bool isConsumerRequest)
+        {            
+            IToken accessToken = isConsumerRequest ? new OAuthConsumerRequestAccessToken( 
+                                                            settings.Consumer.Secret, 
+                                                            settings.Consumer.Key ) : null;
+            return new OAuthRequest()
+            {
+                ResourceUri = resourceUri,
+                Service = settings,
+                IsConsumerRequest = isConsumerRequest,
+                AccessToken = accessToken
+            };
+
         }
 
         /// <summary>
@@ -289,7 +327,8 @@ namespace OAuth.Net.Consumer
             {
                 ResourceUri = resourceUri,
                 Service = settings,
-                RequestToken = requestToken
+                RequestToken = requestToken,
+                IsConsumerRequest = false
             };
         }
 
@@ -315,7 +354,8 @@ namespace OAuth.Net.Consumer
                 ResourceUri = resourceUri,
                 Service = settings,
                 RequestToken = requestToken,
-                AccessToken = accessToken
+                AccessToken = accessToken,
+                IsConsumerRequest = false
             };
         }
 
@@ -390,6 +430,7 @@ namespace OAuth.Net.Consumer
         /// </exception>
         protected virtual HttpWebRequest PrepareProtectedResourceRequest(NameValueCollection parameters)
         {
+           
             if (this.AccessToken == null || this.RequestToken == null)
             {
                 if (this.RequestToken == null)
@@ -418,10 +459,15 @@ namespace OAuth.Net.Consumer
 
             if (this.AccessToken == null)
                 throw new InvalidOperationException("Access token was not received.");
+        
 
             return this.DoPrepareProtectedResourceRequest(parameters);
         }
 
+        /// <summary>
+        /// Performs the HTTP request to the service providers request token endpoint
+        /// to obtain a RequestToken.
+        /// </summary>
         protected virtual void DoGetRequestToken()
         {
             // Fire the OnBeforeGetRequestToken event
@@ -503,6 +549,11 @@ namespace OAuth.Net.Consumer
             return authArgs.ContinueOnReturn;
         }
 
+
+        /// <summary>
+        /// Performs the HTTP request to the service providers access token endpoint
+        /// to obtain the AccessToken.
+        /// </summary>
         protected virtual void DoGetAccessToken()
         {
             // Fire the OnBeforeGetAccessToken event
@@ -560,6 +611,11 @@ namespace OAuth.Net.Consumer
                 this.OnReceiveAccessToken(this, responseArgs);
         }
 
+        /// <summary>
+        /// Prepares the OAuath signed parameters for making the HTTP request for the protected resource.
+        /// </summary>
+        /// <param name="parameters">NameValueCollection of parameters that become part of the OAuth signature.</param>
+        /// <returns>The HttpWebRequest object ready to make the request.</returns>
         protected virtual HttpWebRequest DoPrepareProtectedResourceRequest(NameValueCollection parameters)
         {
             // Fire the OnBeforeGetProtectedResource event
@@ -581,6 +637,14 @@ namespace OAuth.Net.Consumer
                 this.AccessToken);
         }
 
+        /// <summary>
+        /// Creates the OAuth Signature and sets up the HttpWebRequest with the required oauth parameters.
+        /// </summary>
+        /// <param name="requestUri">The URI of the protected resource</param>
+        /// <param name="httpMethod">The HTTP method to use for getting this request.</param>
+        /// <param name="additionalParameters">Any non OAuth parameters to include within the request</param>
+        /// <param name="token">The Token used in the signing</param>
+        /// <returns>The prepared HttpWebRequest</returns>
         protected virtual HttpWebRequest CreateAndSignRequest(Uri requestUri, string httpMethod, NameValueCollection additionalParameters, IToken token)
         {
             int timestamp = UnixTime.ToUnixTime(DateTime.Now);

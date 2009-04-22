@@ -363,7 +363,7 @@ namespace OAuth.Net.Common
 
             foreach (string key in this.parameters.Keys)
             {
-                if (!String.IsNullOrEmpty(this.parameters[key]) && Array.IndexOf<string>(excludedParameters, key) < 0)
+                if (this.parameters[key] != null && Array.IndexOf<string>(excludedParameters, key) < 0)
                 {
                     OAuthParameters.EncodeHeaderValue(refAuthHeader, key, this.parameters[key], first ? string.Empty : ", ", true);
                     first = false;
