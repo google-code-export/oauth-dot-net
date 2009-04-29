@@ -483,6 +483,33 @@ namespace OAuth.Net.Common
         }
 
         /// <summary>
+        /// Returns a collection of the OAuth parameters that should be included within the HttpRequest.
+        /// These are used when the OAuth parameters are sent in the querystring or the application/x-www-form-urlencoded
+        /// body.
+        /// </summary>
+        /// <returns></returns>
+        public NameValueCollection OAuthRequestParams()
+        {
+            //We don't send the realm or token secret in the querystring or post body.
+            return OAuthRequestParams(
+                Constants.RealmParameter,
+                Constants.TokenSecretParameter
+             );
+        }
+
+        private NameValueCollection OAuthRequestParams(params string[] excludedParameters)
+        {
+            var @params = new NameValueCollection();
+
+            // Add OAuth parameters whose values are not null except excluded parameters
+            foreach (var param in this.parameters.Keys)
+                if (this.parameters[param] != null && Array.IndexOf<string>(excludedParameters, param) < 0)
+                    @params.Add(param, this.parameters[param]);
+
+            return @params;
+        }
+
+        /// <summary>
         /// Creates a normalized representation of the parameters for use in the signature base string.
         /// </summary>
         /// <param name="excludedParameters">Names of parameters to exclude from the normalized string.</param>

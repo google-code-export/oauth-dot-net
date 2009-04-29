@@ -189,6 +189,32 @@ namespace OAuth.Net.Consumer
             private set;
         }
 
+        private string httpMethod;
+        public string HttpMethod
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(httpMethod))
+                    return this.Service.HttpMethod;
+                else
+                    return httpMethod;
+            }
+            set
+            {
+                switch (value)
+                {
+                    case "GET":
+                    case "POST":
+                    case "DELETE":
+                    case "PUT":
+                        httpMethod = value;
+                        break;
+                    default:
+                        throw new ArgumentException("Only GET, POST, DELETE AND PUT are supported HttpMethods");
+                }
+            }
+        }
+
         /// <summary>
         /// The OAuth service
         /// </summary>
@@ -341,9 +367,18 @@ namespace OAuth.Net.Consumer
         /// </exception>
         public OAuthResponse GetResource(NameValueCollection parameters)
         {
+            return GetResource(
+                parameters, 
+                HttpMethod == "POST" || HttpMethod == "PUT" ? Constants.HttpPostUrlEncodedContentType : String.Empty, 
+                null
+            );
+        }
+
+        private OAuthResponse GetResource(NameValueCollection parameters, string contentType, System.IO.Stream bodyStream)
+        {
             OAuthResponse response;
 
-            HttpWebRequest request = this.PrepareProtectedResourceRequest(parameters);
+            HttpWebRequest request = this.PrepareProtectedResourceRequest(parameters, contentType, bodyStream);
 
             // A null value for the HttpWebRequest is returned when a ResponseToken is returned
             // and no one has returned in the AuthorizationHandler continue with getting an AccessToken
@@ -381,6 +416,8 @@ namespace OAuth.Net.Consumer
             return response;
         }
 
+        /// <param name="contentType">The HTTP content-type of the entity contained in the body</param>
+        /// <param name="bodyStream">The stream of bytes to send in the request to the resource</param>
         /// <exception cref="OAuth.Net.Common.OAuthRequestException">
         /// <list>
         /// <item>If the server responds with an OAuthRequestException</item>
@@ -388,7 +425,35 @@ namespace OAuth.Net.Consumer
         /// <item>If the requests to the server cannot be signed</item>
         /// </list>
         /// </exception>
-        protected virtual HttpWebRequest PrepareProtectedResourceRequest(NameValueCollection parameters)
+        public OAuthResponse GetResource(string contentType, System.IO.Stream bodyStream)
+        {
+            //The contentType must be supplied but bodyBytes can be null or 0 length.
+            if (String.IsNullOrEmpty(contentType))
+                throw new ArgumentException("Cannot be null or empty", "contentType");
+
+            if (Constants.HttpPostUrlEncodedContentTypeRegex.IsMatch( contentType ) )
+                throw new ArgumentException(String.Format(
+                    "Invalid method call.  Use GetResource(NameValueCollection parameters) for HTTP requests of content-type {0}.",
+                        Constants.HttpPostUrlEncodedContentType)
+                        , "contentType");
+
+            //Check to see if we are a GET or DELETE can't send a body in a GET or DELETE
+            if( HttpMethod == "GET" || HttpMethod == "DELETE" )
+                throw new InvalidOperationException(
+                    "You cannot send an entity in the HTTP request in a GET or DELETE HttpMethod."
+                );
+
+            return this.GetResource(null, contentType, bodyStream);
+        }
+
+        /// <exception cref="OAuth.Net.Common.OAuthRequestException">
+        /// <list>
+        /// <item>If the server responds with an OAuthRequestException</item>
+        /// <item>If the server's responds unexpectedly</item>
+        /// <item>If the requests to the server cannot be signed</item>
+        /// </list>
+        /// </exception>
+        protected virtual HttpWebRequest PrepareProtectedResourceRequest(NameValueCollection parameters, string contentType, System.IO.Stream bodyStream)
         {
             if (this.AccessToken == null || this.RequestToken == null)
             {
@@ -419,7 +484,7 @@ namespace OAuth.Net.Consumer
             if (this.AccessToken == null)
                 throw new InvalidOperationException("Access token was not received.");
 
-            return this.DoPrepareProtectedResourceRequest(parameters);
+            return this.DoPrepareProtectedResourceRequest(parameters, contentType, bodyStream);
         }
 
         protected virtual void DoGetRequestToken()
@@ -433,11 +498,15 @@ namespace OAuth.Net.Consumer
             if (this.OnBeforeGetRequestToken != null)
                 this.OnBeforeGetRequestToken(this, args);
 
+
+            OAuthParameters authParams = this.SignRequest(args.RequestUri, args.HttpMethod, args.AdditionalParameters, null);
+
             // Create and sign the request
-            HttpWebRequest request = this.CreateAndSignRequest(
-                args.RequestUri, 
-                args.HttpMethod, 
-                args.AdditionalParameters, 
+            HttpWebRequest request = this.CreateRequest(
+                args.RequestUri,
+                authParams,
+                args.HttpMethod,
+                args.HttpMethod == "POST" ? Constants.HttpPostUrlEncodedContentType : String.Empty, 
                 null);
 
             HttpWebResponse response = null;
@@ -514,12 +583,16 @@ namespace OAuth.Net.Consumer
             if (this.OnBeforeGetAccessToken != null)
                 this.OnBeforeGetAccessToken(this, preArgs);
 
+            OAuthParameters authParams = this.SignRequest(preArgs.RequestUri, preArgs.HttpMethod, null, this.RequestToken);
+
             // Create and sign the request
-            HttpWebRequest request = this.CreateAndSignRequest(
+            HttpWebRequest request = this.CreateRequest( 
                 preArgs.RequestUri, 
-                preArgs.HttpMethod, 
-                null, 
-                this.RequestToken);
+                authParams, 
+                preArgs.HttpMethod,
+                preArgs.HttpMethod == "POST" ? Constants.HttpPostUrlEncodedContentType : String.Empty,
+                null
+            );
 
             HttpWebResponse response = null;
             OAuthParameters responseParameters = null;
@@ -560,12 +633,12 @@ namespace OAuth.Net.Consumer
                 this.OnReceiveAccessToken(this, responseArgs);
         }
 
-        protected virtual HttpWebRequest DoPrepareProtectedResourceRequest(NameValueCollection parameters)
+        protected virtual HttpWebRequest DoPrepareProtectedResourceRequest(NameValueCollection parameters, string contentType, System.IO.Stream bodyStream)
         {
             // Fire the OnBeforeGetProtectedResource event
             PreProtectedResourceRequestEventArgs preArgs = new PreProtectedResourceRequestEventArgs(
                 this.ResourceUri, 
-                this.Service.HttpMethod,
+                string.IsNullOrEmpty( this.HttpMethod ) ? Service.HttpMethod : this.HttpMethod ,
                 parameters ?? new NameValueCollection(), 
                 this.RequestToken, 
                 this.AccessToken);
@@ -573,15 +646,12 @@ namespace OAuth.Net.Consumer
             if (this.OnBeforeGetProtectedResource != null)
                 this.OnBeforeGetProtectedResource(this, preArgs);
 
-            // Prepare request
-            return this.CreateAndSignRequest(
-                preArgs.RequestUri, 
-                preArgs.HttpMethod, 
-                preArgs.AdditionalParameters, 
-                this.AccessToken);
+            OAuthParameters authParams = this.SignRequest(preArgs.RequestUri, preArgs.HttpMethod, preArgs.AdditionalParameters, this.AccessToken);
+
+            return this.CreateRequest(preArgs.RequestUri, authParams, preArgs.HttpMethod, contentType, bodyStream);
         }
 
-        protected virtual HttpWebRequest CreateAndSignRequest(Uri requestUri, string httpMethod, NameValueCollection additionalParameters, IToken token)
+        protected virtual OAuthParameters SignRequest(Uri requestUri, string httpMethod, NameValueCollection additionalParameters, IToken token)
         {
             int timestamp = UnixTime.ToUnixTime(DateTime.Now);
 
@@ -632,92 +702,72 @@ namespace OAuth.Net.Consumer
                 this.Service.Consumer.Secret,
                 (token != null && token.Secret != null) ? token.Secret : null);
 
-            // Create the request, attaching the OAuth parameters and additional parameters
-            switch (httpMethod)
+            return authParameters;
+
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="requestUri"></param>
+        /// <param name="authParameters"></param>
+        /// <param name="httpMethod"></param>
+        /// <param name="contentType"></param>
+        /// <param name="body"></param>
+        /// <returns></returns>
+        protected virtual HttpWebRequest CreateRequest(Uri requestUri, OAuthParameters authParameters, string httpMethod, string contentType, System.IO.Stream bodyStream)
+        {
+            NameValueCollection requestSpecificParameters = new NameValueCollection(authParameters.AdditionalParameters);
+            if (!this.Service.UseAuthorizationHeader)
             {
-                case "GET":
-                    if (this.Service.UseAuthorizationHeader)
-                    {
-                        // Put the OAuth parameters in the header and the additional parameters in the query string
-                        string authHeader = authParameters.ToHeaderFormat();
-                        string query = Rfc3986.EncodeAndJoin(authParameters.AdditionalParameters);
-
-                        if (!string.IsNullOrEmpty(query))
-                        {
-                            UriBuilder mutableRequestUri = new UriBuilder(requestUri);
-                            if (string.IsNullOrEmpty(mutableRequestUri.Query))
-                                mutableRequestUri.Query = query;
-                            else
-                                mutableRequestUri.Query = mutableRequestUri.Query.Substring(1) + "&" + query;
-
-                            requestUri = mutableRequestUri.Uri;
-                        }
-
-                        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUri);
-                        request.Method = httpMethod;
-                        request.Headers.Add(HttpRequestHeader.Authorization, authHeader);
-                        return request;
-                    }
-                    else 
-                    {
-                        string query = authParameters.ToQueryStringFormat();
-
-                        UriBuilder mutableRequestUri = new UriBuilder(requestUri);
-                        if (string.IsNullOrEmpty(mutableRequestUri.Query))
-                            mutableRequestUri.Query = query;
-                        else
-                            mutableRequestUri.Query = mutableRequestUri.Query.Substring(1) + "&" + query;
-
-                        requestUri = mutableRequestUri.Uri;
-
-                        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUri);
-                        request.Method = httpMethod;
-                        return request;
-                    }
-
-                case "POST":
-                    if (this.Service.UseAuthorizationHeader)
-                    {
-                        // Put the OAuth parameters in the header and the additional parameters in the post body
-                        string authHeader = authParameters.ToHeaderFormat();
-                        string body = Rfc3986.EncodeAndJoin(authParameters.AdditionalParameters);
-
-                        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUri);
-                        request.Method = httpMethod;
-
-                        request.Headers.Add(HttpRequestHeader.Authorization, authHeader);
-
-                        byte[] bodyBytes = Encoding.ASCII.GetBytes(body);
-                        request.ContentType = Constants.HttpPostUrlEncodedContentType;
-                        request.ContentLength = bodyBytes.Length;
-
-                        Stream requestStream = request.GetRequestStream();
-                        requestStream.Write(bodyBytes, 0, bodyBytes.Length);
-
-                        return request;
-                    }
-                    else
-                    {
-                        string body = authParameters.ToNormalizedString(
-                            Constants.RealmParameter,
-                            Constants.TokenSecretParameter);
-
-                        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUri);
-                        request.Method = httpMethod;
-
-                        byte[] bodyBytes = Encoding.ASCII.GetBytes(body);
-                        request.ContentType = Constants.HttpPostUrlEncodedContentType;
-                        request.ContentLength = bodyBytes.Length;
-
-                        Stream requestStream = request.GetRequestStream();
-                        requestStream.Write(bodyBytes, 0, bodyBytes.Length);
-
-                        return request;
-                    }
-
-                default:
-                    throw new ArgumentException("httpMethod argument must be GET or POST", "httpMethod");
+                //The OAuth params need to be added either into the querystring or into the post body.
+                requestSpecificParameters.Add(authParameters.OAuthRequestParams());
             }
+
+            if (Constants.HttpPostUrlEncodedContentTypeRegex.IsMatch(contentType) && bodyStream == null)
+            {
+                //All the requestSpecificParameters need to be encoded into the body bytes
+                string body = Rfc3986.EncodeAndJoin(requestSpecificParameters);
+                bodyStream = new MemoryStream(Encoding.ASCII.GetBytes(body));
+            }
+            else
+            {
+                //They go into the querystring.
+                string query = Rfc3986.EncodeAndJoin(requestSpecificParameters);
+
+                if (!string.IsNullOrEmpty(query))
+                {
+                    UriBuilder mutableRequestUri = new UriBuilder(requestUri);
+                    if (string.IsNullOrEmpty(mutableRequestUri.Query))
+                        mutableRequestUri.Query = query;
+                    else
+                        mutableRequestUri.Query = mutableRequestUri.Query.Substring(1) + "&" + query;
+
+                    requestUri = mutableRequestUri.Uri;
+                }
+            }
+
+            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(requestUri);
+            request.Method = httpMethod;
+
+            if (Service.UseAuthorizationHeader)
+                request.Headers.Add(HttpRequestHeader.Authorization, authParameters.ToHeaderFormat());
+
+            if (!String.IsNullOrEmpty(contentType))
+            {
+                request.ContentType = contentType;
+
+                if (bodyStream != null)
+                {
+                    if( bodyStream.CanSeek )
+                        request.ContentLength = bodyStream.Length;
+
+                    StreamCopier.CopyTo(bodyStream, request.GetRequestStream());
+                }
+            }
+
+            return request;
         }
     }
 }
