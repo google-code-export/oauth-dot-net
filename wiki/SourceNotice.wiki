@@ -4,4 +4,13 @@ The current source trunk is under active development, and may be unstable.  The 
 
 = New On The Trunk =
 
- * Work to implement the [http://oauth.googlecode.com/svn/spec/ext/consumer_request/1.0/drafts/2/spec.html Consumer Request Extension]
+ * Implementing changes for the OAuth Core 1.0 Rev A spec.
+   14 May 2009 - Changes made to consumer classes commited.
+
+ * Implementing changes to support RESTful end points and allow different HttpMethod for the protected resource.
+   9 May 2009 - Changes made to support GET, POST, PUT, and DELETE.  Additional HttpMethod property on the OAuthRequest class provides functionality to change the http method for requesting the protected resource.
+
+ * Implementing changes to allow different HttpMethods for each oauth endpoint.
+ 
+ * Work to implement the [http://oauth.googlecode.com/svn/spec/ext/consumer_request/1.0/drafts/2/spec.html Consumer Request Extension]  
+   13 May 2009 - Currently Delayed to allow for OAuth Core 1.0 Rev A spec.
