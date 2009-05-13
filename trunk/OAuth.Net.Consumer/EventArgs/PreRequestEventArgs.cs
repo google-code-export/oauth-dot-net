@@ -49,11 +49,12 @@ namespace OAuth.Net.Consumer
         /// <param name="requestUri">Request Uri</param>
         /// <param name="httpMethod">HTTP method</param>
         /// <param name="parameters">Additional parameters</param>
-        public PreRequestEventArgs(Uri requestUri, string httpMethod, NameValueCollection parameters)
+        public PreRequestEventArgs(Uri requestUri, string httpMethod, Uri callbackUrl, NameValueCollection parameters)
         {
             this.RequestUri = requestUri;
             this.HttpMethod = httpMethod;
             this.AdditionalParameters = parameters;
+            this.CallbackUrl = callbackUrl;
         }
 
         /// <summary>
@@ -69,6 +70,15 @@ namespace OAuth.Net.Consumer
         /// The HTTP method of the request to be sent
         /// </summary>
         public string HttpMethod
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The URL that the service provider will return the user to after 
+        /// </summary>
+        public Uri CallbackUrl
         {
             get;
             set;

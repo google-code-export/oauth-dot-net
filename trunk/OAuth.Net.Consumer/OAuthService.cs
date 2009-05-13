@@ -111,6 +111,19 @@ namespace OAuth.Net.Consumer
         }
 
         /// <summary>
+        /// The URL that the user is redirected to by the Service Provider.  If no Uri is defined 
+        /// the request is defined as out-of-band and the call back has been defined elsewhere or will
+        /// be performed manually.
+        /// <remarks>This value can be dynamically updated during the request by handling the OnBeforeGetRequestToken 
+        /// event in OauthRequest</remarks>
+        /// </summary>
+        public Uri CallbackUrl
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// The HTTP method to use
         /// </summary>
         /// <value>Only <c>GET</c> and <c>POST</c> are supported</value>
@@ -514,7 +527,8 @@ namespace OAuth.Net.Consumer
         }
 
         /// <summary>
-        /// Builds the authorization URL to send a user to for a particular request token.
+        /// Builds the authorization URL to send a user to for a particular request token.  As no callback
+        /// URL is defined calling this method will force the OAuth Callback to be out-of-band.
         /// </summary>
         /// <remarks>
         /// If an <see cref="OAuthRequest"/> requires authorization, the URL to send the user
@@ -525,46 +539,8 @@ namespace OAuth.Net.Consumer
         /// <returns>The Uri to send the user to (with the OAuth token parameters encoded)</returns>
         public Uri BuildAuthorizationUrl(IToken token)
         {
-            return this.BuildAuthorizationUrl(token, null, null);
-        }
-
-        /// <summary>
-        /// Builds the authorization URL to send a user to for a particular request token, 
-        /// with the URI for the service provider to return the user to.
-        /// </summary>
-        /// <remarks>
-        /// If an <see cref="OAuthRequest"/> requires authorization, the URL to send the user
-        /// to should be built by calling this method, passing in the 
-        /// <see cref="OAuthRequest.RequestToken"/> value.
-        /// </remarks>
-        /// <param name="token">Request token that requires authorization</param>  
-        /// <param name="callbackUrl">URL to have user redirected to after authorization</param>
-        /// <returns>The Uri to send the user to (with the callback URL and the OAuth 
-        /// token parameters encoded)</returns>
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "callback", Justification = "Callback is a domain term")]
-        public Uri BuildAuthorizationUrl(IToken token, Uri callbackUrl)
-        {
-            return this.BuildAuthorizationUrl(token, callbackUrl, null);
-        }
-
-        /// <summary>
-        /// Builds the authorization URL to send a user to for a particular request token, 
-        /// including the additional parameters supplied.
-        /// </summary>
-        /// <remarks>
-        /// If an <see cref="OAuthRequest"/> requires authorization, the URL to send the user
-        /// to should be built by calling this method, passing in the 
-        /// <see cref="OAuthRequest.RequestToken"/> value.
-        /// </remarks>
-        /// <param name="token">Request token that requires authorization</param> 
-        /// <param name="additionalParameters">Additional parameters to add to the query 
-        /// string</param>
-        /// <returns>The Uri to send the user to (with the additional parameters added and 
-        /// the OAuth token parameters encoded)</returns>
-        public Uri BuildAuthorizationUrl(IToken token, NameValueCollection additionalParameters)
-        {
-            return this.BuildAuthorizationUrl(token, null, additionalParameters);
-        }
+            return this.BuildAuthorizationUrl(token, null);
+        }   
 
         /// <summary>
         /// Builds the authorization URL to send a user to for a particular request token, 
@@ -576,16 +552,14 @@ namespace OAuth.Net.Consumer
         /// to should be built by calling this method, passing in the 
         /// <see cref="OAuthRequest.RequestToken"/> value.
         /// </remarks>
-        /// <param name="token">Request token that requires authorization</param> 
-        /// <param name="callbackUrl">URL to have user redirected to after authorization</param>
+        /// <param name="token">Request token that requires authorization</param>        
         /// <param name="additionalParameters">Additional parameters to add to the query 
         /// string</param>
         /// <returns>The Uri to send the user to (with callback URL &amp; additional parameters 
         /// added and the OAuth token parameters encoded)</returns>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "callback", Justification = "Callback is a domain term")]
         public Uri BuildAuthorizationUrl(
-            IToken token, 
-            Uri callbackUrl, 
+            IToken token,             
             NameValueCollection additionalParameters)
         {
             if (token.Type == TokenType.Request)
@@ -593,10 +567,7 @@ namespace OAuth.Net.Consumer
                 OAuthParameters authParameters = new OAuthParameters()
                 {
                     Token = token.Token
-                };
-
-                if (callbackUrl != null)
-                    authParameters.Callback = callbackUrl.AbsoluteUri;
+                };                
 
                 if (additionalParameters != null)
                     authParameters.AdditionalParameters.Add(additionalParameters);

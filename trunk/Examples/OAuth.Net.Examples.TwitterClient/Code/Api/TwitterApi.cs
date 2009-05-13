@@ -239,6 +239,16 @@ namespace OAuth.Net.Examples.TwitterClient.Api
                 throw new ArgumentException("uriFormat must not be empty", "uriFormat");
 
             var request = this.CreateRequest(service, uriFormat, args);
+            request.OnBeforeGetRequestToken += new EventHandler<PreRequestEventArgs>((sender, preRequestEventArgs) =>
+            {
+                preRequestEventArgs.CallbackUrl = options.AuthorizationCallbackUri;
+            });
+
+            request.OnBeforeGetAccessToken += new EventHandler<PreAccessTokenRequestEventArgs>((sender, preAccesstokenRequestEventArgs) =>
+            {
+                preAccesstokenRequestEventArgs.Verifier = options.RequestTokenVerifier;
+            });
+
             var response = request.GetResource(parameters);
 
             if (response.HasProtectedResource)
@@ -264,7 +274,6 @@ namespace OAuth.Net.Examples.TwitterClient.Api
                 {
                     AuthorizationUri = TwitterApi.ReadServiceDefinition.BuildAuthorizationUrl(
                         requestToken,
-                        options.AuthorizationCallbackUri,
                         options.AuthorizationArguments)
                 };
             }

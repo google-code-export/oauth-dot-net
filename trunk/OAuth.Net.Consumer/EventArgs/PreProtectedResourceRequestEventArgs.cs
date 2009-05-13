@@ -42,7 +42,7 @@ namespace OAuth.Net.Consumer
     /// Event arguments for the OnBeforeGetProtectedResource event.
     /// </summary>
     public class PreProtectedResourceRequestEventArgs
-        : PreRequestEventArgs
+        : EventArgs
     {
         /// <summary>
         /// Creates event arguments with the corresponding request Uri, HTTP method,parameter collection,
@@ -59,10 +59,40 @@ namespace OAuth.Net.Consumer
             NameValueCollection parameters,
             IToken requestToken,
             IToken accessToken)
-            : base(requestUri, httpMethod, parameters)
         {
+            this.RequestUri = requestUri;
+            this.HttpMethod = httpMethod;
+            this.AdditionalParameters = parameters;
             this.RequestToken = requestToken;
             this.AccessToken = accessToken;
+        }
+
+        /// <summary>
+        /// The Uri of the request to be sent.
+        /// </summary>
+        public Uri RequestUri
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The HTTP method of the request to be sent
+        /// </summary>
+        public string HttpMethod
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// A name value collection of parameters that will be applied to the
+        /// request before it is sent.
+        /// </summary>
+        public NameValueCollection AdditionalParameters
+        {
+            get;
+            private set;
         }
 
         /// <summary>

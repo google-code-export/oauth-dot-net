@@ -190,6 +190,10 @@ namespace OAuth.Net.Consumer
         }
 
         private string httpMethod;
+
+        /// <summary>
+        /// The HttpMethod that is used for requesting the protected resource.
+        /// </summary>
         public string HttpMethod
         {
             get
@@ -197,8 +201,9 @@ namespace OAuth.Net.Consumer
                 if (String.IsNullOrEmpty(httpMethod))
                     return this.Service.HttpMethod;
                 else
-                    return httpMethod;
+                    return this.httpMethod;
             }
+
             set
             {
                 switch (value)
@@ -207,7 +212,7 @@ namespace OAuth.Net.Consumer
                     case "POST":
                     case "DELETE":
                     case "PUT":
-                        httpMethod = value;
+                        this.httpMethod = value;
                         break;
                     default:
                         throw new ArgumentException("Only GET, POST, DELETE AND PUT are supported HttpMethods");
@@ -243,6 +248,16 @@ namespace OAuth.Net.Consumer
         }
 
         /// <summary>
+        /// The verifier parameter provided by the service provider 
+        /// that needs to be returned on the request for the access token.
+        /// </summary>
+        public string RequestTokenVerifier
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// This delegate, if not <c>null</c>, is called when the request token
         /// requires authorization.
         /// </summary>
@@ -264,9 +279,7 @@ namespace OAuth.Net.Consumer
         /// 
         /// <para>
         /// In either mechanism, the authorization URI is built using
-        /// <see cref="OAuthService.BuildAuthorizationUrl"/>. If a callback URI
-        /// is supplied, the service provider will redirect the user to it once
-        /// the authorization process is complete. If additional parameters are
+        /// <see cref="OAuthService.BuildAuthorizationUrl"/>. If additional parameters are
         /// supplied, these will be included in the authorization URI 
         /// generated.
         /// </para>
@@ -367,54 +380,11 @@ namespace OAuth.Net.Consumer
         /// </exception>
         public OAuthResponse GetResource(NameValueCollection parameters)
         {
-            return GetResource(
+            return this.GetResource(
                 parameters, 
                 HttpMethod == "POST" || HttpMethod == "PUT" ? Constants.HttpPostUrlEncodedContentType : String.Empty, 
-                null
-            );
-        }
-
-        private OAuthResponse GetResource(NameValueCollection parameters, string contentType, System.IO.Stream bodyStream)
-        {
-            OAuthResponse response;
-
-            HttpWebRequest request = this.PrepareProtectedResourceRequest(parameters, contentType, bodyStream);
-
-            // A null value for the HttpWebRequest is returned when a ResponseToken is returned
-            // and no one has returned in the AuthorizationHandler continue with getting an AccessToken
-            // or an RequestToken exists but the AccessToken request was refused.
-            if (request == null)
-                response = new OAuthResponse(this.RequestToken);
-            else
-            {
-                OAuthResource resource;
-                OAuthParameters responseParameters;
-
-                try
-                {
-                    resource = new OAuthResource((HttpWebResponse)request.GetResponse());
-
-                    // Parse the parameters and re-throw any OAuthRequestException from the service provider
-                    responseParameters = OAuthParameters.Parse(resource);
-                    OAuthRequestException.TryRethrow(responseParameters);
-
-                    // If nothing is thrown then we should have a valid resource.
-                    response = new OAuthResponse(this.AccessToken ?? this.RequestToken, resource);
-                }
-                catch (WebException e)
-                {
-                    // Parse the parameters and re-throw any OAuthRequestException from the service provider
-                    responseParameters = OAuthParameters.Parse(e.Response as HttpWebResponse);
-                    OAuthRequestException.TryRethrow(responseParameters);
-
-                    // If no OAuthRequestException, rethrow the WebException
-                    #warning TODO: We have consumer the WebException's body so rethrowing it is pretty pointless; wrap the WebException in an OAuthProtocolException and store the body (create an OAuthResource before parsing parameters)
-                    throw;
-                }
-            }
-
-            return response;
-        }
+                null);
+        }        
 
         /// <param name="contentType">The HTTP content-type of the entity contained in the body</param>
         /// <param name="bodyStream">The stream of bytes to send in the request to the resource</param>
@@ -427,21 +397,20 @@ namespace OAuth.Net.Consumer
         /// </exception>
         public OAuthResponse GetResource(string contentType, System.IO.Stream bodyStream)
         {
-            //The contentType must be supplied but bodyBytes can be null or 0 length.
+            ////The contentType must be supplied but bodyBytes can be null or 0 length.
             if (String.IsNullOrEmpty(contentType))
                 throw new ArgumentException("Cannot be null or empty", "contentType");
 
-            if (Constants.HttpPostUrlEncodedContentTypeRegex.IsMatch( contentType ) )
+            if (Constants.HttpPostUrlEncodedContentTypeRegex.IsMatch( contentType ))
                 throw new ArgumentException(String.Format(
                     "Invalid method call.  Use GetResource(NameValueCollection parameters) for HTTP requests of content-type {0}.",
                         Constants.HttpPostUrlEncodedContentType)
                         , "contentType");
 
-            //Check to see if we are a GET or DELETE can't send a body in a GET or DELETE
-            if( HttpMethod == "GET" || HttpMethod == "DELETE" )
+            ////Check to see if we are a GET or DELETE can't send a body in a GET or DELETE
+            if(this.HttpMethod == "GET" || this.HttpMethod == "DELETE")
                 throw new InvalidOperationException(
-                    "You cannot send an entity in the HTTP request in a GET or DELETE HttpMethod."
-                );
+                    "You cannot send an entity in the HTTP request in a GET or DELETE HttpMethod.");
 
             return this.GetResource(null, contentType, bodyStream);
         }
@@ -493,13 +462,16 @@ namespace OAuth.Net.Consumer
             PreRequestEventArgs args = new PreRequestEventArgs(
                 this.Service.RequestTokenUrl, 
                 this.Service.HttpMethod,
+                this.Service.CallbackUrl,
                 new NameValueCollection());
 
             if (this.OnBeforeGetRequestToken != null)
                 this.OnBeforeGetRequestToken(this, args);
 
+            OAuthParameters authParams = this.CreateOAuthParameters(args.AdditionalParameters);
+            authParams.Callback = args.CallbackUrl == null ? Constants.OAuthOutOfBandCallback : args.CallbackUrl.AbsoluteUri;
 
-            OAuthParameters authParams = this.SignRequest(args.RequestUri, args.HttpMethod, args.AdditionalParameters, null);
+            this.SignParameters(args.RequestUri, args.HttpMethod, authParams, null);                
 
             // Create and sign the request
             HttpWebRequest request = this.CreateRequest(
@@ -577,22 +549,25 @@ namespace OAuth.Net.Consumer
             // Fire the OnBeforeGetAccessToken event
             PreAccessTokenRequestEventArgs preArgs = new PreAccessTokenRequestEventArgs(
                 this.Service.AccessTokenUrl,
-                this.Service.HttpMethod, 
-                this.RequestToken);
+                this.Service.HttpMethod,                 
+                this.RequestToken,
+                String.Empty);
 
             if (this.OnBeforeGetAccessToken != null)
                 this.OnBeforeGetAccessToken(this, preArgs);
 
-            OAuthParameters authParams = this.SignRequest(preArgs.RequestUri, preArgs.HttpMethod, null, this.RequestToken);
-
             // Create and sign the request
+            OAuthParameters authParams = this.CreateOAuthParameters(null);
+            authParams.Verifier = preArgs.Verifier;
+
+            this.SignParameters(preArgs.RequestUri, preArgs.HttpMethod, authParams, this.AccessToken);                
+            
             HttpWebRequest request = this.CreateRequest( 
                 preArgs.RequestUri, 
                 authParams, 
                 preArgs.HttpMethod,
                 preArgs.HttpMethod == "POST" ? Constants.HttpPostUrlEncodedContentType : String.Empty,
-                null
-            );
+                null);
 
             HttpWebResponse response = null;
             OAuthParameters responseParameters = null;
@@ -638,7 +613,7 @@ namespace OAuth.Net.Consumer
             // Fire the OnBeforeGetProtectedResource event
             PreProtectedResourceRequestEventArgs preArgs = new PreProtectedResourceRequestEventArgs(
                 this.ResourceUri, 
-                string.IsNullOrEmpty( this.HttpMethod ) ? Service.HttpMethod : this.HttpMethod ,
+                string.IsNullOrEmpty(this.HttpMethod )? this.Service.HttpMethod : this.HttpMethod,
                 parameters ?? new NameValueCollection(), 
                 this.RequestToken, 
                 this.AccessToken);
@@ -646,30 +621,17 @@ namespace OAuth.Net.Consumer
             if (this.OnBeforeGetProtectedResource != null)
                 this.OnBeforeGetProtectedResource(this, preArgs);
 
-            OAuthParameters authParams = this.SignRequest(preArgs.RequestUri, preArgs.HttpMethod, preArgs.AdditionalParameters, this.AccessToken);
+            OAuthParameters authParams = this.CreateOAuthParameters(preArgs.AdditionalParameters);
 
+            this.SignParameters(preArgs.RequestUri, preArgs.HttpMethod, authParams, this.AccessToken);
+            
             return this.CreateRequest(preArgs.RequestUri, authParams, preArgs.HttpMethod, contentType, bodyStream);
-        }
+        }        
 
-        protected virtual OAuthParameters SignRequest(Uri requestUri, string httpMethod, NameValueCollection additionalParameters, IToken token)
-        {
-            int timestamp = UnixTime.ToUnixTime(DateTime.Now);
-
-            OAuthParameters authParameters = new OAuthParameters()
-            {
-                ConsumerKey = this.Service.Consumer.Key,
-                Realm = this.Service.Realm,
-                SignatureMethod = this.Service.SignatureMethod,
-                Timestamp = timestamp.ToString(CultureInfo.InvariantCulture),
-                Nonce = this.Service.ComponentLocator.GetInstance<INonceProvider>().GenerateNonce(timestamp),
-                Version = this.Service.OAuthVersion
-            };
-
+        protected virtual void SignParameters(Uri requestUri, string httpMethod, OAuthParameters authParameters, IToken token)
+        {           
             if (token != null)
-                authParameters.Token = token.Token;
-
-            if (additionalParameters != null && additionalParameters.Count > 0)
-                authParameters.AdditionalParameters.Add(additionalParameters);
+                authParameters.Token = token.Token;            
 
             // Normalize the request uri for signing
             if (!string.IsNullOrEmpty(requestUri.Query))
@@ -700,12 +662,8 @@ namespace OAuth.Net.Consumer
             authParameters.Signature = signingProvider.ComputeSignature(
                 SignatureBase.Create(httpMethod, requestUri, authParameters),
                 this.Service.Consumer.Secret,
-                (token != null && token.Secret != null) ? token.Secret : null);
-
-            return authParameters;
-
+                (token != null && token.Secret != null) ? token.Secret : null);           
         }
-
 
         /// <summary>
         /// 
@@ -721,19 +679,19 @@ namespace OAuth.Net.Consumer
             NameValueCollection requestSpecificParameters = new NameValueCollection(authParameters.AdditionalParameters);
             if (!this.Service.UseAuthorizationHeader)
             {
-                //The OAuth params need to be added either into the querystring or into the post body.
+                ////The OAuth params need to be added either into the querystring or into the post body.
                 requestSpecificParameters.Add(authParameters.OAuthRequestParams());
             }
 
             if (Constants.HttpPostUrlEncodedContentTypeRegex.IsMatch(contentType) && bodyStream == null)
             {
-                //All the requestSpecificParameters need to be encoded into the body bytes
+                ////All the requestSpecificParameters need to be encoded into the body bytes
                 string body = Rfc3986.EncodeAndJoin(requestSpecificParameters);
                 bodyStream = new MemoryStream(Encoding.ASCII.GetBytes(body));
             }
             else
             {
-                //They go into the querystring.
+                ////They go into the querystring.
                 string query = Rfc3986.EncodeAndJoin(requestSpecificParameters);
 
                 if (!string.IsNullOrEmpty(query))
@@ -751,7 +709,7 @@ namespace OAuth.Net.Consumer
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(requestUri);
             request.Method = httpMethod;
 
-            if (Service.UseAuthorizationHeader)
+            if (this.Service.UseAuthorizationHeader)
                 request.Headers.Add(HttpRequestHeader.Authorization, authParameters.ToHeaderFormat());
 
             if (!String.IsNullOrEmpty(contentType))
@@ -760,7 +718,7 @@ namespace OAuth.Net.Consumer
 
                 if (bodyStream != null)
                 {
-                    if( bodyStream.CanSeek )
+                    if(bodyStream.CanSeek) 
                         request.ContentLength = bodyStream.Length;
 
                     StreamCopier.CopyTo(bodyStream, request.GetRequestStream());
@@ -768,6 +726,68 @@ namespace OAuth.Net.Consumer
             }
 
             return request;
+        }
+
+        private OAuthResponse GetResource(NameValueCollection parameters, string contentType, System.IO.Stream bodyStream)
+        {
+            OAuthResponse response;
+
+            HttpWebRequest request = this.PrepareProtectedResourceRequest(parameters, contentType, bodyStream);
+
+            // A null value for the HttpWebRequest is returned when a ResponseToken is returned
+            // and no one has returned in the AuthorizationHandler continue with getting an AccessToken
+            // or an RequestToken exists but the AccessToken request was refused.
+            if (request == null)
+                response = new OAuthResponse(this.RequestToken);
+            else
+            {
+                OAuthResource resource;
+                OAuthParameters responseParameters;
+
+                try
+                {
+                    resource = new OAuthResource((HttpWebResponse)request.GetResponse());
+
+                    // Parse the parameters and re-throw any OAuthRequestException from the service provider
+                    responseParameters = OAuthParameters.Parse(resource);
+                    OAuthRequestException.TryRethrow(responseParameters);
+
+                    // If nothing is thrown then we should have a valid resource.
+                    response = new OAuthResponse(this.AccessToken ?? this.RequestToken, resource);
+                }
+                catch (WebException e)
+                {
+                    // Parse the parameters and re-throw any OAuthRequestException from the service provider
+                    responseParameters = OAuthParameters.Parse(e.Response as HttpWebResponse);
+                    OAuthRequestException.TryRethrow(responseParameters);
+
+                    // If no OAuthRequestException, rethrow the WebException
+                    #warning TODO: We have consumer the WebException's body so rethrowing it is pretty pointless; wrap the WebException in an OAuthProtocolException and store the body (create an OAuthResource before parsing parameters)
+                    throw;
+                }
+            }
+
+            return response;
+        }
+
+        private OAuthParameters CreateOAuthParameters(NameValueCollection additionalParameters)
+        {
+            int timestamp = UnixTime.ToUnixTime(DateTime.Now);
+
+            OAuthParameters authParameters = new OAuthParameters()
+            {
+                ConsumerKey = this.Service.Consumer.Key,
+                Realm = this.Service.Realm,
+                SignatureMethod = this.Service.SignatureMethod,
+                Timestamp = timestamp.ToString(CultureInfo.InvariantCulture),
+                Nonce = this.Service.ComponentLocator.GetInstance<INonceProvider>().GenerateNonce(timestamp),
+                Version = this.Service.OAuthVersion
+            };
+
+            if (additionalParameters != null && additionalParameters.Count > 0)
+                authParameters.AdditionalParameters.Add(additionalParameters);
+
+            return authParameters;
         }
     }
 }

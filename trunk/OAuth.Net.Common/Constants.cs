@@ -45,6 +45,11 @@ namespace OAuth.Net.Common
     public static class Constants
     {
         /// <summary>
+        /// The value that identifies the callback after authorizationis OOB.
+        /// </summary>
+        public const string OAuthOutOfBandCallback = "oob";
+
+        /// <summary>
         /// The HTTP content-type for url encoded parameters in the POST body
         /// </summary>
         public const string HttpPostUrlEncodedContentType = "application/x-www-form-urlencoded";
@@ -128,6 +133,11 @@ namespace OAuth.Net.Common
         public const string VersionParameter = "oauth_version";
 
         /// <summary>
+        /// The parameter for the OAuth verifier
+        /// </summary>
+        public const string VerifierParameter = "oauth_verifier";
+
+        /// <summary>
         /// The parameter for the OAuth token
         /// </summary>
         public const string TokenParameter = "oauth_token";
@@ -170,7 +180,8 @@ namespace OAuth.Net.Common
                     Constants.TimestampParameter,
                     Constants.TokenParameter,
                     Constants.TokenSecretParameter,
-                    Constants.VersionParameter
+                    Constants.VersionParameter,
+                    Constants.VerifierParameter
                 });
     }
 }
