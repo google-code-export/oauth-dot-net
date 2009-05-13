@@ -89,6 +89,16 @@ namespace OAuth.Net.Examples.FireEagleConsumer
                 FireEagle.GetService,
                 context.Session["request_token"] as IToken,
                 context.Session["access_token"] as IToken);
+
+            request.OnBeforeGetRequestToken += new EventHandler<PreRequestEventArgs>((sender,args)=>{
+                args.CallbackUrl= callback;   
+            });
+
+            request.OnBeforeGetAccessToken += new EventHandler<PreAccessTokenRequestEventArgs>((sender, args) =>
+            {
+                args.Verifier = context.Request[OAuth.Net.Common.Constants.VerifierParameter];
+            });
+
             OAuthResponse response = request.GetResource();
 
             if (response.HasProtectedResource)
@@ -112,7 +122,7 @@ namespace OAuth.Net.Examples.FireEagleConsumer
 
                 throw new AuthorizationRequiredException()
                 {
-                    AuthorizationUri = FireEagle.GetService.BuildAuthorizationUrl(response.Token, callback)
+                    AuthorizationUri = FireEagle.GetService.BuildAuthorizationUrl(response.Token)
                 };
             }
         }
@@ -135,6 +145,16 @@ namespace OAuth.Net.Examples.FireEagleConsumer
                 FireEagle.PostService,
                 context.Session["request_token"] as IToken,
                 context.Session["access_token"] as IToken);
+
+            request.OnBeforeGetRequestToken += new EventHandler<PreRequestEventArgs>((sender, args) =>
+            {
+                args.CallbackUrl = callback;
+            });
+
+            request.OnBeforeGetAccessToken += new EventHandler<PreAccessTokenRequestEventArgs>((sender, args) =>
+            {
+                args.Verifier = context.Request[OAuth.Net.Common.Constants.VerifierParameter];
+            });
 
             // Send the location latitude and longitude with the request
             OAuthResponse response = request.GetResource(
@@ -165,7 +185,7 @@ namespace OAuth.Net.Examples.FireEagleConsumer
 
                 throw new AuthorizationRequiredException()
                 {
-                    AuthorizationUri = FireEagle.PostService.BuildAuthorizationUrl(response.Token, callback)
+                    AuthorizationUri = FireEagle.PostService.BuildAuthorizationUrl(response.Token)
                 };
             }
         }

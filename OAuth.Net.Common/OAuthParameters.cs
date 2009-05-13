@@ -184,6 +184,12 @@ namespace OAuth.Net.Common
             set { this.parameters[Constants.VersionParameter] = value; }
         }
 
+        public string Verifier
+        {
+            get { return this.parameters[Constants.VerifierParameter]; }
+            set { this.parameters[Constants.VerifierParameter] = value; }
+        }
+
         public NameValueCollection AdditionalParameters
         {
             get;
@@ -490,24 +496,11 @@ namespace OAuth.Net.Common
         /// <returns></returns>
         public NameValueCollection OAuthRequestParams()
         {
-            //We don't send the realm or token secret in the querystring or post body.
-            return OAuthRequestParams(
+            ////We don't send the realm or token secret in the querystring or post body.
+            return this.OAuthRequestParams(
                 Constants.RealmParameter,
-                Constants.TokenSecretParameter
-             );
-        }
-
-        private NameValueCollection OAuthRequestParams(params string[] excludedParameters)
-        {
-            var @params = new NameValueCollection();
-
-            // Add OAuth parameters whose values are not null except excluded parameters
-            foreach (var param in this.parameters.Keys)
-                if (this.parameters[param] != null && Array.IndexOf<string>(excludedParameters, param) < 0)
-                    @params.Add(param, this.parameters[param]);
-
-            return @params;
-        }
+                Constants.TokenSecretParameter);
+        }        
 
         /// <summary>
         /// Creates a normalized representation of the parameters for use in the signature base string.
@@ -553,7 +546,7 @@ namespace OAuth.Net.Common
 
             return parms.ToString();
         }
-                
+
         internal static OAuthParameters DoParse(string authHeader, string wwwAuthHeader, NameValueCollection form, NameValueCollection queryString, OAuthParameterSources sources, bool validateParameters)
         {
             if (sources == OAuthParameterSources.None)
@@ -602,10 +595,24 @@ namespace OAuth.Net.Common
                 Token = GetParam(Constants.TokenParameter, authHeaderParams, wwwAuthHeaderParams, postParams, queryStringParams),
                 TokenSecret = GetParam(Constants.TokenSecretParameter, authHeaderParams, wwwAuthHeaderParams, postParams, queryStringParams),
                 Version = GetParam(Constants.VersionParameter, authHeaderParams, wwwAuthHeaderParams, postParams, queryStringParams),
+                Verifier = GetParam(Constants.VerifierParameter, authHeaderParams, wwwAuthHeaderParams, postParams, queryStringParams),
 
                 AdditionalParameters = GetNonOAuthParameters(wwwAuthHeaderParams, postParams, queryStringParams)
             };
         }
+
+        private NameValueCollection OAuthRequestParams(params string[] excludedParameters)
+        {
+            var @params = new NameValueCollection();
+
+            // Add OAuth parameters whose values are not null except excluded parameters
+            foreach (var param in this.parameters.Keys)
+                if (this.parameters[param] != null && Array.IndexOf<string>(excludedParameters, param) < 0)
+                    @params.Add(param, this.parameters[param]);
+
+            return @params;
+        }
+
 
         private static void EncodeHeaderValue(StringBuilder buffer, string key, string value, string separator, bool quote)
         {

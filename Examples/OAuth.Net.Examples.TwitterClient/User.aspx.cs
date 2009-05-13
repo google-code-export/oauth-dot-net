@@ -74,7 +74,9 @@ namespace OAuth.Net.Examples.TwitterClient
             {
                 AuthorizationCallbackUri = new Uri(
                     this.Request.Url, 
-                    new VPathResolver().Resolve("~/User.aspx"))
+                    new VPathResolver().Resolve("~/User.aspx")),
+
+                RequestTokenVerifier = Request[OAuth.Net.Common.Constants.VerifierParameter]
             };
 
             try

@@ -55,5 +55,11 @@ namespace OAuth.Net.Examples.TwitterClient.Api
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly",
             Justification = "Callers must be able to set collection by design")]
         public NameValueCollection AuthorizationArguments { get; set; }
+
+        /// <summary>
+        /// The oauth_verifier received from the service provider
+        /// on the authorization callback.
+        /// </summary>
+        public string RequestTokenVerifier {get; set;}
     }
 }
