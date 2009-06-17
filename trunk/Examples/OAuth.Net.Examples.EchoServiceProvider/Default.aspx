@@ -49,6 +49,7 @@
         <div id="main-content">
             <h1>OAuth Echo Service Provider Demo</h1>
             <p>This is a test OAuth service provider with pre-defined keys and secrets and no user authentication step.</p>
+            <p>This provider implements the OAuth Core 1.0 Rev A</p>
             
             <h2>Service settings</h2>
             <dl>

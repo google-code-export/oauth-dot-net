@@ -107,7 +107,8 @@ namespace OAuth.Net.ServiceProvider
                     Constants.SignatureMethodParameter,
                     Constants.SignatureParameter,
                     Constants.TimestampParameter,
-                    Constants.NonceParameter);
+                    Constants.NonceParameter,
+                    Constants.CallbackParameter);
 
             /*
              * The version parameter is optional, but it if is present its value must be 1.0
@@ -143,11 +144,30 @@ namespace OAuth.Net.ServiceProvider
             // Generate a request token
             IRequestToken token = this.GenerateRequestToken(httpContext, requestContext);
 
+            // Check to see if the request for a token is oob and that oob is allowed.
+            if (requestContext.Parameters.Callback.Equals(Constants.OAuthOutOfBandCallback))
+            {
+                if (ServiceProviderContext.Settings.AllowOutOfBandCallback == false)
+                    OAuthRequestException.ThrowParametersRejected(new string[] { Constants.CallbackParameter }, "Out of band is not supported.");
+            }
+            else
+            {
+                Uri callbackUri;
+
+                if (Uri.TryCreate(requestContext.Parameters.Callback, UriKind.Absolute, out callbackUri))
+                {
+                    ServiceProviderContext.CallbackStore.AddCallback(requestContext.RequestToken, callbackUri);
+                }
+                else
+                    OAuthRequestException.ThrowParametersRejected(new string[] { Constants.CallbackParameter }, "Not a valid Uri.");
+            }
+
             // Store the token
             requestContext.RequestToken = token;
             ServiceProviderContext.TokenStore.Add(token);
 
             // Add to the response
+            requestContext.ResponseParameters[Constants.CallbackConfirmedParameter] = "true"; //The spec never defines when to send false or what will happen if you do.
             requestContext.ResponseParameters[Constants.TokenParameter] = token.Token;
             requestContext.ResponseParameters[Constants.TokenSecretParameter] = token.Secret;
         }
@@ -163,6 +183,8 @@ namespace OAuth.Net.ServiceProvider
 
             return requestToken;
         }
+
+
 
         /// <summary>
         /// Determines whether a request token is issued for this request.

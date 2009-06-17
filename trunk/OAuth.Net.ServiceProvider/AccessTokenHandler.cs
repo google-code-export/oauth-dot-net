@@ -70,8 +70,9 @@ namespace OAuth.Net.ServiceProvider
                 this.SetSigningProvider(context, requestContext);
                 this.SetConsumer(context, requestContext);
                 this.SetRequestId(context, requestContext);
-                this.SetRequestToken(context, requestContext);
+                this.SetRequestToken(context, requestContext);                                                
                 this.SetSignature(context, requestContext);
+                this.CheckVerifier(context, requestContext);
             }
             catch (OAuthRequestException ex)
             {
@@ -103,6 +104,14 @@ namespace OAuth.Net.ServiceProvider
             }
         }
 
+        protected virtual void CheckVerifier(HttpContext httpContext, OAuthRequestContext requestContext)
+        {
+            if (!ServiceProviderContext.VerificationProvider.IsValid(requestContext.RequestToken, requestContext.Parameters.Verifier))
+            {
+                OAuthRequestException.ThrowParametersRejected(new string[] { Constants.VerifierParameter }, "Invalid verifier for request token.");
+            }
+        }
+
         protected virtual void ParseParameters(HttpContext httpContext, OAuthRequestContext requestContext)
         {
             // Try to parse the parameters
@@ -120,7 +129,8 @@ namespace OAuth.Net.ServiceProvider
                     Constants.SignatureMethodParameter,
                     Constants.SignatureParameter,
                     Constants.TimestampParameter,
-                    Constants.NonceParameter);
+                    Constants.NonceParameter,
+                    Constants.VerifierParameter);
 
             /*
              * The version parameter is optional, but it if is present its value must be 1.0
@@ -139,8 +149,10 @@ namespace OAuth.Net.ServiceProvider
                     Constants.SignatureParameter,
                     Constants.TimestampParameter,
                     Constants.NonceParameter,
+                    Constants.VerifierParameter,
                     Constants.VersionParameter, // (optional)
-                    Constants.RealmParameter); // (optional)
+                    Constants.RealmParameter// (optional)
+                    ); 
 
             requestContext.Parameters = parameters;
         }
@@ -288,7 +300,7 @@ namespace OAuth.Net.ServiceProvider
         /// </returns>
         protected virtual bool AllowRequest(HttpContext httpContext, OAuthRequestContext requestContext)
         {
-            // By default, requests for access tokens are always allowed
+            // By default, requests for access tokens are allowed
             return true;
         }
 

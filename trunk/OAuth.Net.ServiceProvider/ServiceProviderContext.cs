@@ -116,6 +116,47 @@ namespace OAuth.Net.ServiceProvider
         }
 
         /// <summary>
+        /// An instance of a Callback Uri Store.
+        /// </summary>
+        public static ICallbackStore CallbackStore
+        {
+            get
+            {
+                try
+                {
+                    return ServiceLocator.Current.GetInstance<ICallbackStore>();
+                }
+                catch (ActivationException)
+                {
+                    return null;
+                }
+                catch (NullReferenceException)
+                {
+                    return null;
+                }
+            }
+        }
+
+        public static IVerificationProvider VerificationProvider
+        {
+            get
+            {
+                try
+                {
+                    return ServiceLocator.Current.GetInstance<IVerificationProvider>();
+                }
+                catch (ActivationException)
+                {
+                    return null;
+                }
+                catch (NullReferenceException)
+                {
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
         /// An instance of a token generator. 
         /// </summary>
         /// <value>
@@ -139,6 +180,8 @@ namespace OAuth.Net.ServiceProvider
                 }
             }
         }
+
+        
 
         /// <summary>
         /// An instance of a token store. 

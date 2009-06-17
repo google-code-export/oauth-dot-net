@@ -55,6 +55,13 @@ namespace OAuth.Net.ServiceProvider
             set { this["AdvertiseOAuthSupport"] = value; }
         }
 
+        [ConfigurationProperty("AllowOutOfBandCallback", IsRequired = false, DefaultValue = true)]
+        public bool AllowOutOfBandCallback
+        {
+            get { return (bool)this["AllowOutOfBandCallback"]; }
+            set { this["AllowOutOfBandCallback"] = value; }
+        }
+
         [ConfigurationProperty("ParameterSources", IsRequired = false, DefaultValue = OAuthParameterSources.ServiceProviderDefault)]
         public OAuthParameterSources ParameterSources
         {

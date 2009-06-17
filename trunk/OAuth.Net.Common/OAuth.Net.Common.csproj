@@ -79,6 +79,8 @@
     <Compile Include="Tokens\TokenStatus.cs" />
     <Compile Include="Tokens\TokenType.cs" />
     <Compile Include="UnixTime.cs" />
+    <Compile Include="UserCallback\ICallbackStore.cs" />
+    <Compile Include="UserCallback\IVerificationProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\oauth.net.strongname.pfx">
