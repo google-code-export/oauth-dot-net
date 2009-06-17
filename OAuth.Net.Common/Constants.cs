@@ -154,6 +154,11 @@ namespace OAuth.Net.Common
         public const string CallbackParameter = "oauth_callback";
 
         /// <summary>
+        /// The parameter for the OAuth callback confirmed
+        /// </summary>
+        public const string CallbackConfirmedParameter = "oauth_callback_confirmed";
+
+        /// <summary>
         /// The OAuth version parameter value for OAuth Core 1.0
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores", Justification = "No other sensible punctuation")]

@@ -89,6 +89,7 @@ namespace OAuth.Net.Examples.EchoServiceProvider
             parameters.SignatureMethod = "HMAC-SHA1";
             parameters.Timestamp = timestamp.ToString(CultureInfo.InvariantCulture);
             parameters.Version = "1.0";
+            parameters.Callback = "http://yourownsite.com/";
 
             parameters.Signature = ServiceProviderContext.GetSigningProvider("HMAC-SHA1").ComputeSignature(
                 SignatureBase.Create("GET", this.RequestTokenBaseUri, parameters),
@@ -114,6 +115,7 @@ namespace OAuth.Net.Examples.EchoServiceProvider
             parameters.Timestamp = timestamp.ToString(CultureInfo.InvariantCulture);
             parameters.Version = "1.0";
             parameters.Token = TokenGenerator.FixedRequestToken.Token;
+            parameters.Verifier = ServiceProviderContext.VerificationProvider.Generate(TokenGenerator.FixedRequestToken);
 
             parameters.Signature = ServiceProviderContext.GetSigningProvider("HMAC-SHA1").ComputeSignature(
                 SignatureBase.Create("GET", this.AccessTokenBaseUri, parameters),
