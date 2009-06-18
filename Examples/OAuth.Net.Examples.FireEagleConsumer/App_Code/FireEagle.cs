@@ -49,15 +49,30 @@ namespace OAuth.Net.Examples.FireEagleConsumer
         /// <summary>
         /// The Fire Eagle OAuth service definition for GET requests
         /// </summary>
-        private static readonly OAuthService OAuthService = OAuthService.Create(
-            new EndPoint("https://fireeagle.yahooapis.com/oauth/request_token"),
+        private static readonly OAuthService GetService = OAuthService.Create(
+            new Uri("https://fireeagle.yahooapis.com/oauth/request_token"),
             new Uri("https://fireeagle.yahoo.net/oauth/authorize"),
-            new EndPoint("https://fireeagle.yahooapis.com/oauth/access_token"),            
+            new Uri("https://fireeagle.yahooapis.com/oauth/access_token"),
+            "GET", 
             false, 
             string.Empty, 
             "HMAC-SHA1", 
             "1.0",
-            new OAuthConsumer("rYdWCYtnpoWM", "VjCvuxJbcDWwyFst4btSyv3BYET2KJYw"));        
+            new OAuthConsumer("rYdWCYtnpoWM", "VjCvuxJbcDWwyFst4btSyv3BYET2KJYw"));
+
+        /// <summary>
+        /// The Fire Eagle OAuth service definition for POST requests
+        /// </summary>
+        private static readonly OAuthService PostService = OAuthService.Create(
+            FireEagle.GetService.RequestTokenUrl,
+            FireEagle.GetService.AuthorizationUrl,
+            FireEagle.GetService.AccessTokenUrl,
+            "POST",
+            FireEagle.GetService.UseAuthorizationHeader,
+            FireEagle.GetService.Realm,
+            FireEagle.GetService.SignatureMethod,
+            FireEagle.GetService.OAuthVersion,
+            FireEagle.GetService.Consumer);
 
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "callback", Justification = "Callback is a domain term")]
         public static Location GetLocation(HttpContext context, Uri callback)
@@ -70,8 +85,8 @@ namespace OAuth.Net.Examples.FireEagleConsumer
 
             // Find the user's location
             var request = OAuthRequest.Create(
-                new EndPoint("https://fireeagle.yahooapis.com/api/0.1/user","GET"), 
-                FireEagle.OAuthService,
+                new Uri("https://fireeagle.yahooapis.com/api/0.1/user"), 
+                FireEagle.GetService,
                 context.Session["request_token"] as IToken,
                 context.Session["access_token"] as IToken);
 
@@ -107,7 +122,7 @@ namespace OAuth.Net.Examples.FireEagleConsumer
 
                 throw new AuthorizationRequiredException()
                 {
-                    AuthorizationUri = FireEagle.OAuthService.BuildAuthorizationUrl(response.Token)
+                    AuthorizationUri = FireEagle.GetService.BuildAuthorizationUrl(response.Token)
                 };
             }
         }
@@ -126,8 +141,8 @@ namespace OAuth.Net.Examples.FireEagleConsumer
 
             // Update the user's location
             var request = OAuthRequest.Create(
-                new EndPoint("https://fireeagle.yahooapis.com/api/0.1/update","POST"),
-                FireEagle.OAuthService,
+                new Uri("https://fireeagle.yahooapis.com/api/0.1/update"),
+                FireEagle.PostService,
                 context.Session["request_token"] as IToken,
                 context.Session["access_token"] as IToken);
 
@@ -170,7 +185,7 @@ namespace OAuth.Net.Examples.FireEagleConsumer
 
                 throw new AuthorizationRequiredException()
                 {
-                    AuthorizationUri = FireEagle.OAuthService.BuildAuthorizationUrl(response.Token)
+                    AuthorizationUri = FireEagle.PostService.BuildAuthorizationUrl(response.Token)
                 };
             }
         }
