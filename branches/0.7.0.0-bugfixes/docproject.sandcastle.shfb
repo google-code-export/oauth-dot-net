@@ -1,0 +1,54 @@
+﻿<project schemaVersion="1.6.0.7">
+    <assemblies>
+        <assembly assemblyPath=".\OAuth.Net.Common\bin\Debug\OAuth.Net.Common.dll" xmlCommentsPath=".\OAuth.Net.Common\bin\Debug\OAuth.Net.Common.XML" commentsOnly="False" />
+        <assembly assemblyPath=".\OAuth.Net.Components\bin\Debug\OAuth.Net.Components.dll" xmlCommentsPath=".\OAuth.Net.Components\bin\Debug\OAuth.Net.Components.XML" commentsOnly="False" />
+        <assembly assemblyPath=".\OAuth.Net.Consumer\bin\Debug\OAuth.Net.Consumer.dll" xmlCommentsPath=".\OAuth.Net.Consumer\bin\Debug\OAuth.Net.Consumer.XML" commentsOnly="False" />
+        <assembly assemblyPath=".\Examples\OAuth.Net.Examples.FireEagleConsumer\bin\OAuth.Net.Examples.FireEagleConsumer.dll" xmlCommentsPath=".\Examples\OAuth.Net.Examples.FireEagleConsumer\bin\OAuth.Net.Examples.FireEagleConsumer.XML" commentsOnly="False" />
+        <assembly assemblyPath=".\OAuth.Net.ServiceProvider\bin\Debug\OAuth.Net.ServiceProvider.dll" xmlCommentsPath=".\OAuth.Net.ServiceProvider\bin\Debug\OAuth.Net.ServiceProvider.XML" commentsOnly="False" />
+        <assembly assemblyPath=".\XRDS-Simple.Net\bin\Debug\XRDS-Simple.Net.dll" xmlCommentsPath=".\OAuth.Net.ServiceProvider\bin\Debug\OAuth.Net.ServiceProvider.XML" commentsOnly="False" />
+    </assemblies>
+    <dependencies>
+        <dependencyItem depPath=".\Libraries\*.*" />
+    </dependencies>
+    <ProjectSummary />
+    <MissingTags>None</MissingTags>
+    <VisibleItems>InheritedMembers, InheritedFrameworkMembers, Protected, SealedProtected</VisibleItems>
+    <HtmlHelp1xCompilerPath path="" />
+    <HtmlHelp2xCompilerPath path="" />
+    <OutputPath>.\Documentation\</OutputPath>
+    <SandcastlePath path="" />
+    <WorkingPath path="" />
+    <CleanIntermediates>True</CleanIntermediates>
+    <KeepLogFile>True</KeepLogFile>
+    <BuildLogFile path="" />
+    <HelpFileFormat>HtmlHelp1x</HelpFileFormat>
+    <CppCommentsFixup>False</CppCommentsFixup>
+    <FrameworkVersion>2.0.50727</FrameworkVersion>
+    <IndentHtml>False</IndentHtml>
+    <Preliminary>True</Preliminary>
+    <RootNamespaceContainer>False</RootNamespaceContainer>
+    <RootNamespaceTitle />
+    <HelpTitle>OAuth.net</HelpTitle>
+    <HtmlHelpName>OAuthNet</HtmlHelpName>
+    <Language>en-US</Language>
+    <CopyrightHref>http://lab.madgex.com/oauth-net/</CopyrightHref>
+    <CopyrightText>Copyright © Madgex, 2008. Licensed under the MIT license.</CopyrightText>
+    <FeedbackEMailAddress>oauth-dot-net@madgex.com</FeedbackEMailAddress>
+    <FeedbackEMailLinkText>oauth-dot-net@madgex.com</FeedbackEMailLinkText>
+    <HeaderText />
+    <FooterText />
+    <ProjectLinkType>Local</ProjectLinkType>
+    <SdkLinkType>Index</SdkLinkType>
+    <SdkLinkTarget>Blank</SdkLinkTarget>
+    <PresentationStyle>Prototype</PresentationStyle>
+    <NamingMethod>HashedMemberName</NamingMethod>
+    <SyntaxFilters>CSharp, VisualBasic</SyntaxFilters>
+    <ShowFeedbackControl>False</ShowFeedbackControl>
+    <BinaryTOC>True</BinaryTOC>
+    <IncludeFavorites>False</IncludeFavorites>
+    <CollectionTocStyle>Hierarchical</CollectionTocStyle>
+    <IncludeStopWordList>True</IncludeStopWordList>
+    <PlugInNamespaces>ms.vsipcc+, ms.vsexpresscc+</PlugInNamespaces>
+    <HelpFileVersion>1.0.0.0</HelpFileVersion>
+    <ContentPlacement>AboveNamespaces</ContentPlacement>
+</project>

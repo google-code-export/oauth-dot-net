@@ -1,0 +1,163 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="User.aspx.cs" Inherits="OAuth.Net.Examples.TwitterClient.UserPage" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+// Copyright (c) 2008 Madgex
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+// 
+// OAuth.net uses the Common Service Locator interface, released under the MS-PL
+// license. See "CommonServiceLocator License.txt" in the Licenses folder.
+// 
+// The examples and test cases use the Windsor Container from the Castle Project
+// and Common Service Locator Windsor adaptor, released under the Apache License,
+// Version 2.0. See "Castle Project License.txt" in the Licenses folder.
+// 
+// XRDS-Simple.net uses the HTMLAgility Pack. See "HTML Agility Pack License.txt"
+// in the Licenses folder.
+//
+// Authors: Bruce Boughton, Chris Adams
+// Website: http://lab.madgex.com/oauth-net/
+// Email:   oauth-dot-net@madgex.com
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Hello, <%= this.TwitterUser.Name %> | OAuth.Net Example Twitter Client</title>
+    
+    <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/combo?2.7.0/build/reset-fonts/reset-fonts.css&2.7.0/build/base/base-min.css" />
+    <link rel="stylesheet" type="text/css" href="design/default.css"/>
+</head>
+<body class="user_page <% if (this.TwitterUser.ProfileImageUrl != null) { %>hasphoto<% } %>">
+    <div class="hcard user_metadata">
+        <form id="disconnect" method="get" action="Disconnect.aspx">
+            <input type="submit" id="disconnect_button" tabindex="99" value="Disconnect" />
+        </form>
+        <h1>
+            <% if (this.TwitterUser.ProfileImageUrl != null)
+               {
+            %>
+                <img class="photo" src="<%= this.TwitterUser.ProfileImageUrl.AbsoluteUri %>" border="0" />
+            <% 
+               } 
+            %>
+            Hello, <span class="fn"><%= this.TwitterUser.Name %></span>
+        </h1>
+        <% if (!string.IsNullOrEmpty(this.TwitterUser.Description))
+           {
+        %>
+            <p class="note"><%= this.TwitterUser.Description %></p>
+        <% 
+           } 
+        %>
+        
+        
+        <% if (!string.IsNullOrEmpty(this.TwitterUser.ScreenName))
+           {
+        %>
+            <p class="screenname">@<a href="http://twitter.com/<%= this.TwitterUser.ScreenName %>" class="nickname"><%= this.TwitterUser.ScreenName %></a></p>
+        <% 
+           } 
+        %>
+        
+        
+        <% if (!string.IsNullOrEmpty(this.TwitterUser.Location))
+           {
+        %>
+            <p><span class="adr"><%= this.TwitterUser.Location %></span></p>
+        <% 
+           } 
+        %>
+        
+        
+        <% if (this.TwitterUser.Url != null)
+           {
+        %>
+            <p><a class="url" href="<%= this.TwitterUser.Url.AbsoluteUri %>"><%= this.TwitterUser.Url.AbsoluteUri %></a></p>
+        <% 
+           } 
+        %>
+    </div>
+    <div id="status_updater">
+        <form id="update" method="post" action="UpdateStatus.aspx">
+            <input type="submit" id="update_button" tabindex="2" value="Update" />
+            <input type="text" id="status" name="status" tabindex="1" value="Update your status&hellip;" />
+        
+            <p class="stats"><%= this.TwitterUser.StatusUpdatesCount.ToString("N0") %>
+            <% if (this.TwitterUser.StatusUpdatesCount == 1)
+               {
+            %>
+                 update
+            <% 
+               } 
+               else
+               {
+            %>
+                 updates
+            <% 
+               } 
+            %>
+            </p>
+            
+            <p class="stats"><%= this.TwitterUser.FollowersCount.ToString("N0")%>
+            <% if (this.TwitterUser.FollowersCount == 1)
+               {
+            %>
+                 follower
+            <% 
+               } 
+               else
+               {
+            %>
+                 followers
+            <% 
+               } 
+            %>
+            </p>
+                    
+            <p class="stats">following <%= this.TwitterUser.FriendsCount.ToString("N0")%></p>
+        </form>
+    </div>
+    
+    <ol class="tweet_timeline hfeed">
+        <% foreach (OAuth.Net.Examples.TwitterClient.Api.Status status in this.UserTimeline)
+           {
+        %>
+            <li class="status hentry">
+                <p class="tweet entry-title">
+                    <%= status.Text %>
+                </p>
+                <p class="tweet_metadata">
+                    <span class="author fn nickname">
+                        <%= status.User.ScreenName %>
+                    </span>
+                    <abbr class="updated" 
+                        title="<%= status.CreatedDate.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ssK") %>">
+                        <span class="date"><%= status.CreatedDate.ToString("dddd MMMM dd")%></span>
+                        <span class="time">at <%= status.CreatedDate.ToString("h:mm tt")%></span>
+                    </abbr>
+                    <span class="tweet_source">from <%= status.Source%></span>
+                </p>
+            </li>
+        <% 
+           } 
+        %>
+    </ol>
+</body>
+</html>
