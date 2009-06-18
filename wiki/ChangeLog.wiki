@@ -1,5 +1,18 @@
 #labels Featured
-= OAuth.net 0.5.2.0=
+= OAuth.net 0.7.0.0=
+
+===18th April 2009==
+*Breaking Changes*
+
+The Consumer and Service Provider classes have both been updated to implement the [http://oauth.net/core/1.0a OAuth Core 1.0 Rev A specification].  The implementation will not support OAuth Core 1.0 requests.
+
+Consumer:
+
+ * The consumer requests classes now support HTTP GET, POST, PUT and DELETE methods for the resource calls.
+
+
+
+= OAuth.net 0.6.0.0=
 
 ===9th April 2009==
 *Breaking Changes*
