@@ -181,45 +181,25 @@ namespace OAuth.Net.Consumer
         public event EventHandler<PreProtectedResourceRequestEventArgs> OnBeforeGetProtectedResource;
 
         /// <summary>
-        /// The protected resource Uri
+        /// The EndPoint for the protected resource
         /// </summary>
-        public Uri ResourceUri
+        public EndPoint ResourceEndPoint
         {
             get;
             private set;
         }
 
-        private string httpMethod;
-
         /// <summary>
-        /// The HttpMethod that is used for requesting the protected resource.
+        /// The protected resource Uri
         /// </summary>
-        public string HttpMethod
+        public Uri ResourceUri
         {
             get
             {
-                if (String.IsNullOrEmpty(httpMethod))
-                    return this.Service.HttpMethod;
-                else
-                    return this.httpMethod;
+                return ResourceEndPoint.Uri;
             }
-
-            set
-            {
-                switch (value)
-                {
-                    case "GET":
-                    case "POST":
-                    case "DELETE":
-                    case "PUT":
-                        this.httpMethod = value;
-                        break;
-                    default:
-                        throw new ArgumentException("Only GET, POST, DELETE AND PUT are supported HttpMethods");
-                }
-            }
-        }
-
+        }       
+        
         /// <summary>
         /// The OAuth service
         /// </summary>
@@ -300,11 +280,31 @@ namespace OAuth.Net.Consumer
         /// <param name="resourceUri">Protected resource URI</param>
         /// <param name="settings">Service settings</param>
         /// <returns>An OAuth protected request for the protected resource</returns>
+        [Obsolete("This method has been superseded by the Create(EndPoint resourceEndPoint, OAuthService settings) method")]
         public static OAuthRequest Create(Uri resourceUri, OAuthService settings)
         {
             return new OAuthRequest()
             {
-                ResourceUri = resourceUri,
+                ResourceEndPoint = new EndPoint(resourceUri),
+                Service = settings
+            };
+        }
+
+        /// <summary>
+        /// Creates a new OAuth protected requests.
+        /// </summary>
+        /// <remarks>
+        /// Since neither a request token nor an access token is supplied,
+        /// the user will have to authorize this request.
+        /// </remarks>
+        /// <param name="resourceEndPoint">Protected resource End Point</param>
+        /// <param name="settings">Service settings</param>
+        /// <returns>An OAuth protected request for the protected resource</returns>
+        public static OAuthRequest Create(EndPoint resourceEndPoint, OAuthService settings)
+        {
+            return new OAuthRequest()
+            {
+                ResourceEndPoint = resourceEndPoint,
                 Service = settings
             };
         }
@@ -322,11 +322,34 @@ namespace OAuth.Net.Consumer
         /// <param name="requestToken">Request token</param>
         /// <returns>An OAuth protected request for the protected resources,
         /// initialised with the request token</returns>
+        [Obsolete("This method has been superseded by the Create(EndPoint resourceEndPoint, OAuthService settings, IToken requestToken) method")]
         public static OAuthRequest Create(Uri resourceUri, OAuthService settings, IToken requestToken)
         {
             return new OAuthRequest()
             {
-                ResourceUri = resourceUri,
+                ResourceEndPoint = new EndPoint(resourceUri),
+                Service = settings,
+                RequestToken = requestToken
+            };
+        }
+
+        /// <summary>
+        /// Creates a new OAuth protected request, initialised with a previously
+        /// retrieved request token. This token may or may not have been authorized.
+        /// </summary>
+        /// <remarks>
+        /// If the request token supplied has not been authorized, the user will
+        /// have to be directed to authorize it before the request can proceed.
+        /// </remarks>
+        /// <param name="resourceEndPoint">Protected resource End Point</param>
+        /// <param name="settings">Service settings</param>
+        /// <param name="requestToken">Request token</param>
+        /// <returns>An OAuth protected request for the protected resource</returns>
+        public static OAuthRequest Create(EndPoint resourceEndPoint, OAuthService settings, IToken requestToken)
+        {
+            return new OAuthRequest()
+            {
+                ResourceEndPoint = resourceEndPoint,
                 Service = settings,
                 RequestToken = requestToken
             };
@@ -347,11 +370,39 @@ namespace OAuth.Net.Consumer
         /// <param name="accessToken">Access token</param>
         /// <returns>An OAuth protected request for the protected resource,
         /// initialised with the request token and access token</returns>
+        /// 
+        [Obsolete("This method has been superseded by the Create(EndPoint resourceEndPoint, OAuthService settings, IToken requestToken, IToken accessToken) method")]
         public static OAuthRequest Create(Uri resourceUri, OAuthService settings, IToken requestToken, IToken accessToken)
         {
             return new OAuthRequest()
             {
-                ResourceUri = resourceUri,
+                ResourceEndPoint = new EndPoint(resourceUri),
+                Service = settings,
+                RequestToken = requestToken,
+                AccessToken = accessToken
+            };
+        }
+
+        /// <summary>
+        /// Creates a new OAuth protected request, initialised with previously
+        /// retrieved request and access tokens. 
+        /// </summary>
+        /// <remarks>
+        /// If the access token is valid, the user should not have to intervene
+        /// to authorize the request and the protected resource should be
+        /// fetched immediately.
+        /// </remarks>
+        /// <param name="resourceEndPoint">Protected resource End Point</param>
+        /// <param name="settings">Service settings</param>
+        /// <param name="requestToken">Request token</param>
+        /// <param name="accessToken">Access token</param>
+        /// <returns>An OAuth protected request for the protected resource,
+        /// initialised with the request token and access token</returns>
+        public static OAuthRequest Create(EndPoint resourceEndPoint, OAuthService settings, IToken requestToken, IToken accessToken)
+        {
+            return new OAuthRequest()
+            {
+                ResourceEndPoint = resourceEndPoint,
                 Service = settings,
                 RequestToken = requestToken,
                 AccessToken = accessToken
@@ -381,8 +432,8 @@ namespace OAuth.Net.Consumer
         public OAuthResponse GetResource(NameValueCollection parameters)
         {
             return this.GetResource(
-                parameters, 
-                HttpMethod == "POST" || HttpMethod == "PUT" ? Constants.HttpPostUrlEncodedContentType : String.Empty, 
+                parameters,
+                this.ResourceEndPoint.HttpMethod == "POST" || this.ResourceEndPoint.HttpMethod == "PUT" ? Constants.HttpPostUrlEncodedContentType : String.Empty, 
                 null);
         }        
 
@@ -408,7 +459,7 @@ namespace OAuth.Net.Consumer
                         , "contentType");
 
             ////Check to see if we are a GET or DELETE can't send a body in a GET or DELETE
-            if(this.HttpMethod == "GET" || this.HttpMethod == "DELETE")
+            if (this.ResourceEndPoint.HttpMethod == "GET" || this.ResourceEndPoint.HttpMethod == "DELETE")
                 throw new InvalidOperationException(
                     "You cannot send an entity in the HTTP request in a GET or DELETE HttpMethod.");
 
@@ -461,7 +512,7 @@ namespace OAuth.Net.Consumer
             // Fire the OnBeforeGetRequestToken event
             PreRequestEventArgs args = new PreRequestEventArgs(
                 this.Service.RequestTokenUrl, 
-                this.Service.HttpMethod,
+                this.Service.RequestTokenEndPoint.HttpMethod,
                 this.Service.CallbackUrl,
                 new NameValueCollection());
 
@@ -549,7 +600,7 @@ namespace OAuth.Net.Consumer
             // Fire the OnBeforeGetAccessToken event
             PreAccessTokenRequestEventArgs preArgs = new PreAccessTokenRequestEventArgs(
                 this.Service.AccessTokenUrl,
-                this.Service.HttpMethod,                 
+                this.Service.AccessTokenEndPoint.HttpMethod,                 
                 this.RequestToken,
                 String.Empty);
 
@@ -560,7 +611,7 @@ namespace OAuth.Net.Consumer
             OAuthParameters authParams = this.CreateOAuthParameters(null);
             authParams.Verifier = preArgs.Verifier;
 
-            this.SignParameters(preArgs.RequestUri, preArgs.HttpMethod, authParams, this.AccessToken);                
+            this.SignParameters(preArgs.RequestUri, preArgs.HttpMethod, authParams, this.RequestToken);                
             
             HttpWebRequest request = this.CreateRequest( 
                 preArgs.RequestUri, 
@@ -612,8 +663,8 @@ namespace OAuth.Net.Consumer
         {
             // Fire the OnBeforeGetProtectedResource event
             PreProtectedResourceRequestEventArgs preArgs = new PreProtectedResourceRequestEventArgs(
-                this.ResourceUri, 
-                string.IsNullOrEmpty(this.HttpMethod )? this.Service.HttpMethod : this.HttpMethod,
+                this.ResourceUri,
+                this.ResourceEndPoint.HttpMethod,
                 parameters ?? new NameValueCollection(), 
                 this.RequestToken, 
                 this.AccessToken);
