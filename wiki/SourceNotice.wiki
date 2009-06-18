@@ -14,6 +14,8 @@ The current source trunk is under active development, and may be unstable.  The 
 9th May 2009 - Changes made to support GET, POST, PUT, and DELETE.  Additional HttpMethod property on the OAuthRequest class provides functionality to change the http method for requesting the protected resource.
 
  * Implementing changes to allow different HttpMethods for each oauth endpoint.
+18th June 2009 - Commited changes to Consumer classes to implement new EndPoint class.  You are now able to specify a different HTTP method for the access token, request token and protected resource end point indepentdently.
+
  
  * Work to implement the [http://oauth.googlecode.com/svn/spec/ext/consumer_request/1.0/drafts/2/spec.html Consumer Request Extension]  
 13th May 2009 - Currently Delayed to allow for OAuth Core 1.0 Rev A spec.
