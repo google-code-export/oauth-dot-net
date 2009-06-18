@@ -50,8 +50,7 @@ namespace OAuth.Net.Examples.TwitterClient.Api
 
         private static readonly object staticLock = new object();
         private readonly OAuthState state;
-        private static OAuthService readServiceDefinition;
-        private static OAuthService writeServiceDefinition;
+        private static OAuthService serviceDefinition;        
 
         public TwitterApi(OAuthState state)
         {
@@ -62,56 +61,27 @@ namespace OAuth.Net.Examples.TwitterClient.Api
         }
 
         /// <summary>
-        /// The OAuth service definition for the Twitter client for read 
-        /// operations
+        /// The OAuth service definition for the Twitter client
         /// </summary>
-        private static OAuthService ReadServiceDefinition
+        private static OAuthService ServiceDefinition
         {
             get
             {
-                if (readServiceDefinition == null)
+                if (serviceDefinition == null)
                     lock (staticLock)
-                        if (readServiceDefinition == null)
-                            readServiceDefinition = OAuthService.Create(
-                                new Uri("http://twitter.com/oauth/request_token"),
+                        if (serviceDefinition == null)
+                            serviceDefinition = OAuthService.Create(
+                                new OAuth.Net.Consumer.EndPoint("http://twitter.com/oauth/request_token"),
                                 new Uri("http://twitter.com/oauth/authorize"),
-                                new Uri("http://twitter.com/oauth/access_token"),
+                                new OAuth.Net.Consumer.EndPoint("http://twitter.com/oauth/access_token"),
                                 "HMAC-SHA1",
                                 new OAuthConsumer(
                                     "S9NZ9AlPtRAJO7O2fHWrg",
                                     "sSHY3q2obL6BKbPyB3QwnuCruWbFH53qocbGaCDf7U"));
 
-                return readServiceDefinition;
+                return serviceDefinition;
             }
-        }
-
-        /// <summary>
-        /// The OAuth service definition for the Twitter client for write
-        /// operations
-        /// </summary>
-        private static OAuthService WriteServiceDefinition
-        {
-            get
-            {
-                if (writeServiceDefinition == null)
-                    lock (staticLock)
-                        if (writeServiceDefinition == null)
-                            writeServiceDefinition = OAuthService.Create(
-                                new Uri("http://twitter.com/oauth/request_token"),
-                                new Uri("http://twitter.com/oauth/authorize"),
-                                new Uri("http://twitter.com/oauth/access_token"),
-                                "POST",
-                                true,
-                                string.Empty,
-                                "HMAC-SHA1",
-                                Constants.Version1_0,
-                                new OAuthConsumer(
-                                    "S9NZ9AlPtRAJO7O2fHWrg",
-                                    "sSHY3q2obL6BKbPyB3QwnuCruWbFH53qocbGaCDf7U"));
-
-                return writeServiceDefinition;
-            }
-        }
+        }      
 
         /// <summary>
         /// Verifies the user credentials and fetches extended user information
@@ -133,10 +103,10 @@ namespace OAuth.Net.Examples.TwitterClient.Api
         public bool VerifyCredentials(out ExtendedUser user, ApiCallOptions options)
         {
             OAuthResource resource = this.ExecuteRequest(
-                TwitterApi.ReadServiceDefinition,
+                TwitterApi.ServiceDefinition,
                 options,
                 null,
-                "http://twitter.com/account/verify_credentials.xml");
+                "http://twitter.com/account/verify_credentials.xml", "GET");
 
             switch (resource.StatusCode)
             {
@@ -166,10 +136,10 @@ namespace OAuth.Net.Examples.TwitterClient.Api
         public ReadOnlyCollection<Status> UserTimeline(ApiCallOptions options)
         {
             OAuthResource resource = this.ExecuteRequest(
-                TwitterApi.ReadServiceDefinition,
+                TwitterApi.ServiceDefinition,
                 options,
                 null,
-                "http://twitter.com/statuses/user_timeline.xml");
+                "http://twitter.com/statuses/user_timeline.xml", "GET");
 
             return new ReadOnlyCollection<Status>(
                 new ListSerializationHelper().DeserializeStatusList(
@@ -192,13 +162,13 @@ namespace OAuth.Net.Examples.TwitterClient.Api
                     "status");
 
             OAuthResource resource = this.ExecuteRequest(
-                TwitterApi.WriteServiceDefinition,
+                TwitterApi.ServiceDefinition,
                 options,
                 new NameValueCollection
                 {
                     { "status", status }
                 },
-                "http://twitter.com/statuses/update.xml");
+                "http://twitter.com/statuses/update.xml", "POST");
 
             return Status.Deserialize(resource.GetResponseStream());
         }
@@ -212,6 +182,7 @@ namespace OAuth.Net.Examples.TwitterClient.Api
         /// <param name="parameters">Additional parameters to send</param>
         /// <param name="uriFormat">Resource URI (optionally with format
         /// placeholders)</param>
+        /// <param name="httpMethod">HTTP Method of the resource request</param>
         /// <param name="args">Arguments to format with</param>
         /// <returns>
         /// <see cref="OAuthResource"/> representing the response for the 
@@ -223,7 +194,8 @@ namespace OAuth.Net.Examples.TwitterClient.Api
             OAuthService service,
             ApiCallOptions options, 
             NameValueCollection parameters,
-            string uriFormat, 
+            string uriFormat,
+            string httpMethod,
             params string[] args)
         {
             if (service == null)
@@ -238,7 +210,7 @@ namespace OAuth.Net.Examples.TwitterClient.Api
             if (string.IsNullOrEmpty(uriFormat))
                 throw new ArgumentException("uriFormat must not be empty", "uriFormat");
 
-            var request = this.CreateRequest(service, uriFormat, args);
+            var request = this.CreateRequest(service, uriFormat, httpMethod, args);
             request.OnBeforeGetRequestToken += new EventHandler<PreRequestEventArgs>((sender, preRequestEventArgs) =>
             {
                 preRequestEventArgs.CallbackUrl = options.AuthorizationCallbackUri;
@@ -272,7 +244,7 @@ namespace OAuth.Net.Examples.TwitterClient.Api
                     "Authorization required to request " + 
                         string.Format(CultureInfo.InvariantCulture, uriFormat, args))
                 {
-                    AuthorizationUri = TwitterApi.ReadServiceDefinition.BuildAuthorizationUrl(
+                    AuthorizationUri = TwitterApi.ServiceDefinition.BuildAuthorizationUrl(
                         requestToken,
                         options.AuthorizationArguments)
                 };
@@ -292,6 +264,7 @@ namespace OAuth.Net.Examples.TwitterClient.Api
         private OAuthRequest CreateRequest(
             OAuthService service,
             string uriFormat, 
+            string httpMethod,
             params string[] args)
         {
             if (service == null)
@@ -304,11 +277,11 @@ namespace OAuth.Net.Examples.TwitterClient.Api
                 throw new ArgumentException("uriFormat must not be empty", "uriFormat");
 
             return OAuthRequest.Create(
-                new Uri(
+                new OAuth.Net.Consumer.EndPoint(
                     string.Format(
                         CultureInfo.InvariantCulture, 
                         uriFormat, 
-                        args)),
+                        args), httpMethod),
                 service,
                 this.state.RequestToken,
                 this.state.AccessToken);
