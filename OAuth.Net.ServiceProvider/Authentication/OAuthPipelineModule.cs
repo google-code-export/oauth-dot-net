@@ -59,42 +59,45 @@ namespace OAuth.Net.ServiceProvider
         [SuppressMessage("Microsoft.Security", "CA2109:ReviewVisibleEventHandlers", Justification = "This is an extension point")]
         public virtual void HandleAuthenticateRequest(object sender, EventArgs args)
         {
-            HttpApplication application = (HttpApplication)sender;
-
-            // Don't do anything if another authentication module has set the user already
-            if (application.Context.User != null)
-                return;
-
-            OAuthRequestContext context = new OAuthRequestContext();
-            WorkflowHelper.StoreOAuthContext(application.Context, context);
-
-            try
+            if (ServiceProviderContext.Settings.AuthenticateRequests)
             {
-                this.ParseParameters(application, context);
-                this.SetConsumer(application, context);
-                this.SetAccessToken(application, context);
-            }
-            catch (OAuthRequestException ex)
-            {
-                // The request may not be an OAuth request so don't pass the exception to the consumer
-                context.AddError(ex);
-                return;
-            }
+                HttpApplication application = (HttpApplication)sender;
 
-            try
-            {
-                this.SetSigningProvider(application, context);
-                this.SetRequestId(application, context);
-                this.SetSignature(application, context);
-            }
-            catch (OAuthRequestException ex)
-            {
-                context.AddError(ex);
-                WorkflowHelper.SendBadRequest(application.Context, ex, null);
-            }
+                // Don't do anything if another authentication module has set the user already
+                if (application.Context.User != null)
+                    return;
 
-            this.UpdateAccessToken(application, context);
-            this.SetUser(application, context);
+                OAuthRequestContext context = new OAuthRequestContext();
+                WorkflowHelper.StoreOAuthContext(application.Context, context);
+
+                try
+                {
+                    this.ParseParameters(application, context);
+                    this.SetConsumer(application, context);
+                    this.SetAccessToken(application, context);
+                }
+                catch (OAuthRequestException ex)
+                {
+                    // The request may not be an OAuth request so don't pass the exception to the consumer
+                    context.AddError(ex);
+                    return;
+                }
+
+                try
+                {
+                    this.SetSigningProvider(application, context);
+                    this.SetRequestId(application, context);
+                    this.SetSignature(application, context);
+                }
+                catch (OAuthRequestException ex)
+                {
+                    context.AddError(ex);
+                    WorkflowHelper.SendBadRequest(application.Context, ex, null);
+                }
+
+                this.UpdateAccessToken(application, context);
+                this.SetUser(application, context);
+            }
         }
 
         protected virtual void ParseParameters(HttpApplication application, OAuthRequestContext context)

@@ -47,6 +47,18 @@ namespace OAuth.Net.ServiceProvider
             set { this["AuthenticationRealm"] = value; }
         }
 
+        /// <summary>
+        /// Defines if the Pipeline module checks for OAuth authentication parameters on inbound requests.
+        /// The &lt;location&gt;&lt;/location&gt tag of the web.config file can be used to switch this settings on/off for
+        /// different urls.
+        /// </summary>
+        [ConfigurationProperty("AuthenticateRequests", IsRequired = false, DefaultValue = true)]
+        public bool AuthenticateRequests
+        {
+            get { return (bool)this["AuthenticateRequests"]; }
+            set { this["AuthenticateRequests"] = value; }
+        }
+
         #warning TODO: This is completely ignored at the moment! (never advertised)
         [ConfigurationProperty("AdvertiseOAuthSupport", IsRequired = false, DefaultValue = true)]
         public bool AdvertiseOAuthSupport
