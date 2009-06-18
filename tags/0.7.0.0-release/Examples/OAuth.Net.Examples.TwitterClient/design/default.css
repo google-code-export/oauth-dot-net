@@ -1,0 +1,240 @@
+﻿/* TODO: Fix layout issues in Mozilla, Trident */
+
+html
+{
+	background: #555;
+	color: #DDD;
+	padding: 0;
+	margin: 0;
+}
+
+body
+{
+	position: relative;
+	text-align: center;
+	padding: 0 0 3em;
+	margin: 0 5em;
+}
+
+body *
+{
+	text-align: left;
+}
+
+a,
+a:visited
+{	
+	color: rgb(251, 151, 8);
+}
+
+a:hover,
+a:focus,
+a:active
+{
+	color: #DDD;
+}
+
+abbr
+{
+	cursor: inherit;
+	border: none;
+}
+
+
+h1
+{
+	color: rgb(251, 151, 8);
+	font-size: 394%;
+	padding: 0.2em 0.4em 0;
+	margin: 0;
+}
+
+.user_metadata
+{
+	margin: 0 0 4em;
+}
+
+.user_metadata .photo
+{
+	float: left;
+	margin: 0 0.2em 0 -1.45em;
+	border: 0.1em solid #666;
+	-moz-border-radius: 0.1em;
+	-webkit-border-radius: 0.1em;
+}
+
+.user_metadata p
+{
+	float: left;
+	margin: 0.3em 0 0.7em 1em;
+}
+
+.user_metadata p.note
+{
+	font-size: 138.5%;
+	margin: 0 0 0.7em 1.25em;
+}
+
+.user_metadata p.screenname
+{
+	/*clear: both;*/
+}
+
+form#disconnect
+{
+	float: right;
+	margin: 1em -4em 1em 1em;	
+}
+
+form#login
+{
+	clear: both;
+	text-align: center;
+	background: #525252;
+	width: 35em;
+	padding: 2em 1em 3em;
+	margin: 5em auto 0;	
+	border: 0.6em solid #505050;
+	
+	-moz-border-radius: 1.3em;
+	-webkit-border-radius: 1.3em;
+}
+
+form#login p
+{
+	font-size: 108%;
+	margin: 0 3.4em 1em;
+}
+
+form#login p.security_message
+{
+	padding-bottom: 1em;
+	margin-bottom: 2em;
+	border-bottom: 1px solid #484848;
+}
+
+input#connect_button,
+input#status,
+input#update_button,
+input#disconnect_button
+{
+	font-size: 153.9%;
+	padding: 0.3em;
+}
+
+input#connect_button,
+input#update_button,
+input#disconnect_button
+{
+	background: #888;
+	color: #DDD;
+	padding: 0.15em;
+	border: 0.15em solid #666;
+	
+	-moz-border-radius: 0.3em;
+	-webkit-border-radius: 0.3em;
+}
+
+input#connect_button:focus,
+input#update_button:focus,
+input#connect_button:hover,
+input#update_button:hover
+{
+	background: #333;
+	border-color: #2A2A2A;
+}
+
+input#disconnect_button
+{
+	background: #707070;
+	color: #AAA;
+	border-color: #606060;
+}
+
+input#disconnect_button:focus,
+input#disconnect_button:hover
+{
+	background: #505050;
+	border-color: #444;
+}
+
+form#update
+{
+	overflow: auto;
+	clear: both;
+	background: #404040;
+	padding: 0.4em;
+	padding-right: 9em;
+	margin: 1.7em 0.5em 0.3em;
+	border: 0.3em solid #94703c;
+	
+	-moz-border-radius: 0.4em;
+	-webkit-border-radius: 0.4em;
+}
+
+input#status
+{
+	background: transparent;
+	color: #DDD;
+	width: 100%;
+	border: 0.1em solid #555;
+}
+
+input#update_button
+{
+	float: right;
+	margin-right: -5.4em;
+}
+
+.stats
+{
+	float: left;
+	color: #555;
+	font-weight: bold;
+	margin: 0.6em 0.8em;
+}
+
+.tweet_timeline
+{
+	width: 60%;
+}
+
+ol.tweet_timeline,
+ol.tweet_timeline li
+{
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+.tweet_timeline .status
+{
+	margin: 0.6em 0.8em;
+}
+
+.tweet_timeline .status .tweet
+{
+	float: left;
+	font-size: 138.5%;
+	clear: both;
+	background: #4B4B4B;
+	padding: 0.4em;
+	margin: 1em 0 0.4em;
+	
+	-moz-border-radius: 0.4em;
+	-webkit-border-radius: 0.4em;
+}
+
+.tweet_timeline .status .tweet_metadata
+{
+	clear: both;
+	color: #222;
+	font-size: 93%;
+	margin: 0.3em 1.4em;
+}
+
+.tweet_timeline .status .tweet_metadata .author
+{
+	position: absolute;
+	left: -999em;
+}
