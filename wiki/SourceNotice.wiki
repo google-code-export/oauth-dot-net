@@ -6,9 +6,11 @@ The current source trunk is under active development, and may be unstable.  The 
 
  * Implementing changes for the OAuth Core 1.0 Rev A spec.
 14th May 2009 - Changes made to consumer classes commited.
+
 18th June 2009 - Changes made to service provider classes commited.
 
  * Implementing changes to support RESTful end points and allow different HttpMethod for the protected resource.
+
 9th May 2009 - Changes made to support GET, POST, PUT, and DELETE.  Additional HttpMethod property on the OAuthRequest class provides functionality to change the http method for requesting the protected resource.
 
  * Implementing changes to allow different HttpMethods for each oauth endpoint.
