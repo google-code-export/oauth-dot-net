@@ -560,7 +560,7 @@ namespace OAuth.Net.Consumer
             OAuthParameters authParams = this.CreateOAuthParameters(null);
             authParams.Verifier = preArgs.Verifier;
 
-            this.SignParameters(preArgs.RequestUri, preArgs.HttpMethod, authParams, this.AccessToken);                
+            this.SignParameters(preArgs.RequestUri, preArgs.HttpMethod, authParams, this.RequestToken);                
             
             HttpWebRequest request = this.CreateRequest( 
                 preArgs.RequestUri, 
