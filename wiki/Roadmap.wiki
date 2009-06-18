@@ -17,18 +17,18 @@ Items Needed Before Release:
    * ~~Remove experimental IOutOfBounds interface ~~ Done 17th March 2009
    * Update configuration documentation
 
-== v.0.61 ==
-Due: Mid April 2009
+== v.0.71 ==
+Due: Mid July 2009
 
 Release to create new Google Contacts example.
 
 
-== v0.7 ==
-Due: May 2009
+== v0.8 ==
+Due: July 2009
 
 Implement two-legged [http://oauth.googlecode.com/svn/spec/ext/consumer_request/1.0/drafts/2/spec.html Consumer Request extension ]
 
-== v0.8 ==
+== v0.9 ==
 Due: TBA
 
 Implementation of XRD and OAuth Discovery - dependent on creation of new extension.
