@@ -92,7 +92,7 @@ namespace OAuth.Net.Components
             set;
         }
 
-        public virtual RequestId CheckRequest(string nonce, string timestampValue, string consumerKey)
+        public virtual RequestId CheckRequest(string nonce, string timestampValue, string consumerKey, string requestToken)
         {
             // Compute the server time
             long now = UnixTime.ToUnixTime(DateTime.Now);
@@ -100,7 +100,7 @@ namespace OAuth.Net.Components
             // Get and validate the timestamp
             long timestamp = this.ValidateTimestamp(timestampValue, now);
 
-            return this.ValidateNonce(nonce, timestamp, consumerKey);
+            return this.ValidateNonce(nonce, timestamp, consumerKey, requestToken);
         }
 
         public void Dispose()
@@ -150,9 +150,9 @@ namespace OAuth.Net.Components
 
         // Checks whether the supplied nonce, timestamp and consumer key combination is unique within
         // the current window.
-        protected virtual RequestId ValidateNonce(string nonce, long timestamp, string consumerKey)
+        protected virtual RequestId ValidateNonce(string nonce, long timestamp, string consumerKey, string token)
         {
-            RequestId currentId = new RequestId(timestamp, nonce, consumerKey);
+            RequestId currentId = new RequestId(timestamp, nonce, consumerKey, token);
 
             bool foundClash = false;
 

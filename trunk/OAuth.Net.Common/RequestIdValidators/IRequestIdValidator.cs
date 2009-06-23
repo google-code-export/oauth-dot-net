@@ -50,9 +50,10 @@ namespace OAuth.Net.Common
         /// <param name="nonce">The nonce</param>
         /// <param name="timestampValue">The timestamp</param>
         /// <param name="consumerKey">The consumer key</param>
+        /// <param name="requestToken">The request token</param>
         /// <returns>A RequestId (formed of the timestamp, nonce and consumer key)
         /// if the request is ok</returns>
         /// <exception cref="OAuth.Net.Common.OAuthRequestException" />
-        RequestId CheckRequest(string nonce, string timestampValue, string consumerKey);
+        RequestId CheckRequest(string nonce, string timestampValue, string consumerKey, string requestToken);
     }
 }
