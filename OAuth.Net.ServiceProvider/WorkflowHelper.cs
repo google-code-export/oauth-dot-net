@@ -203,7 +203,8 @@ namespace OAuth.Net.ServiceProvider
             context.RequestId = ServiceProviderContext.RequestIdValidator.CheckRequest(
                 context.Parameters.Nonce,
                 context.Parameters.Timestamp,
-                context.Parameters.ConsumerKey);
+                context.Parameters.ConsumerKey,
+                context.Parameters.Token);
         }
 
         public static void SetSignature(HttpContext httpContext, OAuthRequestContext requestContext)

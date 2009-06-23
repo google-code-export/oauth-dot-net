@@ -39,12 +39,13 @@ namespace OAuth.Net.Common
     [DebuggerDisplay("Timestamp: {Timestamp} Nonce: {Nonce} Consumer Key: {ConsumerKey}")]
     public struct RequestId
     {
-        public RequestId(long timestamp, string nonce, string consumerKey)
+        public RequestId(long timestamp, string nonce, string consumerKey, string token)
             : this()
         {
             this.Timestamp = timestamp;
             this.Nonce = nonce;
             this.ConsumerKey = consumerKey;
+            this.Token = token;
         }
 
         /// <summary>
@@ -69,6 +70,15 @@ namespace OAuth.Net.Common
         /// The consumer key
         /// </summary>
         public string ConsumerKey
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// The consumer key
+        /// </summary>
+        public string Token
         {
             get;
             private set;
@@ -99,12 +109,13 @@ namespace OAuth.Net.Common
         {
             return this.Timestamp == other.Timestamp
                 && this.Nonce.Equals(other.Nonce)
-                && this.ConsumerKey.Equals(other.ConsumerKey);
+                && this.ConsumerKey.Equals(other.ConsumerKey)
+                && this.Token.Equals(other.Token);
         }
 
         public override int GetHashCode()
         {
-            return this.Timestamp.GetHashCode() ^ this.Nonce.GetHashCode() ^ this.ConsumerKey.GetHashCode();
+            return this.Timestamp.GetHashCode() ^ this.Nonce.GetHashCode() ^ this.ConsumerKey.GetHashCode() ^ this.Token.GetHashCode();
         }
     }
 }
