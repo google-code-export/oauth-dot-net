@@ -121,7 +121,7 @@ namespace OAuth.Net.Common
             this.TokenSecret = null;
             this.Version = null;
             this.AdditionalParameters = new NameValueCollection();
-        }
+        }        
 
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Justification = "Callback is a domain term")]
         public string Callback
@@ -326,6 +326,17 @@ namespace OAuth.Net.Common
             }
 
             return OAuthParameters.DoParse(null, response.Headers[Constants.WwwAuthenticateHeaderParameter], bodyParams, null, OAuthParameterSources.ConsumerDefault, false);
+        }
+
+        /// <summary>
+        /// Parses the OAuth parameters from a NameValueCollection
+        /// </summary>
+        /// <param name="parameterCollection">the NameValueCollection</param>
+        /// <returns>
+        /// An OAuthParameters object containing the parsed reserved OAuth parameters and any additional, valid parameters.</returns>
+        public static OAuthParameters Parse(NameValueCollection parameterCollection)
+        {
+            return OAuthParameters.DoParse(null, null, parameterCollection, null, OAuthParameterSources.HttpPostBody, true);
         }
 
         /// <summary>
