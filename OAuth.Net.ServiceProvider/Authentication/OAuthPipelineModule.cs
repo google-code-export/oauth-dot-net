@@ -50,6 +50,26 @@ namespace OAuth.Net.ServiceProvider
         {
             context.AuthenticateRequest += this.HandleAuthenticateRequest;
             ////context.PreSendRequestHeaders += this.HandlePreSendRequestHeaders;
+            context.Error += new EventHandler(this.HandleError);
+        }
+
+        void HandleError(object sender, EventArgs e)
+        {
+            if (ServiceProviderContext.Settings.AuthenticateRequests)
+            {
+                HttpApplication application = (HttpApplication)sender;
+
+                if (application.Context.Error is OAuthRequestException)
+                {
+                    OAuthRequestContext context = WorkflowHelper.RetrieveOAuthContext(application.Context);
+                    if (context != null)
+                        context.AddError((OAuthRequestException)application.Context.Error);
+
+                    application.Context.ClearError(); //Ensure we clear the exception to avoid ASP.NET handling this
+
+                    WorkflowHelper.SendBadRequest(application.Context, (OAuthRequestException)application.Context.Error, null);
+                }
+            }
         }
 
         public virtual void Dispose()
