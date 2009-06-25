@@ -719,6 +719,38 @@ namespace OAuth.Net.Common
             OAuthRequestException.ThrowSimpleReport(OAuthRequestExceptionProblemTypes.TokenRevoked, advice);
         }
 
+        /// <summary>
+        /// Throws an exception indicating the consumer does not have the required permissions
+        /// to acccess this resource        
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// <para>
+        /// The <see cref="Problem">problem type</see> is 
+        /// <see cref="OAuthRequestExceptionProblemTypes.PermissionDenied">permission_denied</see>.
+        /// </para>
+        /// 
+        /// <para>
+        /// The <paramref name="advice"/> parameter, if supplied, will be
+        /// stored in the <see cref="Advice"/> property.
+        /// </para>
+        /// 
+        /// <para>
+        /// The <see cref="Exception.Source"/> will be <see cref="OAuthRequestExceptionSources.Local">local</see>.
+        /// </para>
+        /// </remarks>
+        /// 
+        /// <param name="advice">(Optional) Plain text advice for the user 
+        /// of the consumer</param>
+        /// 
+        /// <exception cref="OAuth.Net.Common.OAuthRequestException">
+        /// Always
+        /// </exception>
+        public static void ThrowPermissionDenied(string advice)
+        {
+            OAuthRequestException.ThrowSimpleReport(OAuthRequestExceptionProblemTypes.PermissionDenied, advice);
+        }
+
         //// TODO: ThrowAdditionalAuthorizationRequired
         //// TODO: ThrowPermissionUnknown
         //// TODO: ThrowPermissionDenied
