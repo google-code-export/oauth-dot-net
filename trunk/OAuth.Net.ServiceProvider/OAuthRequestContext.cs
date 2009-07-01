@@ -122,18 +122,18 @@ namespace OAuth.Net.ServiceProvider
 
         public static bool operator ==(OAuthRequestContext left, OAuthRequestContext right)
         {
-            if (left == null)
-                return right == null;
-            else
-                return left.Equals(right);
+            if( System.Object.ReferenceEquals( left, right ))
+                return true;
+
+            if( ((object)left == null) || ((object)right == null ))
+                return false;
+            
+            return left.Equals( right );
         }
 
         public static bool operator !=(OAuthRequestContext left, OAuthRequestContext right)
         {
-            if (left == null)
-                return right != null;
-            else
-                return !left.Equals(right);
+            return !(left == right);
         }
 
         public void AddError(OAuthRequestException error)
