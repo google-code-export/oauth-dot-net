@@ -61,13 +61,15 @@ namespace OAuth.Net.ServiceProvider
 
                 if (application.Context.Error is OAuthRequestException)
                 {
+                    OAuthRequestException exception = (OAuthRequestException)application.Context.Error;
+
                     OAuthRequestContext context = WorkflowHelper.RetrieveOAuthContext(application.Context);
                     if (context != null)
-                        context.AddError((OAuthRequestException)application.Context.Error);
+                        context.AddError(exception);
 
                     application.Context.ClearError(); //Ensure we clear the exception to avoid ASP.NET handling this
 
-                    WorkflowHelper.SendBadRequest(application.Context, (OAuthRequestException)application.Context.Error, null);
+                    WorkflowHelper.SendBadRequest(application.Context, exception, null);
                 }
             }
         }
