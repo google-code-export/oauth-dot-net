@@ -97,11 +97,13 @@ namespace OAuth.Net.ServiceProvider
                     this.ParseParameters(application, context);
                     this.SetConsumer(application, context);
                     this.SetAccessToken(application, context);
+                    context.IsOAuthRequest = true;
                 }
                 catch (OAuthRequestException ex)
                 {
                     // The request may not be an OAuth request so don't pass the exception to the consumer
                     context.AddError(ex);
+                    context.IsOAuthRequest = false;
                     return;
                 }
 

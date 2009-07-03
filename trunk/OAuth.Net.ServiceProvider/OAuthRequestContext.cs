@@ -108,6 +108,12 @@ namespace OAuth.Net.ServiceProvider
             set;
         }
 
+        public bool IsOAuthRequest
+        {
+            get;
+            set;
+        }
+
         public OAuthPrincipal Principal
         {
             get;
