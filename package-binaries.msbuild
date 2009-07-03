@@ -29,7 +29,7 @@
 	</ItemGroup>
   
 	<!-- Build the projects -->	
-	<MSBuild Projects="@(OAuthNetProjects)" Targets="Build" Properties="Configuration=$(Configuration);SignAssemblies=true">
+	<MSBuild Projects="@(OAuthNetProjects)" Targets="Clean;Build" Properties="Configuration=$(Configuration);SignAssemblies=true">
 		 <Output TaskParameter="TargetOutputs" ItemName="OAuthNetAssemblies" />
 	</MSBuild>
 	
