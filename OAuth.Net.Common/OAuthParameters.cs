@@ -709,7 +709,7 @@ namespace OAuth.Net.Common
                                 }
 
                                 // Add the parameter and value
-                                @params.Add(parameter, value);
+                                @params.Add(Rfc3986.Decode(parameter), Rfc3986.Decode(value));
                             }
                         }
                     }
