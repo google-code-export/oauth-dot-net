@@ -156,7 +156,7 @@ namespace OAuth.Net.ServiceProvider
 
                 if (Uri.TryCreate(requestContext.Parameters.Callback, UriKind.Absolute, out callbackUri))
                 {
-                    ServiceProviderContext.CallbackStore.AddCallback(requestContext.RequestToken, callbackUri);
+                    ServiceProviderContext.CallbackStore.AddCallback(token, callbackUri);
                 }
                 else
                     OAuthRequestException.ThrowParametersRejected(new string[] { Constants.CallbackParameter }, "Not a valid Uri.");
