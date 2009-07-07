@@ -78,10 +78,17 @@ namespace OAuth.Net.ServiceProvider
             set;
         }
 
+        private IRequestToken requestToken;
         public IRequestToken RequestToken
         {
-            get;
-            set;
+            get 
+            {
+                if (requestToken == null && AccessToken != null)
+                    requestToken = AccessToken.RequestToken;
+
+                return requestToken;
+            }
+            set { requestToken = value; }
         }
 
         public IAccessToken AccessToken
