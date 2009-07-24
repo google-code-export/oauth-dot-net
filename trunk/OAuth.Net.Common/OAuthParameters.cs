@@ -120,6 +120,7 @@ namespace OAuth.Net.Common
             this.Token = null;
             this.TokenSecret = null;
             this.Version = null;
+            this.Verifier = null;
             this.AdditionalParameters = new NameValueCollection();
         }        
 
