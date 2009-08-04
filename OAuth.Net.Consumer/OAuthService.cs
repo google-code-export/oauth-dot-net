@@ -924,8 +924,14 @@ namespace OAuth.Net.Consumer
         /// <returns><c>true</c> if the objects' properties have the same values;
         /// <c>false</c> otherwise</returns>
         public override bool Equals(object obj)
-        {            
+        {
             if (obj == null)
+                return false;
+
+            if (System.Object.ReferenceEquals(this, obj))
+                return true;
+
+            if (this.GetType() != obj.GetType())
                 return false;
 
             return this.Equals(obj as OAuthService);
@@ -939,15 +945,15 @@ namespace OAuth.Net.Consumer
         /// <param name="other">Other OAuthService</param>
         /// <returns><c>true</c> if the OAuthServices' properties have the same values;
         /// <c>false</c> otherwise</returns>
-        public bool Equals(OAuthService other)
+        private bool Equals(OAuthService other)
         {
             return other != null
                 && this.RequestTokenEndPoint.Equals(other.RequestTokenUrl)
                 && this.AuthorizationUrl.Equals(other.AuthorizationUrl)
                 && this.AccessTokenEndPoint.Equals(other.AccessTokenUrl)                
-                && this.UseAuthorizationHeader.Equals(other.UseAuthorizationHeader)
+                && this.UseAuthorizationHeader == other.UseAuthorizationHeader
                 && string.Equals(this.Realm, other.Realm)
-                && this.SignatureMethod.Equals(other.SignatureMethod)
+                && string.Equals(this.SignatureMethod, other.SignatureMethod)
                 && string.Equals(this.OAuthVersion, other.OAuthVersion)
                 && this.Consumer.Equals(other.Consumer);
         }

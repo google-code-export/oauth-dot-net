@@ -42,8 +42,8 @@ namespace OAuth.Net.Consumer
     /// Represent an Uri and HttpMethod that define the EndPoint in the OAuth dance.  This could either
     /// be the protected resource, or the oauth request and token end points.
     /// </summary>
-    public sealed class EndPoint
-    {
+    public struct EndPoint
+    {        
         /// <summary>
         /// Constructs and EndPoint instance using the HTTP GET method for the 
         /// supplied uri
@@ -59,7 +59,7 @@ namespace OAuth.Net.Consumer
         /// supplied uri
         /// </summary>
         /// <param name="uri">An absolute Uri</param>
-        public EndPoint(Uri uri)
+        public EndPoint(Uri uri) : this()
         {            
             this.Uri = uri;
             if (!this.Uri.IsAbsoluteUri)
@@ -114,6 +114,54 @@ namespace OAuth.Net.Consumer
         {
             get;
             private set;
+        }
+
+        /// <summary>
+        /// Checks if two EndPoints are equal
+        /// </summary>
+        /// <param name="left">Left-hand-side EndPoint</param>
+        /// <param name="right">Right-hand-side EndPoint</param>
+        /// <returns><c>true</c>, if they are equal; otherwise <c>false</c></returns>
+        public static bool operator ==(EndPoint left, EndPoint right)
+        {            
+            return left.Equals(right);
+        }
+
+        /// <summary>
+        /// Checks if two OAuthServices are not equal
+        /// </summary>
+        /// <param name="left">Left-hand-side EndPoint</param>
+        /// <param name="right">Right-hand-side EndPoint</param>
+        /// <returns><c>true</c>, if they are not equal; otherwise <c>false</c></returns>
+        public static bool operator !=(EndPoint left, EndPoint right)
+        {
+            return !(left == right);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+
+            if (System.Object.ReferenceEquals(this, obj))
+                return true;
+
+            if (this.GetType() != obj.GetType())
+                return false;
+
+            return this.Equals((EndPoint)obj);
+        }
+
+        private bool Equals(EndPoint other)
+        {
+            return string.Equals(this.HttpMethod, other.HttpMethod)
+                 && ((this.Uri == null && other.Uri == null) ||
+                     (this.Uri != null && this.Uri.Equals(other.Uri)));
+        }
+
+        public override int GetHashCode()
+        {
+            return this.HttpMethod.GetHashCode() ^ this.Uri.GetHashCode();
         }
     }
 }

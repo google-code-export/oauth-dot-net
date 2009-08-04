@@ -86,6 +86,9 @@ namespace OAuth.Net.Common
 
         public static bool operator ==(RequestId left, RequestId right)
         {
+            if (System.Object.ReferenceEquals(left, right))
+                return true;
+
             return left.Equals(right);
         }
 
@@ -99,23 +102,26 @@ namespace OAuth.Net.Common
             if (obj == null)
                 return false;
 
-            if (!(obj is RequestId))
+            if (System.Object.ReferenceEquals(this, obj))
+                return true;
+
+            if (this.GetType() != obj.GetType())
                 return false;
 
             return this.Equals((RequestId)obj);
         }
 
-        public bool Equals(RequestId other)
+        private bool Equals(RequestId other)
         {
             return this.Timestamp == other.Timestamp
-                && this.Nonce.Equals(other.Nonce)
-                && this.ConsumerKey.Equals(other.ConsumerKey)
-                && this.Token.Equals(other.Token);
+                && string.Equals(this.Nonce, other.Nonce)
+                && string.Equals(this.ConsumerKey, other.ConsumerKey)
+                && string.Equals(this.Token, other.Token);
         }
 
         public override int GetHashCode()
         {
-            return this.Timestamp.GetHashCode() ^ this.Nonce.GetHashCode() ^ this.ConsumerKey.GetHashCode() ^ this.Token.GetHashCode();
+            return this.Timestamp.GetHashCode();
         }
     }
 }

@@ -124,14 +124,20 @@ namespace OAuth.Net.Components
             if (obj == null)
                 return false;
 
+            if (System.Object.ReferenceEquals(this, obj))
+                return true;
+
+            if (this.GetType() != obj.GetType())
+                return false;
+
             return this.Equals(obj as OAuthConsumer);
         }
 
         public bool Equals(OAuthConsumer other)
         {
             return other != null
-                && this.Key.Equals(other.Key)
-                && this.Secret.Equals(other.Secret)
+                && string.Equals(this.Key, other.Key)
+                && string.Equals(this.Secret, other.Secret)                
                 && this.Status == other.Status;
         }
 

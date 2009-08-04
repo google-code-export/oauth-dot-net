@@ -132,23 +132,7 @@ namespace OAuth.Net.ServiceProvider
             get;
             private set;
         }
-
-        public static bool operator ==(OAuthRequestContext left, OAuthRequestContext right)
-        {
-            if( System.Object.ReferenceEquals( left, right ))
-                return true;
-
-            if( ((object)left == null) || ((object)right == null ))
-                return false;
-            
-            return left.Equals( right );
-        }
-
-        public static bool operator !=(OAuthRequestContext left, OAuthRequestContext right)
-        {
-            return !(left == right);
-        }
-
+       
         public void AddError(OAuthRequestException error)
         {
             this.errors.Add(error);
@@ -164,35 +148,71 @@ namespace OAuth.Net.ServiceProvider
             this.errors = new List<OAuthRequestException>();
         }
 
+        public static bool operator ==(OAuthRequestContext left, OAuthRequestContext right)
+        {
+            if (System.Object.ReferenceEquals(left, right))
+                return true;
+
+            if (((object)left == null) || ((object)right == null))
+                return false;
+
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(OAuthRequestContext left, OAuthRequestContext right)
+        {
+            return !(left == right);
+        }
+
         public override bool Equals(object obj)
         {
             if (obj == null)
                 return false;
 
+            if (System.Object.ReferenceEquals(this, obj))
+                return true;
+
+            if (this.GetType() != obj.GetType())
+                return false;
+
             return this.Equals(obj as OAuthRequestContext);
         }
 
-        public bool Equals(OAuthRequestContext other)
+        private bool Equals(OAuthRequestContext other)
         {
-            return other != null
-                && this.Parameters.Equals(other.Parameters)
-                && this.SigningProvider.Equals(other.SigningProvider)
-                && this.Consumer.Equals(other.Consumer)
-                && this.RequestToken.Equals(other.RequestToken)
-                && this.AccessToken.Equals(other.AccessToken)
-                && this.RequestId.Equals(other.RequestId)
-                && this.IsSignatureValid == other.IsSignatureValid
-                && this.Signature.Equals(other.Signature)
-                && this.Principal.Equals(other.Principal)
-                && this.ResponseParameters.Equals(other.ResponseParameters);
+
+            if (other == null)
+                return false;
+
+            return ((this.Parameters == null && other.Parameters == null) ||
+                    (this.Parameters != null && this.Parameters.Equals(other.Parameters))) &&
+                   ((this.SigningProvider == null && other.SigningProvider == null) ||
+                    (this.SigningProvider != null && this.SigningProvider.Equals(other.SigningProvider))) &&
+                   ((this.Consumer == null && other.Consumer == null) ||
+                    (this.Consumer != null && this.Consumer.Equals(other.Consumer))) &&
+                   ((this.RequestToken == null && other.RequestToken == null) ||
+                    (this.RequestToken != null && this.RequestToken.Equals(other.RequestToken))) &&
+                   ((this.AccessToken == null && other.AccessToken == null) ||
+                    (this.AccessToken != null && this.AccessToken.Equals(other.AccessToken))) &&                   
+                   (this.RequestId != null && this.RequestId.Equals(other.RequestId)) &&
+                   (this.IsSignatureValid == other.IsSignatureValid) &&
+                   ((this.Signature == null && other.Signature == null) ||
+                    (this.Signature != null && this.Signature.Equals(other.Signature))) &&
+                   ((this.Principal == null && other.Principal == null) ||
+                    (this.Principal != null && this.Principal.Equals(other.Principal))) &&
+                   ((this.ResponseParameters == null && other.ResponseParameters == null) ||
+                    (this.ResponseParameters != null && this.ResponseParameters.Equals(other.ResponseParameters))) &&
+                   (this.IsOAuthRequest == other.IsOAuthRequest);
         }
 
         public override int GetHashCode()
         {
-            return this.Parameters.GetHashCode() ^ this.SigningProvider.GetHashCode() ^ this.Consumer.GetHashCode()
-                ^ this.RequestToken.GetHashCode() ^ this.AccessToken.GetHashCode() ^ this.RequestId.GetHashCode()
-                ^ this.IsSignatureValid.GetHashCode() ^ this.Signature.GetHashCode() ^ this.Principal.GetHashCode()
-                ^ this.ResponseParameters.GetHashCode();
+            int hash = 1;
+            
+            if (this.ResponseParameters != null)
+                hash ^= this.ResponseParameters.GetHashCode();
+
+            return hash;
         }
     }
 }
