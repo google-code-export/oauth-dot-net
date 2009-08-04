@@ -124,12 +124,18 @@ namespace OAuth.Net.Components
 
         public static bool operator ==(OAuthAccessToken left, IAccessToken right)
         {
+            if (System.Object.ReferenceEquals(left, right))
+                return true;
+
+            if (((object)left == null) || ((object)right == null))
+                return false;
+
             return left.Equals(right);
         }
 
         public static bool operator !=(OAuthAccessToken left, IAccessToken right)
         {
-            return !left.Equals(right);
+            return !(left == right);
         }
 
         public override bool Equals(object obj)
@@ -137,25 +143,36 @@ namespace OAuth.Net.Components
             if (obj == null)
                 return false;
 
-            if (obj is OAuthAccessToken)
+            if (System.Object.ReferenceEquals(this, obj))
+                return true;
+
+            if (this.GetType() != obj.GetType())
                 return false;
 
-            return this.Equals((IAccessToken)obj);
+            return this.Equals(obj as IAccessToken);    
         }
 
-        public bool Equals(IAccessToken other)
+        private bool Equals(IAccessToken other)
         {
-            return this.Token.Equals(other.Token)
-                && this.Secret.Equals(other.Secret)
+            if (other == null)
+                return false;
+
+            return string.Equals(this.Token, other.Token)
+                && string.Equals(this.Secret, other.Secret)
                 && this.Status == other.Status
-                && this.ConsumerKey.Equals(other.ConsumerKey)
-                && this.RequestToken.Equals(other.RequestToken);
+                && string.Equals(this.ConsumerKey, other.ConsumerKey)
+               && ((this.RequestToken == null && other.RequestToken == null ) ||
+                   (this.RequestToken != null && this.RequestToken.Equals(other.RequestToken)));
         }
 
         public override int GetHashCode()
         {
-            return this.Token.GetHashCode() ^ this.Secret.GetHashCode() ^ this.Status.GetHashCode()
-                ^ this.ConsumerKey.GetHashCode() ^ this.RequestToken.GetHashCode();
+            //If the token is set then all parameters must have a value as they would have been required
+            //in the constructor.
+            if (this.Token != null)
+                return this.Token.GetHashCode() ^ this.Secret.GetHashCode() ^ this.ConsumerKey.GetHashCode();
+            else
+                return base.GetHashCode();
         }
     }
 }

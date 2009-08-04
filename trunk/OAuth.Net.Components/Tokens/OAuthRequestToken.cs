@@ -148,12 +148,18 @@ namespace OAuth.Net.Components
 
         public static bool operator ==(OAuthRequestToken left, IRequestToken right)
         {
+            if (System.Object.ReferenceEquals(left, right))
+                return true;
+
+            if (((object)left == null) || ((object)right == null))
+                return false;
+
             return left.Equals(right);
         }
 
         public static bool operator !=(OAuthRequestToken left, IRequestToken right)
         {
-            return !left.Equals(right);
+            return !(left == right);
         }
 
         public override bool Equals(object obj)
@@ -161,28 +167,34 @@ namespace OAuth.Net.Components
             if (obj == null)
                 return false;
 
-            if (obj is OAuthRequestToken)
+            if (System.Object.ReferenceEquals(this, obj))
+                return true;
+
+            if (this.GetType() != obj.GetType())
                 return false;
 
-            return this.Equals((IRequestToken)obj);
+            return this.Equals(obj as IRequestToken);
         }
 
-        public bool Equals(IRequestToken other)
+        private bool Equals(IRequestToken other)
         {
+            if (other == null)
+                return false;
+
             return this.Token.Equals(other.Token)
-                && this.Secret.Equals(other.Secret)
+                && this.Secret.Equals(other.Secret) //Constructor ensures that this is not null
                 && this.Status == other.Status
-                && this.ConsumerKey.Equals(other.ConsumerKey)
-                && this.AssociatedParameters.Equals(other.AssociatedParameters)
-                && this.AuthenticatedUser.Equals(other.AuthenticatedUser)
+                && string.Equals(this.ConsumerKey, other.ConsumerKey)
+                && ((this.AssociatedParameters == null && other.AssociatedParameters == null) ||
+                    (this.AssociatedParameters != null && this.AssociatedParameters.Equals(other.AssociatedParameters)))
+                && ((this.AuthenticatedUser == null && other.AuthenticatedUser == null) ||
+                    (this.AuthenticatedUser != null && this.AuthenticatedUser.Equals(other.AuthenticatedUser)))
                 && Array.Equals(this.Roles, other.Roles);
         }
 
         public override int GetHashCode()
         {
-            return this.Token.GetHashCode() ^ this.Secret.GetHashCode() ^ this.Status.GetHashCode()
-                ^ this.ConsumerKey.GetHashCode() ^ this.AssociatedParameters.GetHashCode()
-                ^ this.AuthenticatedUser.GetHashCode() ^ this.Roles.GetHashCode();
+            return this.Token.GetHashCode() ^ this.Secret.GetHashCode() ^ this.ConsumerKey.GetHashCode();                
         }
     }
 }

@@ -194,20 +194,23 @@ namespace OAuth.Net.Common
             if (obj == null)
                 return false;
 
-            if (!(obj is ResultInfo<T>))
+            if (System.Object.ReferenceEquals(this, obj))
+                return true;
+
+            if (this.GetType() != obj.GetType())
                 return false;
 
             return this.Equals((ResultInfo<T>)obj);
         }
 
-        public bool Equals(ResultInfo<T> other)
+        private bool Equals(ResultInfo<T> other)
         {
-            return this.Success == other.Success;
+            return this.Success == other.Success;               
         }
 
         public override int GetHashCode()
         {
-            return this.Success.GetHashCode() ^ this.Data.GetHashCode();
+            return this.Success.GetHashCode();
         }
     }
 }

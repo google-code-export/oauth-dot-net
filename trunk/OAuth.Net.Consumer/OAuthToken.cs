@@ -253,15 +253,16 @@ namespace OAuth.Net.Consumer
             if (obj == null)
                 return false;
 
-            if (obj is OAuthToken)
-                return this.Equals(obj as OAuthToken);
-            else if (obj is IToken)
-                return this.Equals(obj as IToken);
-            else
+            if (System.Object.ReferenceEquals(this, obj))
+                return true;
+
+            if (this.GetType() != obj.GetType())
                 return false;
+           
+            return this.Equals(obj as IToken);
         }
 
-        public bool Equals(OAuthToken other)
+        private bool Equals(IToken other)
         {
             return other != null
                 && this.Type == other.Type
@@ -269,21 +270,22 @@ namespace OAuth.Net.Consumer
                 && string.Equals(this.Secret, other.Secret)
                 && string.Equals(this.ConsumerKey, other.ConsumerKey)
                 && this.Status == other.Status;
-        }
-
-        public bool Equals(IToken other)
-        {
-            return other != null
-                && string.Equals(this.Token, other.Token)
-                && string.Equals(this.Secret, other.Secret)
-                && string.Equals(this.ConsumerKey, other.ConsumerKey)
-                && this.Status == other.Status;
-        }
+        }        
 
         public override int GetHashCode()
         {
-            return this.Type.GetHashCode() ^ this.Token.GetHashCode() ^ this.Secret.GetHashCode()
-                ^ this.ConsumerKey.GetHashCode() ^ this.Status.GetHashCode();
+            int hash = this.Type.GetHashCode();
+
+            if( this.Token != null )
+                hash ^= this.Token.GetHashCode();
+            
+            if( this.Secret != null )
+                hash ^= this.Secret.GetHashCode();
+
+            if( this.ConsumerKey != null )
+                hash ^= this.ConsumerKey.GetHashCode();
+
+            return hash;
         }
     }
 }

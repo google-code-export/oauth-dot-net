@@ -52,6 +52,19 @@ namespace OAuth.Net.TestCases.Common
             Assert.That(a.Success, Is.EqualTo(true));
             Assert.That(a.Data, Is.EqualTo(null));
         }
+
+
+        [Test]
+        [SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores", Justification = "Unit test")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Unit test methods cannot be static")]
+        public void Test_ResultInfo_Equality()
+        {
+            ResultInfo<string> a = new ResultInfo<string>(true, "My Data 1");
+            ResultInfo<string> b = new ResultInfo<string>(true, "My Data 2");
+            Assert.That(a.Equals(b), "Equals() comparater returned wrong value");
+            Assert.That(a == (b),"== comparater returned wrong value");
+            Assert.That(a != (b), Is.EqualTo(false), "!= comparater returned wrong value");
+        }
     }
 }
 #endif
