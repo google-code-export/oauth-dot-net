@@ -1,5 +1,5 @@
 #labels Featured
-= OAuth.net 0.7.0.0=
+= OAuth.net 0.7.1.0=
 
 ===5th August 2009==
 *Breaking Changes*
@@ -8,16 +8,16 @@ The Consumer class has been modified to now accept a new EndPoint for the access
 
 *Non-breaking changes*
 
-  *Changes to the IRequestIDValidator to include the token in the method
-  *Added additional parse method to OAuthParameters to allow a name value collection to be directly parsed
-  *Added new OAuthRequestException and modified the OAuthPipelineModule to catch uncaught exceptions and stream them correctly to the client
-  *Added IsOAuthRequest property to OAuthRequestcontext to be able to deetermine in the Service Provider if the context is valid.
-  *Fixed error where AuthHeader Params were not being Rfc2986 decoded
-  *Fixed passing of token to consumer callback store
-  *Changed OAuthRequestContext to return the RequestToken from the Accesstoken if it has not been set previously
-  *Fixed Issue [17|http://code.google.com/p/oauth-dot-net/issues/detail?id=17]
-  *Fixed issues with equality implementations [Issue 18|http://code.google.com/p/oauth-dot-net/issues/detail?id=18]
-  *Changed OAuthRequest to stop the workflow if no verifier is present when getting the AccessToken.
+  * Changes to the IRequestIDValidator to include the token in the method
+  * Added additional parse method to OAuthParameters to allow a name value collection to be directly parsed
+  * Added new OAuthRequestException and modified the OAuthPipelineModule to catch uncaught exceptions and stream them correctly to the client
+  * Added IsOAuthRequest property to OAuthRequestcontext to be able to deetermine in the Service Provider if the context is valid.
+  * Fixed error where AuthHeader Params were not being Rfc2986 decoded
+  * Fixed passing of token to consumer callback store
+  * Changed OAuthRequestContext to return the RequestToken from the Accesstoken if it has not been set previously
+  * Fixed Issue [17|http://code.google.com/p/oauth-dot-net/issues/detail?id=17]
+  * Fixed issues with equality implementations [Issue 18|http://code.google.com/p/oauth-dot-net/issues/detail?id=18]
+  * Changed OAuthRequest to stop the workflow if no verifier is present when getting the AccessToken.
 
 
 = OAuth.net 0.7.0.0=
