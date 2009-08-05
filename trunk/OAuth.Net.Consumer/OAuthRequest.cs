@@ -497,8 +497,10 @@ namespace OAuth.Net.Consumer
                 if (this.RequestToken == null || this.RequestToken.Status != TokenStatus.Authorized)
                     throw new InvalidOperationException("Request token was not authorized.");
 
-                // Get an access token
-                this.DoGetAccessToken();
+                //Get the access token - this will return false if the verifier is not provided
+                //the implementation needs to get the user to re-authentiate.
+                if (!this.DoGetAccessToken())
+                    return null;
             }
 
             if (this.AccessToken == null)
@@ -595,7 +597,7 @@ namespace OAuth.Net.Consumer
             return authArgs.ContinueOnReturn;
         }
 
-        protected virtual void DoGetAccessToken()
+        protected virtual bool DoGetAccessToken()
         {
             // Fire the OnBeforeGetAccessToken event
             PreAccessTokenRequestEventArgs preArgs = new PreAccessTokenRequestEventArgs(
@@ -611,52 +613,64 @@ namespace OAuth.Net.Consumer
             OAuthParameters authParams = this.CreateOAuthParameters(null);
             authParams.Verifier = preArgs.Verifier;
 
-            this.SignParameters(preArgs.RequestUri, preArgs.HttpMethod, authParams, this.RequestToken);                
-            
-            HttpWebRequest request = this.CreateRequest( 
-                preArgs.RequestUri, 
-                authParams, 
-                preArgs.HttpMethod,
-                preArgs.HttpMethod == "POST" ? Constants.HttpPostUrlEncodedContentType : String.Empty,
-                null);
-
-            HttpWebResponse response = null;
-            OAuthParameters responseParameters = null;
-
-            // Get the service provider response
-            try
+            if (String.IsNullOrEmpty(authParams.Verifier))
             {
-                response = (HttpWebResponse)request.GetResponse();
-
-                // Parse the parameters and re-throw any OAuthRequestException from the service provider
-                responseParameters = OAuthParameters.Parse(response);
-                OAuthRequestException.TryRethrow(responseParameters);
+                //We don't have a verifier so something has gone wrong in the process and we shouldn't be here                
+                this.RequestToken.Status = TokenStatus.Unauthorized;
+                return false; //halt the continue with the work flow
             }
-            catch (WebException e)
+            else
             {
-                // Parse the parameters and re-throw any OAuthRequestException from the service provider
-                responseParameters = OAuthParameters.Parse(e.Response as HttpWebResponse);
-                OAuthRequestException.TryRethrow(responseParameters);
 
-                // If no OAuthRequestException, rethrow the WebException
-                throw;
+                this.SignParameters(preArgs.RequestUri, preArgs.HttpMethod, authParams, this.RequestToken);
+
+                HttpWebRequest request = this.CreateRequest(
+                    preArgs.RequestUri,
+                    authParams,
+                    preArgs.HttpMethod,
+                    preArgs.HttpMethod == "POST" ? Constants.HttpPostUrlEncodedContentType : String.Empty,
+                    null);
+
+                HttpWebResponse response = null;
+                OAuthParameters responseParameters = null;
+
+                // Get the service provider response
+                try
+                {
+                    response = (HttpWebResponse)request.GetResponse();
+
+                    // Parse the parameters and re-throw any OAuthRequestException from the service provider
+                    responseParameters = OAuthParameters.Parse(response);
+                    OAuthRequestException.TryRethrow(responseParameters);
+                }
+                catch (WebException e)
+                {
+                    // Parse the parameters and re-throw any OAuthRequestException from the service provider
+                    responseParameters = OAuthParameters.Parse(e.Response as HttpWebResponse);
+                    OAuthRequestException.TryRethrow(responseParameters);
+
+                    // If no OAuthRequestException, rethrow the WebException
+                    throw;
+                }
+
+                // Store the access token
+                this.AccessToken = new OAuthToken(
+                    TokenType.Access,
+                    responseParameters.Token,
+                    responseParameters.TokenSecret,
+                    this.Service.Consumer);
+
+                // Fire the OnReceiveAccessToken event
+                AccessTokenReceivedEventArgs responseArgs = new AccessTokenReceivedEventArgs(
+                    this.RequestToken,
+                    this.AccessToken,
+                    responseParameters.AdditionalParameters);
+
+                if (this.OnReceiveAccessToken != null)
+                    this.OnReceiveAccessToken(this, responseArgs);
+
+                return true;
             }
-
-            // Store the access token
-            this.AccessToken = new OAuthToken(
-                TokenType.Access, 
-                responseParameters.Token,
-                responseParameters.TokenSecret, 
-                this.Service.Consumer);
-
-            // Fire the OnReceiveAccessToken event
-            AccessTokenReceivedEventArgs responseArgs = new AccessTokenReceivedEventArgs(
-                this.RequestToken,
-                this.AccessToken, 
-                responseParameters.AdditionalParameters);
-
-            if (this.OnReceiveAccessToken != null)
-                this.OnReceiveAccessToken(this, responseArgs);
         }
 
         protected virtual HttpWebRequest DoPrepareProtectedResourceRequest(NameValueCollection parameters, string contentType, System.IO.Stream bodyStream)
