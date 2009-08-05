@@ -1,4 +1,4 @@
-The current source trunk is under active development, and may be unstable.  The latest stable release is 0.7.0 available from the [http://code.google.com/p/oauth-dot-net/downloads/list download section] (or browse the [http://code.google.com/p/oauth-dot-net/source/browse/#svn/tags/0.7.0.0-release 0.7.0.0 release source]).
+The current source trunk is under active development, and may be unstable.  The latest stable release is 0.7.1 available from the [http://code.google.com/p/oauth-dot-net/downloads/list download section] (or browse the [http://code.google.com/p/oauth-dot-net/source/browse/#svn/tags/0.7.1.0-release 0.7.1.0 release source]).
 
 [http://code.google.com/p/oauth-dot-net/source/browse/ Continue to browse source...]
 
