@@ -13,7 +13,7 @@ namespace OAuth.Net.Components
     /// Implements the Verification Provider by hashing the token with the consumer key.
     /// The return verifier must equal this value.
     /// </summary>
-    public class MD5HashVerifierProvider : IVerificationProvider
+    public class MD5HashVerificationProvider : IVerificationProvider
     {
 
         #region IVerificationProvider Members

@@ -60,7 +60,7 @@
     <Compile Include="Tokens\OAuthAccessToken.cs" />
     <Compile Include="Tokens\OAuthRequestToken.cs" />
     <Compile Include="UserCallback\InMemoryCallbackStore.cs" />
-    <Compile Include="UserCallback\MD5HashVerifierProvider.cs" />
+    <Compile Include="UserCallback\MD5HashVerificationProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\oauth.net.strongname.pfx">
