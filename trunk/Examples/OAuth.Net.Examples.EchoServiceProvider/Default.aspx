@@ -95,7 +95,7 @@
                 Uri requestUri = this.BuildRequestTokenUri();
             %>
             
-            <p>For example: <a href="<%= requestUri %>"><%= requestUri%></a></p>
+            <p>For example: <a href="<%= requestUri.AbsoluteUri %>"><%= requestUri.AbsoluteUri%></a></p>
             
             <h2>Getting an access token</h2>
             
@@ -113,7 +113,7 @@
                 Uri accessUri = this.BuildAccessTokenUri();
             %>
             
-            <p>For example: <a href="<%= accessUri %>"><%= accessUri %></a></p>
+            <p>For example: <a href="<%= accessUri.AbsoluteUri %>"><%= accessUri.AbsoluteUri%></a></p>
             
             <h2>Calling the Echo API</h2>
             
