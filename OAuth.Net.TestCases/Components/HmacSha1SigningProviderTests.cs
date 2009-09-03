@@ -37,6 +37,8 @@ using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using OAuth.Net.Components;
+using OAuth.Net.Common;
+using System;
 
 namespace OAuth.Net.TestCases.Components
 {
@@ -58,6 +60,37 @@ namespace OAuth.Net.TestCases.Components
 
             string hash = signingProvider.ComputeSignature(sigbase, consumerSecret, tokenSecret);
             Assert.That(hash, Is.EqualTo("tR3+Ty81lMeYAr/Fid0kMTYa/WM="));
+        }
+
+        [Test]
+        public void Test_SignatureCompareWithSpaceInSignature()
+        {
+            OAuthParameters parameters = new OAuthParameters()
+            {
+                ConsumerKey = "key",
+                Nonce = "5b434e59-729a-444b-9a11-2d8e57b1f2fb",
+                SignatureMethod = "HMAC-SHA1",
+                Timestamp = "1251983826",                
+                Version = "1.0",
+                Callback = "http://yourownsite.com/"
+            };
+
+            string sigbase = SignatureBase.Create(
+                "GET",
+                new Uri("http://localhost:3423/request-token.ashx"),
+                parameters);
+
+            string consumerSecret = "secret";
+            string tokenSecret = null;
+
+            HmacSha1SigningProvider signingProvider = new HmacSha1SigningProvider();
+            Assert.That(signingProvider.SignatureMethod, Is.EqualTo("HMAC-SHA1"));
+
+            string hash = signingProvider.ComputeSignature(sigbase, consumerSecret, tokenSecret);
+            Assert.That(hash, Is.EqualTo("zHTiQHg8X5Lpkh+/0MSatKeNEFg="));
+
+            Assert.That(signingProvider.CheckSignature(sigbase, Rfc3986.Decode("zHTiQHg8X5Lpkh+/0MSatKeNEFg="), consumerSecret, tokenSecret), "Signature did not match");
+
         }
     }
 }
