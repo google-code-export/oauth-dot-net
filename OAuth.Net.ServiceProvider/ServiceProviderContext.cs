@@ -137,6 +137,9 @@ namespace OAuth.Net.ServiceProvider
             }
         }
 
+        /// <summary>
+        /// An instance of the Verification Provider
+        /// </summary>
         public static IVerificationProvider VerificationProvider
         {
             get
@@ -155,6 +158,29 @@ namespace OAuth.Net.ServiceProvider
                 }
             }
         }
+
+        /// <summary>
+        /// An instance of the Nonce Provider
+        /// </summary>
+        public static INonceProvider NonceProvider
+        {
+            get
+            {
+                try
+                {
+                    return ServiceLocator.Current.GetInstance<INonceProvider>();
+                }
+                catch (ActivationException)
+                {
+                    return null;
+                }
+                catch (NullReferenceException)
+                {
+                    return null;
+                }
+            }
+        }
+
 
         /// <summary>
         /// An instance of a token generator. 
