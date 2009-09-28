@@ -228,68 +228,6 @@ namespace OAuth.Net.Consumer
         ///     </item>
         /// </list>
         /// </remarks>
-        /// <param name="requestTokenUrl">URL for obtaining request tokens</param>
-        /// <param name="authorizationUrl">URL to send users to for authorization</param>
-        /// <param name="accessTokenUrl">URL for obtaining access tokens</param>
-        /// <param name="consumer">Consumer credentials</param>
-        /// <returns>An OAuthService</returns>
-        [Obsolete("This method has been superseded by the version implementing EndPoint arguments.")]
-        public static OAuthService Create(
-            Uri requestTokenUrl, 
-            Uri authorizationUrl,
-            Uri accessTokenUrl, 
-            IConsumer consumer)
-        {
-            return OAuthService.Create(
-                requestTokenUrl, 
-                authorizationUrl,
-                accessTokenUrl, 
-                "POST", 
-                true, 
-                null, 
-                "HMAC-SHA1", 
-                Constants.Version1_0,
-                consumer,
-                () => ServiceLocator.Current);
-        }
-
-        /// <summary>
-        /// Creates an OAuthService using defaults for most parameters, loading components
-        /// from the current global service locator.
-        /// </summary>
-        /// <remarks>
-        /// <para>The OAuthService created will have the following defaults:</para>
-        /// <list type="table">
-        ///     <listheader>
-        ///         <term>Property</term>    
-        ///         <description>Value</description>
-        ///     </listheader>
-        ///     <item>
-        ///         <term>HttpMethod</term>
-        ///         <description><c>"POST"</c></description>
-        ///     </item>
-        ///     <item>
-        ///         <term>UseAuthorizationHeader</term>
-        ///         <description><c>true</c></description>
-        ///     </item>
-        ///     <item>
-        ///         <term>Realm</term>
-        ///         <description><c>null</c></description>
-        ///     </item>
-        ///     <item>
-        ///         <term>SignatureMethod</term>
-        ///         <description><c>"HMAC-SHA1"</c></description>
-        ///     </item>
-        ///     <item>
-        ///         <term>OAuthVersion</term>
-        ///         <description><c>"1.0"</c></description>
-        ///     </item>
-        ///     <item>
-        ///         <term>ConfigSection</term>
-        ///         <description><c>"oauth.net.consumer"</c></description>
-        ///     </item>
-        /// </list>
-        /// </remarks>
         /// <param name="requestTokenEndPoint">EndPoint for obtaining request tokens</param>
         /// <param name="authorizationUrl">URL to send users to for authorization</param>
         /// <param name="accessTokenEndPoint">EndPoint for obtaining access tokens</param>
@@ -311,66 +249,6 @@ namespace OAuth.Net.Consumer
                 Constants.Version1_0,
                 consumer,
                 () => ServiceLocator.Current);
-        }
-
-        /// <summary>
-        /// Creates an OAuthService using defaults for most parameters, loading components
-        /// from the service locator provided by the supplied provider.
-        /// </summary>
-        /// <remarks>
-        /// <para>The OAuthService created will have the following defaults:</para>
-        /// <list type="table">
-        ///     <listheader>
-        ///         <term>Property</term>    
-        ///         <description>Value</description>
-        ///     </listheader>
-        ///     <item>
-        ///         <term>HttpMethod</term>
-        ///         <description><c>"POST"</c></description>
-        ///     </item>
-        ///     <item>
-        ///         <term>UseAuthorizationHeader</term>
-        ///         <description><c>true</c></description>
-        ///     </item>
-        ///     <item>
-        ///         <term>Realm</term>
-        ///         <description><c>null</c></description>
-        ///     </item>
-        ///     <item>
-        ///         <term>SignatureMethod</term>
-        ///         <description><c>"HMAC-SHA1"</c></description>
-        ///     </item>
-        ///     <item>
-        ///         <term>OAuthVersion</term>
-        ///         <description><c>"1.0"</c></description>
-        ///     </item>
-        /// </list>
-        /// </remarks>
-        /// <param name="requestTokenUrl">URL for obtaining request tokens</param>
-        /// <param name="authorizationUrl">URL to send users to for authorization</param>
-        /// <param name="accessTokenUrl">URL for obtaining access tokens</param>
-        /// <param name="consumer">Consumer credentials</param>
-        /// <param name="serviceLocatorProvider">Service locator provider which provides a service locator for components</param>
-        /// <returns>An OAuthService</returns>        
-        [Obsolete("This method has been superseded by the version implementing EndPoint arguments.")]
-        public static OAuthService Create(
-            Uri requestTokenUrl,
-            Uri authorizationUrl,
-            Uri accessTokenUrl,
-            IConsumer consumer,
-            ServiceLocatorProvider serviceLocatorProvider)
-        {
-            return OAuthService.Create(
-                requestTokenUrl,
-                authorizationUrl,
-                accessTokenUrl,
-                "POST",
-                true,
-                null,
-                "HMAC-SHA1",
-                Constants.Version1_0,
-                consumer,
-                serviceLocatorProvider);
         }
 
         /// <summary>
@@ -464,66 +342,6 @@ namespace OAuth.Net.Consumer
         ///     </item>
         /// </list>
         /// </remarks>
-        /// <param name="requestTokenUrl">URL for obtaining request tokens</param>
-        /// <param name="authorizationUrl">URL to send users to for authorization</param>
-        /// <param name="accessTokenUrl">URL for obtaining access tokens</param>
-        /// <param name="signatureMethod">Signature method to use</param>
-        /// <param name="consumer">Consumer credentials</param>
-        /// <returns>An OAuthService</returns>        
-        [Obsolete("This method has been superseded by the version implementing EndPoint arguments.")]
-        public static OAuthService Create(
-            Uri requestTokenUrl,
-            Uri authorizationUrl,
-            Uri accessTokenUrl,
-            string signatureMethod,
-            IConsumer consumer)
-        {
-            return OAuthService.Create(
-                requestTokenUrl,
-                authorizationUrl,
-                accessTokenUrl,
-                "POST",
-                true,
-                null,
-                signatureMethod,
-                Constants.Version1_0,
-                consumer,
-                () => ServiceLocator.Current);
-        }
-
-        /// <summary>
-        /// Creates an OAuthService using defaults for most parameters, loading components
-        /// from the current global service locator.
-        /// </summary>
-        /// <remarks>
-        /// <para>The OAuthService created will have the following defaults:</para>
-        /// <list type="table">
-        ///     <listheader>
-        ///         <term>Property</term>    
-        ///         <description>Value</description>
-        ///     </listheader>
-        ///     <item>
-        ///         <term>HttpMethod</term>
-        ///         <description><c>"POST"</c></description>
-        ///     </item>
-        ///     <item>
-        ///         <term>UseAuthorizationHeader</term>
-        ///         <description><c>true</c></description>
-        ///     </item>
-        ///     <item>
-        ///         <term>Realm</term>
-        ///         <description><c>null</c></description>
-        ///     </item>
-        ///     <item>
-        ///         <term>OAuthVersion</term>
-        ///         <description><c>"1.0"</c></description>
-        ///     </item>
-        ///     <item>
-        ///         <term>ConfigSection</term>
-        ///         <description><c>"oauth.net.consumer"</c></description>
-        ///     </item>
-        /// </list>
-        /// </remarks>
         /// <param name="requestTokenEndPoint">EndPoint for obtaining request tokens</param>
         /// <param name="authorizationUrl">URL to send users to for authorization</param>
         /// <param name="accessTokenEndPoint">EndPoint for obtaining access tokens</param>
@@ -547,65 +365,6 @@ namespace OAuth.Net.Consumer
                 Constants.Version1_0,
                 consumer,
                 () => ServiceLocator.Current);
-        }
-
-        /// <summary>
-        /// Creates an OAuthService using defaults for most parameters, loading components
-        /// from the service locator provided by the supplied provider.
-        /// </summary>
-        /// <remarks>
-        /// <para>The OAuthService created will have the following defaults:</para>
-        /// <list type="table">
-        ///     <listheader>
-        ///         <term>Property</term>    
-        ///         <description>Value</description>
-        ///     </listheader>
-        ///     <item>
-        ///         <term>HttpMethod</term>
-        ///         <description><c>"POST"</c></description>
-        ///     </item>
-        ///     <item>
-        ///         <term>UseAuthorizationHeader</term>
-        ///         <description><c>true</c></description>
-        ///     </item>
-        ///     <item>
-        ///         <term>Realm</term>
-        ///         <description><c>null</c></description>
-        ///     </item>
-        ///     <item>
-        ///         <term>OAuthVersion</term>
-        ///         <description><c>"1.0"</c></description>
-        ///     </item>
-        /// </list>
-        /// </remarks>
-        /// <param name="requestTokenUrl">URL for obtaining request tokens</param>
-        /// <param name="authorizationUrl">URL to send users to for authorization</param>
-        /// <param name="accessTokenUrl">URL for obtaining access tokens</param>
-        /// <param name="signatureMethod">Signature method to use</param>
-        /// <param name="consumer">Consumer credentials</param>
-        /// <param name="serviceLocatorProvider">Service locator provider which provides 
-        /// a service locator for components</param>
-        /// <returns>An OAuthService</returns>        
-        [Obsolete("This method has been superseded by the version implementing EndPoint arguments.")]
-        public static OAuthService Create(
-            Uri requestTokenUrl,
-            Uri authorizationUrl,
-            Uri accessTokenUrl,
-            string signatureMethod,
-            IConsumer consumer,
-            ServiceLocatorProvider serviceLocatorProvider)
-        {
-            return OAuthService.Create(
-                requestTokenUrl,
-                authorizationUrl,
-                accessTokenUrl,
-                "POST",
-                true,
-                null,
-                signatureMethod,
-                Constants.Version1_0,
-                consumer,
-                serviceLocatorProvider);
         }
 
         /// <summary>
@@ -663,46 +422,6 @@ namespace OAuth.Net.Consumer
                 Constants.Version1_0,
                 consumer,
                 serviceLocatorProvider);
-        }
-
-        /// <summary>
-        /// Creates an OAuthService, with each parameter specified, loading components
-        /// from the current global service locator.
-        /// </summary>
-        /// <param name="requestTokenUrl">URL for obtaining request tokens</param>
-        /// <param name="authorizationUrl">URL to send users to for authorization</param>
-        /// <param name="accessTokenUrl">URL for obtaining access tokens</param>
-        /// <param name="httpMethod">HTTP method to use</param>
-        /// <param name="useAuthorizationHeader">Whether to use HTTP Authorization headers</param>
-        /// <param name="realm">HTTP authorization realm</param>
-        /// <param name="signatureMethod">Signature method to use</param>
-        /// <param name="oauthVersion">OAuth specification version</param>
-        /// <param name="consumer">Consumer credentials</param>
-        /// <returns>An OAuthService</returns>
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "oauth", Justification = "OAuth is a domain term")]
-        [Obsolete("This method has been superseded by the version implementing EndPoint arguments.")]
-        public static OAuthService Create(
-            Uri requestTokenUrl,
-            Uri authorizationUrl, 
-            Uri accessTokenUrl, 
-            string httpMethod,
-            bool useAuthorizationHeader, 
-            string realm, 
-            string signatureMethod, 
-            string oauthVersion,
-            IConsumer consumer)
-        {
-            return OAuthService.Create(
-                requestTokenUrl,
-                authorizationUrl,
-                accessTokenUrl,
-                httpMethod,
-                useAuthorizationHeader,
-                realm,
-                signatureMethod,
-                oauthVersion,
-                consumer,
-                () => ServiceLocator.Current);
         }
 
         /// <summary>
@@ -739,51 +458,6 @@ namespace OAuth.Net.Consumer
                 oauthVersion,
                 consumer,
                 () => ServiceLocator.Current);
-        }
-
-
-        /// <summary>
-        /// Creates an OAuthService, with each parameter specified, loading components
-        /// from the service locator provided by the supplied provider.
-        /// </summary>
-        /// <param name="requestTokenUrl">URL for obtaining request tokens</param>
-        /// <param name="authorizationUrl">URL to send users to for authorization</param>
-        /// <param name="accessTokenUrl">URL for obtaining access tokens</param>
-        /// <param name="httpMethod">HTTP method to use</param>
-        /// <param name="useAuthorizationHeader">Whether to use HTTP Authorization headers</param>
-        /// <param name="realm">HTTP authorization realm</param>
-        /// <param name="signatureMethod">Signature method to use</param>
-        /// <param name="oauthVersion">OAuth specification version</param>
-        /// <param name="consumer">Consumer credentials</param>
-        /// <param name="serviceLocatorProvider">Service locator provider which provides a service locator for components</param>
-        /// <returns>An OAuthService</returns>
-        /// 
-        [Obsolete("This method has been superseded by the version implementing EndPoint arguments.")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "oauth", Justification = "OAuth is a domain term")]
-        public static OAuthService Create(
-            Uri requestTokenUrl,
-            Uri authorizationUrl,
-            Uri accessTokenUrl,
-            string httpMethod,
-            bool useAuthorizationHeader,
-            string realm,
-            string signatureMethod,
-            string oauthVersion,
-            IConsumer consumer,
-            ServiceLocatorProvider serviceLocatorProvider)
-        {
-            return new OAuthService()
-            {
-                ComponentLocator = serviceLocatorProvider(),
-                RequestTokenEndPoint = new EndPoint(requestTokenUrl,httpMethod),
-                AuthorizationUrl = authorizationUrl,
-                AccessTokenEndPoint = new EndPoint(accessTokenUrl,httpMethod),
-                UseAuthorizationHeader = useAuthorizationHeader,
-                Realm = realm,
-                SignatureMethod = signatureMethod,
-                OAuthVersion = oauthVersion,
-                Consumer = consumer
-            };
         }
 
         /// <summary>
