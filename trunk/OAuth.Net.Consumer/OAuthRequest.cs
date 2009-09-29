@@ -228,6 +228,19 @@ namespace OAuth.Net.Consumer
         }
 
         /// <summary>
+        /// The URL that the user is redirected to by the Service Provider.  If no Uri is defined 
+        /// the request is defined as out-of-band and the call back has been defined elsewhere or will
+        /// be performed manually.
+        /// <remarks>This value can be dynamically updated during the request by handling the OnBeforeGetRequestToken 
+        /// event in OauthRequest</remarks>
+        /// </summary>
+        public Uri CallbackUrl
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// The verifier parameter provided by the service provider 
         /// that needs to be returned on the request for the access token.
         /// </summary>
@@ -443,7 +456,7 @@ namespace OAuth.Net.Consumer
             PreRequestEventArgs args = new PreRequestEventArgs(
                 this.Service.RequestTokenUrl, 
                 this.Service.RequestTokenEndPoint.HttpMethod,
-                this.Service.CallbackUrl,
+                this.CallbackUrl,
                 new NameValueCollection());
 
             if (this.OnBeforeGetRequestToken != null)

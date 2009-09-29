@@ -75,9 +75,7 @@ namespace OAuth.Net.Examples.FireEagleConsumer
                 context.Session["request_token"] as IToken,
                 context.Session["access_token"] as IToken);
 
-            request.OnBeforeGetRequestToken += new EventHandler<PreRequestEventArgs>((sender,args)=>{
-                args.CallbackUrl= callback;
-            });
+            request.CallbackUrl = callback;
 
             string verifier = context.Request[OAuth.Net.Common.Constants.VerifierParameter];
             if (verifier != null)
@@ -130,10 +128,7 @@ namespace OAuth.Net.Examples.FireEagleConsumer
                 context.Session["request_token"] as IToken,
                 context.Session["access_token"] as IToken);
 
-            request.OnBeforeGetRequestToken += new EventHandler<PreRequestEventArgs>((sender, args) =>
-            {
-                args.CallbackUrl = callback;
-            });
+            request.CallbackUrl = callback;
 
             string verifier = context.Request[OAuth.Net.Common.Constants.VerifierParameter];
             if (verifier != null)

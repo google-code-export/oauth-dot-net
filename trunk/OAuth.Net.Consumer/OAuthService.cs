@@ -131,19 +131,6 @@ namespace OAuth.Net.Consumer
                 return AccessTokenEndPoint.Uri;
             }
         }
-
-        /// <summary>
-        /// The URL that the user is redirected to by the Service Provider.  If no Uri is defined 
-        /// the request is defined as out-of-band and the call back has been defined elsewhere or will
-        /// be performed manually.
-        /// <remarks>This value can be dynamically updated during the request by handling the OnBeforeGetRequestToken 
-        /// event in OauthRequest</remarks>
-        /// </summary>
-        public Uri CallbackUrl
-        {
-            get;
-            private set;
-        }        
         
         /// <summary>
         /// Whether to use HTTP Authorization headers (or query string / post body instead)
