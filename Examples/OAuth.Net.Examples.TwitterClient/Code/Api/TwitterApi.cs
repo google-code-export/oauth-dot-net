@@ -211,11 +211,7 @@ namespace OAuth.Net.Examples.TwitterClient.Api
                 throw new ArgumentException("uriFormat must not be empty", "uriFormat");
 
             var request = this.CreateRequest(service, uriFormat, httpMethod, args);
-            request.OnBeforeGetRequestToken += new EventHandler<PreRequestEventArgs>((sender, preRequestEventArgs) =>
-            {
-                preRequestEventArgs.CallbackUrl = options.AuthorizationCallbackUri;
-            });
-
+            request.CallbackUrl = options.AuthorizationCallbackUri;
             request.RequestTokenVerifier = options.RequestTokenVerifier;
 
             var response = request.GetResource(parameters);
