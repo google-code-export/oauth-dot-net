@@ -36,9 +36,7 @@
 using System;
 using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
-using Castle.Core.Resource;
 using Castle.Windsor;
-using Castle.Windsor.Configuration.Interpreters;
 using CommonServiceLocator.WindsorAdapter;
 using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
@@ -74,12 +72,7 @@ namespace OAuth.Net.TestCases.Consumer
                 });
 
             Uri authUri = service.BuildAuthorizationUrl(
-                new MockToken()
-                { 
-                    Token = "token", 
-                    Type = TokenType.Request,
-                    Status = TokenStatus.Unauthorized
-                });
+                new OAuthToken(TokenType.Request, "token", null, (string)null));
 
             Assert.That(
                 authUri.AbsoluteUri, 
@@ -102,12 +95,7 @@ namespace OAuth.Net.TestCases.Consumer
                 });
 
             Uri authUri = service.BuildAuthorizationUrl(
-                new MockToken()
-                {
-                    Token = "token",
-                    Type = TokenType.Request,
-                    Status = TokenStatus.Unauthorized
-                });
+                new OAuthToken(TokenType.Request, "token", null, (string)null));
 
             Assert.That(
                 authUri.AbsoluteUri, 
@@ -130,13 +118,8 @@ namespace OAuth.Net.TestCases.Consumer
                 });
 
             Uri authUri = service.BuildAuthorizationUrl(
-                new MockToken()
-                {
-                    Token = "token",
-                    Type = TokenType.Request,
-                    Status = TokenStatus.Unauthorized
-                },
-                new NameValueCollection()
+                new OAuthToken(TokenType.Request, "token", null, (string)null),
+                new NameValueCollection
                 {
                     { "time", "60" }
                 });
@@ -162,13 +145,8 @@ namespace OAuth.Net.TestCases.Consumer
                 });
 
             Uri authUri = service.BuildAuthorizationUrl(
-                new MockToken()
-                {
-                    Token = "token",
-                    Type = TokenType.Request,
-                    Status = TokenStatus.Unauthorized
-                },
-                new NameValueCollection()
+                new OAuthToken(TokenType.Request, "token", null, (string)null),
+                new NameValueCollection
                 {
                     { "time", "60" }
                 });

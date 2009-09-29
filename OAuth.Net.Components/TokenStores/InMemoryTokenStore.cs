@@ -61,13 +61,13 @@ namespace OAuth.Net.Components
         /// <summary>
         /// Gets all the tokens in the store as an array.
         /// </summary>
-        public virtual ICollection<IToken> Tokens
+        public virtual ICollection<IIssuedToken> Tokens
         {
             get
             {
                 lock (SyncRoot)
                 {
-                    var tokens = new List<IToken>();
+                    var tokens = new List<IIssuedToken>();
 
                     foreach (IRequestToken token in this.RequestTokenDictionary.Values)
                         tokens.Add(token);
@@ -75,7 +75,7 @@ namespace OAuth.Net.Components
                     foreach (IAccessToken token in this.AccessTokenDictionary.Values)
                         tokens.Add(token);
 
-                    return new ReadOnlyCollection<IToken>(tokens);
+                    return new ReadOnlyCollection<IIssuedToken>(tokens);
                 }
             }
         }
@@ -318,7 +318,7 @@ namespace OAuth.Net.Components
         /// <param name="user">The user</param>
         /// <returns>A collection of request AND access tokens, or <c>null</c>
         /// if no tokens are associated with the user</returns>
-        public virtual ICollection<IToken> GetTokensByUser(IIdentity user)
+        public virtual ICollection<IIssuedToken> GetTokensByUser(IIdentity user)
         {
             if (user == null)
                 throw new ArgumentNullException("user");
@@ -336,7 +336,7 @@ namespace OAuth.Net.Components
         /// <param name="consumerKey">The consumer key</param>
         /// <returns>A collection of request AND access tokens, or <c>null</c>
         /// if no tokens are associated with the user</returns>
-        public virtual ICollection<IToken> GetTokensByUser(IIdentity user, string consumerKey)
+        public virtual ICollection<IIssuedToken> GetTokensByUser(IIdentity user, string consumerKey)
         {
             if (user == null)
                 throw new ArgumentNullException("user");
@@ -358,7 +358,7 @@ namespace OAuth.Net.Components
         /// <param name="consumerKey">The consumer key</param>
         /// <returns>A collection of request AND access tokens, or <c>null</c>
         /// if no tokens are associated with the consumer</returns>
-        public virtual ICollection<IToken> GetTokensByConsumer(string consumerKey)
+        public virtual ICollection<IIssuedToken> GetTokensByConsumer(string consumerKey)
         {
             if (string.IsNullOrEmpty(consumerKey))
                 throw new ArgumentException("consumerKey argument is mandatory", "consumerKey");
@@ -461,11 +461,11 @@ namespace OAuth.Net.Components
         /// <param name="accessPredicate">The predicate for access tokens</param>
         /// <returns>An array of request AND access tokens, or <c>null</c>
         /// if no tokens match the predicates</returns>
-        protected virtual ICollection<IToken> GetByPredicate(
+        protected virtual ICollection<IIssuedToken> GetByPredicate(
             Predicate<IRequestToken> requestPredicate,
             Predicate<IAccessToken> accessPredicate)
         {
-            var matches = new List<IToken>();
+            var matches = new List<IIssuedToken>();
 
             lock (SyncRoot)
             {
@@ -481,7 +481,7 @@ namespace OAuth.Net.Components
             if (matches.Count == 0)
                 return null;
             else
-                return new ReadOnlyCollection<IToken>(matches);
+                return new ReadOnlyCollection<IIssuedToken>(matches);
         }
     }
 }

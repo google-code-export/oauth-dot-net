@@ -34,8 +34,7 @@
 
 namespace OAuth.Net.Common
 {
-    public interface IAccessToken
-        : IToken
+    public interface IAccessToken : IIssuedToken
     {
         /// <summary>
         /// The request token exchanged for this access token.

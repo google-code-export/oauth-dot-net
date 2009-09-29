@@ -42,7 +42,7 @@ namespace OAuth.Net.Common
         /// <summary>
         /// Gets all the tokens in the store as an array.
         /// </summary>
-        ICollection<IToken> Tokens
+        ICollection<IIssuedToken> Tokens
         {
             get;
         }
@@ -162,7 +162,7 @@ namespace OAuth.Net.Common
         /// <param name="user">The user</param>
         /// <returns>An array of request AND access tokens, or <c>null</c>
         /// if no tokens are associated with the user</returns>
-        ICollection<IToken> GetTokensByUser(IIdentity user);
+        ICollection<IIssuedToken> GetTokensByUser(IIdentity user);
 
         /// <summary>
         /// Gets an array of request AND access tokens associated with a given
@@ -172,7 +172,7 @@ namespace OAuth.Net.Common
         /// <param name="consumerKey">The consumer key</param>
         /// <returns>An array of request AND access tokens, or <c>null</c>
         /// if no tokens are associated with the user</returns>
-        ICollection<IToken> GetTokensByUser(IIdentity user, string consumerKey);
+        ICollection<IIssuedToken> GetTokensByUser(IIdentity user, string consumerKey);
 
         /// <summary>
         /// Gets an array of request AND access tokens associated with a given
@@ -181,7 +181,7 @@ namespace OAuth.Net.Common
         /// <param name="consumerKey">The consumer key</param>
         /// <returns>An array of request AND access tokens, or <c>null</c>
         /// if no tokens are associated with the consumer</returns>
-        ICollection<IToken> GetTokensByConsumer(string consumerKey);
+        ICollection<IIssuedToken> GetTokensByConsumer(string consumerKey);
 
         /// <summary>
         /// Updates the the given request token in the store. 

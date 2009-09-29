@@ -76,13 +76,12 @@ namespace OAuth.Net.Examples.FireEagleConsumer
                 context.Session["access_token"] as IToken);
 
             request.OnBeforeGetRequestToken += new EventHandler<PreRequestEventArgs>((sender,args)=>{
-                args.CallbackUrl= callback;   
+                args.CallbackUrl= callback;
             });
 
-            request.OnBeforeGetAccessToken += new EventHandler<PreAccessTokenRequestEventArgs>((sender, args) =>
-            {
-                args.Verifier = context.Request[OAuth.Net.Common.Constants.VerifierParameter];
-            });
+            string verifier = context.Request[OAuth.Net.Common.Constants.VerifierParameter];
+            if (verifier != null)
+                request.RequestTokenVerifier = verifier;
 
             OAuthResponse response = request.GetResource();
 
@@ -136,10 +135,9 @@ namespace OAuth.Net.Examples.FireEagleConsumer
                 args.CallbackUrl = callback;
             });
 
-            request.OnBeforeGetAccessToken += new EventHandler<PreAccessTokenRequestEventArgs>((sender, args) =>
-            {
-                args.Verifier = context.Request[OAuth.Net.Common.Constants.VerifierParameter];
-            });
+            string verifier = context.Request[OAuth.Net.Common.Constants.VerifierParameter];
+            if (verifier != null)
+                request.RequestTokenVerifier = verifier;
 
             // Send the location latitude and longitude with the request
             OAuthResponse response = request.GetResource(
