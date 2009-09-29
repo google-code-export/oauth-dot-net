@@ -63,9 +63,9 @@ namespace OAuth.Net.TestCases.Consumer
         public void TestBuildAuthorizationUriWithoutExistingQueryString()
         {
             OAuthService service = OAuthService.Create(
-                new Uri("http://example.com/request_token"),
+                new EndPoint("http://example.com/request_token"),
                 new Uri("http://example.com/authorize"),
-                new Uri("http://example.com/access_token"),
+                new EndPoint("http://example.com/access_token"),
                 new MockConsumer()
                 {
                     Key = "key",
@@ -91,9 +91,9 @@ namespace OAuth.Net.TestCases.Consumer
         public void TestBuildAuthorizationUriWithExistingQueryString()
         {
             OAuthService service = OAuthService.Create(
-                new Uri("http://example.com/request_token"),
+                new EndPoint("http://example.com/request_token"),
                 new Uri("http://example.com/authorize?readonly=true"),
-                new Uri("http://example.com/access_token"),
+                new EndPoint("http://example.com/access_token"),
                 new MockConsumer()
                 {
                     Key = "key",
@@ -119,9 +119,9 @@ namespace OAuth.Net.TestCases.Consumer
         public void TestBuildAuthorizationUriWithAdditionalParametersWithoutExistingQueryString()
         {
             OAuthService service = OAuthService.Create(
-                new Uri("http://example.com/request_token"),
+                new EndPoint("http://example.com/request_token"),
                 new Uri("http://example.com/authorize"),
-                new Uri("http://example.com/access_token"),
+                new EndPoint("http://example.com/access_token"),
                 new MockConsumer()
                 {
                     Key = "key",
@@ -151,9 +151,9 @@ namespace OAuth.Net.TestCases.Consumer
         public void TestBuildAuthorizationUriWithAdditionalParametersAndExistingQueryString()
         {
             OAuthService service = OAuthService.Create(
-                new Uri("http://example.com/request_token"),
+                new EndPoint("http://example.com/request_token"),
                 new Uri("http://example.com/authorize?readonly=true"),
-                new Uri("http://example.com/access_token"),
+                new EndPoint("http://example.com/access_token"),
                 new MockConsumer()
                 {
                     Key = "key",

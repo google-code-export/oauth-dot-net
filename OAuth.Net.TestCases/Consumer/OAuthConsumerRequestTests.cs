@@ -63,9 +63,9 @@ namespace OAuth.Net.TestCases.Consumer
         public void TestConsumerRequestSignature()
         {
             OAuthService service = OAuthService.Create(
-               new Uri("http://example.com/request_token"),
+               new EndPoint("http://example.com/request_token"),
                new Uri("http://example.com/authorize"),
-               new Uri("http://example.com/access_token"),
+               new EndPoint("http://example.com/access_token"),
                new MockConsumer()
                {
                    Key = "dpf43f3p2l4k3l03",
