@@ -32,40 +32,17 @@
 // Website: http://lab.madgex.com/oauth-net/
 // Email:   oauth-dot-net@madgex.com
 
-#if DEBUG
 namespace OAuth.Net.Common
 {
-    public class MockToken : IToken
+    public interface IIssuedToken : IToken
     {
-        public string Token
-        {
-            get;
-            set;
-        }
-
-        public string Secret
-        {
-            get;
-            set;
-        }
-
-        public string ConsumerKey
-        {
-            get;
-            set;
-        }
-
-        public TokenStatus Status
-        {
-            get;
-            set;
-        }
-
-        public TokenType Type
+        /// <summary>
+        /// The status of the token
+        /// </summary>
+        TokenStatus Status
         {
             get;
             set;
         }
     }
 }
-#endif

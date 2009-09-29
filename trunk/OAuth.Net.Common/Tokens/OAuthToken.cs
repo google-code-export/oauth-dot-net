@@ -37,9 +37,8 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
-using OAuth.Net.Common;
 
-namespace OAuth.Net.Consumer
+namespace OAuth.Net.Common
 {
     [Serializable]
     [DebuggerDisplay("Type: {Type} Token: {Token} Secret: {Secret} Consumer Key: {ConsumerKey} Status: {Status}")]
@@ -84,7 +83,6 @@ namespace OAuth.Net.Consumer
             this.Token = token.Token;
             this.Secret = token.Secret;
             this.ConsumerKey = token.ConsumerKey;
-            this.Status = token.Status;
         }
 
         /// <summary>
@@ -124,15 +122,6 @@ namespace OAuth.Net.Consumer
         }
 
         /// <summary>
-        /// The status of the token
-        /// </summary>
-        public TokenStatus Status
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
         /// Serializes a SimpleToken to a string representation.
         /// </summary>
         /// <param name="token">Token</param>
@@ -147,7 +136,6 @@ namespace OAuth.Net.Consumer
                 + "|" + Rfc3986.Encode(token.Token)
                 + "|" + Rfc3986.Encode(token.Secret)
                 + "|" + Rfc3986.Encode(token.ConsumerKey)
-                + "|" + Rfc3986.Encode(Enum.Format(typeof(TokenStatus), token.Status, "G"))
                 + "]";
         }
 
@@ -176,8 +164,8 @@ namespace OAuth.Net.Consumer
             string[] parts = serializedForm.Substring(1, serializedForm.Length - 2)
                 .Split(new char[] { '|' }, StringSplitOptions.None);
 
-            if (parts.Length != 5)
-                throw new FormatException("Serialized SimpleToken must consist of 5 pipe-separated fields");
+            if (parts.Length != 4)
+                throw new FormatException("Serialized SimpleToken must consist of 4 pipe-separated fields");
 
             if (string.IsNullOrEmpty(parts[0]))
                 throw new FormatException("Error deserializing SimpleToken.Type (field 0): cannot be null or empty");
@@ -225,20 +213,7 @@ namespace OAuth.Net.Consumer
                 throw new FormatException("Error deserializing SimpleToken.ConsumerKey (field 3)", e);
             }
 
-            if (string.IsNullOrEmpty(parts[4]))
-                throw new FormatException("Error deserializing SimpleToken.Status (field 4): cannot be null or empty");
-
-            TokenStatus status;
-            try 
-            {
-                status = (TokenStatus) Enum.Parse(typeof(TokenStatus), Rfc3986.Decode(parts[4]), true);
-            }
-            catch (Exception e)
-            {
-                throw new FormatException("Error deserializing SimpleToken.Status (field 4)", e);
-            }
-
-            return new OAuthToken(type, token, secret, consumerKey) { Status = status };
+            return new OAuthToken(type, token, secret, consumerKey);
         }
 
         [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.SerializationFormatter)]
@@ -268,8 +243,7 @@ namespace OAuth.Net.Consumer
                 && this.Type == other.Type
                 && string.Equals(this.Token, other.Token)
                 && string.Equals(this.Secret, other.Secret)
-                && string.Equals(this.ConsumerKey, other.ConsumerKey)
-                && this.Status == other.Status;
+                && string.Equals(this.ConsumerKey, other.ConsumerKey);
         }        
 
         public override int GetHashCode()

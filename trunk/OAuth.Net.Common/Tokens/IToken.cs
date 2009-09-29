@@ -34,7 +34,6 @@
 
 namespace OAuth.Net.Common
 {
-    // TODO: Does token need to store realm?
     public interface IToken
     {
         /// <summary>
@@ -59,15 +58,6 @@ namespace OAuth.Net.Common
         string ConsumerKey
         {
             get;
-        }
-
-        /// <summary>
-        /// The status of the token
-        /// </summary>
-        TokenStatus Status
-        {
-            get;
-            set;
         }
 
         /// <summary>

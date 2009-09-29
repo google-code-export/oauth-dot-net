@@ -216,10 +216,7 @@ namespace OAuth.Net.Examples.TwitterClient.Api
                 preRequestEventArgs.CallbackUrl = options.AuthorizationCallbackUri;
             });
 
-            request.OnBeforeGetAccessToken += new EventHandler<PreAccessTokenRequestEventArgs>((sender, preAccesstokenRequestEventArgs) =>
-            {
-                preAccesstokenRequestEventArgs.Verifier = options.RequestTokenVerifier;
-            });
+            request.RequestTokenVerifier = options.RequestTokenVerifier;
 
             var response = request.GetResource(parameters);
 

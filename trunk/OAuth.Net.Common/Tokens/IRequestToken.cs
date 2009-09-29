@@ -37,8 +37,7 @@ using System.Security.Principal;
 
 namespace OAuth.Net.Common
 {
-    public interface IRequestToken
-        : IToken
+    public interface IRequestToken : IIssuedToken
     {
         /// <summary>
         /// The parameters that were sent in the request that

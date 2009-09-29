@@ -62,6 +62,7 @@
     <Compile Include="PathHelper.cs" />
     <Compile Include="StreamCopier.cs" />
     <Compile Include="Tokens\IAccessToken.cs" />
+    <Compile Include="Tokens\IIssuedToken.cs" />
     <Compile Include="Tokens\IRequestToken.cs" />
     <Compile Include="Tokens\ITokenGenerator.cs" />
     <Compile Include="Tokens\IToken.cs" />
@@ -75,7 +76,7 @@
     <Compile Include="SignatureBase.cs" />
     <Compile Include="RequestId.cs" />
     <Compile Include="Tokens\ITokenStore.cs" />
-    <Compile Include="Tokens\MockToken.cs" />
+    <Compile Include="Tokens\OAuthToken.cs" />
     <Compile Include="Tokens\TokenStatus.cs" />
     <Compile Include="Tokens\TokenType.cs" />
     <Compile Include="UnixTime.cs" />
