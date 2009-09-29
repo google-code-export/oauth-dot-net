@@ -74,6 +74,7 @@
     <Compile Include="Common\SignatureBaseTests.cs" />
     <Compile Include="Components\HmacSha1SigningProviderTests.cs" />
     <Compile Include="Components\PlainTextSigningProviderTests.cs" />
+    <Compile Include="Consumer\OAuthConsumerRequestTests.cs" />
     <Compile Include="WikiTests\ConcatenateRequestElementsTests.cs" />
     <Compile Include="WikiTests\HmacSha1Tests.cs" />
     <Compile Include="WikiTests\NormalizeRequestParameterTests.cs" />
