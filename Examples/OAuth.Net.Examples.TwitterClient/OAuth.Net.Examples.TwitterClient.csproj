@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{CDF95B2D-FCE6-4F28-942E-AA7A223722A9}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
@@ -82,14 +82,11 @@
     <Compile Include="Code\Api\ApiCallOptions.cs" />
     <Compile Include="Code\Api\BasicUser.cs" />
     <Compile Include="Code\Api\ExtendedUser.cs" />
-    <Compile Include="Code\Api\ITwitterApi.cs" />
     <Compile Include="Code\Api\Status.cs" />
     <Compile Include="Code\Api\ListSerializationHelper.cs" />
-    <Compile Include="Code\AuthorizationRequiredException.cs" />
     <Compile Include="Code\BadCredentialsException.cs" />
     <Compile Include="Code\CachingContainer.cs" />
     <Compile Include="Code\Func.cs" />
-    <Compile Include="Code\OAuthState.cs" />
     <Compile Include="Code\Api\TwitterApi.cs" />
     <Compile Include="Code\VPathResolver.cs" />
     <Compile Include="Default.aspx.cs">
@@ -152,6 +149,9 @@
           <IISUrl>
           </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>

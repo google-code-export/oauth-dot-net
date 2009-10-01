@@ -148,6 +148,9 @@ namespace OAuth.Net.Consumer
     /// </remarks>
     public class OAuthRequest
     {
+        private readonly IRequestStateStore stateStore;
+        private readonly RequestState state;
+
         /// <summary>
         /// This event is fired before the request to get a request token is created. You may
         /// modify the request Uri and HTTP method, as well as add additional request 
@@ -212,10 +215,19 @@ namespace OAuth.Net.Consumer
         /// <summary>
         /// The request token
         /// </summary>
-        public IToken RequestToken
+        public IToken RequestToken 
         {
-            get;
-            private set;
+            get 
+            {
+                return this.state.RequestToken; 
+            }
+            private set
+            {
+                this.state.RequestToken = value;
+                
+                if (this.stateStore != null)
+                    this.stateStore.Store(this.state);
+            }
         }
 
         /// <summary>
@@ -223,8 +235,17 @@ namespace OAuth.Net.Consumer
         /// </summary>
         public IToken AccessToken
         {
-            get;
-            private set;
+            get
+            {
+                return this.state.AccessToken;
+            }
+            private set
+            {
+                this.state.AccessToken = value;
+
+                if (this.stateStore != null)
+                    this.stateStore.Store(this.state);
+            }
         }
 
         /// <summary>
@@ -237,7 +258,7 @@ namespace OAuth.Net.Consumer
         public Uri CallbackUrl
         {
             get;
-            set;
+            private set;
         }
 
         /// <summary>
@@ -245,6 +266,27 @@ namespace OAuth.Net.Consumer
         /// that needs to be returned on the request for the access token.
         /// </summary>
         public string RequestTokenVerifier
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// This delegate, if not <c>null</c>, is called before requesting the
+        /// access token to collect the verifier issued by the service provider.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// It is not required to use this mechanism. Instead, you can provide
+        /// the verifier to <see cref="OAuthRequest.Create"/>.
+        /// </para>
+        /// 
+        /// <para>
+        /// If you supply a handler, it should attempt to provide the verifier
+        /// in an application-specific manner when raised.
+        /// </para>
+        /// </remarks>
+        public EventHandler<AuthorizationVerificationEventArgs> VerificationHandler
         {
             get;
             set;
@@ -295,11 +337,7 @@ namespace OAuth.Net.Consumer
         /// <returns>An OAuth protected request for the protected resource</returns>
         public static OAuthRequest Create(EndPoint resourceEndPoint, OAuthService settings)
         {
-            return new OAuthRequest()
-            {
-                ResourceEndPoint = resourceEndPoint,
-                Service = settings
-            };
+            return OAuthRequest.Create(resourceEndPoint, settings, null as IToken, null as IToken);
         }
 
         /// <summary>
@@ -316,12 +354,7 @@ namespace OAuth.Net.Consumer
         /// <returns>An OAuth protected request for the protected resource</returns>
         public static OAuthRequest Create(EndPoint resourceEndPoint, OAuthService settings, IToken requestToken)
         {
-            return new OAuthRequest()
-            {
-                ResourceEndPoint = resourceEndPoint,
-                Service = settings,
-                RequestToken = requestToken
-            };
+            return OAuthRequest.Create(resourceEndPoint, settings, requestToken, null);
         }
 
         /// <summary>
@@ -341,13 +374,156 @@ namespace OAuth.Net.Consumer
         /// initialised with the request token and access token</returns>
         public static OAuthRequest Create(EndPoint resourceEndPoint, OAuthService settings, IToken requestToken, IToken accessToken)
         {
-            return new OAuthRequest()
+            return OAuthRequest.Create(resourceEndPoint, settings, null, requestToken, null, accessToken); 
+        }
+
+        /// <summary>
+        /// Creates a new OAuth protected request, initialised with previously
+        /// retrieved request and access tokens, the specified callback  
+        /// </summary>
+        /// <remarks>
+        /// If the access token is valid, the user should not have to intervene
+        /// to authorize the request and the protected resource should be
+        /// fetched immediately.
+        /// </remarks>
+        /// <param name="resourceEndPoint">Protected resource End Point</param>
+        /// <param name="settings">Service settings</param>
+        /// <param name="callbackUri">Callback uri</param>
+        /// <param name="requestToken">Request token</param>
+        /// <param name="accessToken">Access token</param>
+        /// <returns>An OAuth protected request for the protected resource,
+        /// initialised with the request token and access token</returns>
+        public static OAuthRequest Create(
+            EndPoint resourceEndPoint,
+            OAuthService settings,
+            Uri callbackUri,
+            IToken requestToken,
+            IToken accessToken)
+        {
+            return OAuthRequest.Create(resourceEndPoint, settings, callbackUri, requestToken, null, accessToken);
+        }
+
+        /// <summary>
+        /// Creates a new OAuth protected request, initialised with previously
+        /// retrieved request and access tokens, the specified callback  
+        /// </summary>
+        /// <remarks>
+        /// If the access token is valid, the user should not have to intervene
+        /// to authorize the request and the protected resource should be
+        /// fetched immediately.
+        /// </remarks>
+        /// <param name="resourceEndPoint">Protected resource End Point</param>
+        /// <param name="settings">Service settings</param>
+        /// <param name="callbackUri">Callback uri</param>
+        /// <param name="requestToken">Request token</param>
+        /// <param name="verifier">Verifier</param>
+        /// <param name="accessToken">Access token</param>
+        /// <returns>An OAuth protected request for the protected resource,
+        /// initialised with the request token and access token</returns>
+        public static OAuthRequest Create(
+            EndPoint resourceEndPoint, 
+            OAuthService settings, 
+            Uri callbackUri,
+            IToken requestToken, 
+            string verifier,
+            IToken accessToken)
+        {
+            var state = new RequestState(new RequestStateKey(settings, null))
             {
-                ResourceEndPoint = resourceEndPoint,
-                Service = settings,
                 RequestToken = requestToken,
                 AccessToken = accessToken
             };
+
+            var request = new OAuthRequest(resourceEndPoint, settings, verifier, state);
+            request.CallbackUrl = callbackUri;
+            return request;
+        }
+
+        /// <summary>
+        /// Creates a new OAuth protected request, using the supplied end user ID
+        /// in combination with the service to create a state key to load and 
+        /// store request state such as tokens. 
+        /// </summary>
+        /// <param name="resourceEndPoint">Protected resource End Point</param>
+        /// <param name="settings">Service settings</param>
+        /// <param name="endUserId">End user ID</param>
+        /// <returns>An OAuth protected request for the protected resource,
+        /// initialised using the configured state store</returns>
+        public static OAuthRequest Create(EndPoint resourceEndPoint, OAuthService settings, string endUserId)
+        {
+            return OAuthRequest.Create(resourceEndPoint, settings, null, null, endUserId);
+        }
+
+        /// <summary>
+        /// Creates a new OAuth protected request, using the supplied end user ID
+        /// in combination with the service to create a state key to load and 
+        /// store request state such as tokens.
+        /// </summary>
+        /// <param name="resourceEndPoint">Protected resource End Point</param>
+        /// <param name="settings">Service settings</param>
+        /// <param name="callbackUri">Callback URI</param>
+        /// <param name="endUserId">End user ID</param>
+        /// <returns>An OAuth protected request for the protected resource,
+        /// initialised using the configured state store</returns>
+        public static OAuthRequest Create(EndPoint resourceEndPoint, OAuthService settings, Uri callbackUri, string endUserId)
+        {
+            return OAuthRequest.Create(resourceEndPoint, settings, callbackUri, null, endUserId);
+        }
+
+        /// <summary>
+        /// Creates a new OAuth protected request, using the supplied end user ID
+        /// in combination with the service to create a state key to load and 
+        /// store request state such as tokens.
+        /// </summary>
+        /// <param name="resourceEndPoint">Protected resource End Point</param>
+        /// <param name="settings">Service settings</param>
+        /// <param name="callbackUri">Callback URI</param>
+        /// <param name="endUserId">End user ID</param>
+        /// <param name="verifier">Verifier</param>
+        /// <returns>An OAuth protected request for the protected resource,
+        /// initialised using the configured state store</returns>
+        public static OAuthRequest Create(EndPoint resourceEndPoint, OAuthService settings, Uri callbackUri, string verifier, string endUserId)
+        {
+            var stateStore = settings.ComponentLocator.GetInstance<IRequestStateStore>();
+
+            var request = new OAuthRequest(
+                resourceEndPoint,
+                settings,
+                verifier,
+                stateStore,
+                new RequestStateKey(settings, endUserId));
+
+            request.CallbackUrl = callbackUri;
+
+            return request;
+        }
+
+        protected OAuthRequest(
+            EndPoint resourceEndPoint,
+            OAuthService settings,
+            string verifier,
+            RequestState state)
+        {
+            this.ResourceEndPoint = resourceEndPoint;
+            this.Service = settings;
+            this.RequestTokenVerifier = verifier;
+
+            this.state = state;
+        }
+
+        protected OAuthRequest(
+            EndPoint resourceEndPoint,
+            OAuthService settings,
+            string verifier, 
+            IRequestStateStore stateStore, 
+            RequestStateKey stateKey)
+        {
+            this.ResourceEndPoint = resourceEndPoint;
+            this.Service = settings;
+            this.RequestTokenVerifier = verifier;
+
+            this.stateStore = stateStore;
+            this.state = stateStore.Get(stateKey);
         }
 
         /// <exception cref="OAuth.Net.Common.OAuthRequestException">
@@ -416,30 +592,33 @@ namespace OAuth.Net.Consumer
         /// </exception>
         protected virtual HttpWebRequest PrepareProtectedResourceRequest(NameValueCollection parameters, string contentType, System.IO.Stream bodyStream)
         {
-            if (this.AccessToken == null || this.RequestToken == null)
+            if (this.AccessToken == null)
             {
                 if (this.RequestToken == null)
                 {
                     // Get a request token
                     this.DoGetRequestToken();
-                }
 
-                if (this.RequestToken == null)
-                    throw new InvalidOperationException("Request token was not received.");
+                    if (this.RequestToken == null)
+                        throw new InvalidOperationException("Request token was not received.");
 
-                if (string.IsNullOrEmpty(this.RequestTokenVerifier))
-                {
                     // Get the authorization handler to authorize the request token
                     // Halt processing if the authorization handler is out-of-band
                     if (!this.DoAuthorizeRequestToken())
                         return null;
                 }
+                
+                if (string.IsNullOrEmpty(this.RequestTokenVerifier))
+                {
+                    // Try to collect the verifier
+                    this.DoCollectVerifier();
+                }
 
                 if (string.IsNullOrEmpty(this.RequestTokenVerifier))
-                    throw new InvalidOperationException("Request token was not authorized.");
+                    return null;
 
                 //Get the access token - this will return false if the verifier is not provided
-                //the implementation needs to get the user to re-authentiate.
+                //the implementation needs to get the user to re-authenticate.
                 if (!this.DoGetAccessToken())
                     return null;
             }
@@ -530,9 +709,27 @@ namespace OAuth.Net.Consumer
             AuthorizationEventArgs authArgs = new AuthorizationEventArgs(this.RequestToken);
 
             if (this.AuthorizationHandler != null)                                            
-                this.AuthorizationHandler(this, authArgs);                      
+                this.AuthorizationHandler(this, authArgs);
 
             return authArgs.ContinueOnReturn;
+        }
+
+        /// <summary>
+        /// Raises the AuthorizationVerificationEventArgs that allows a Consumer to provide
+        /// the verifier received after authorization if it has it.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual void DoCollectVerifier()
+        {
+            // Invoke the authorization handler
+            var verificationArgs = new AuthorizationVerificationEventArgs();
+
+            if (this.VerificationHandler != null)
+                this.VerificationHandler(this, verificationArgs);
+
+            // Store the verifier if it has been specified
+            if (!string.IsNullOrEmpty(verificationArgs.Verifier))
+                this.RequestTokenVerifier = verificationArgs.Verifier;
         }
 
         protected virtual bool DoGetAccessToken()
@@ -786,6 +983,25 @@ namespace OAuth.Net.Consumer
                 authParameters.AdditionalParameters.Add(additionalParameters);
 
             return authParameters;
+        }
+
+        private class StatelessRequestStateStore : IRequestStateStore
+        {
+
+            public void Store(RequestState state)
+            {
+                throw new NotImplementedException();
+            }
+
+            public RequestState Get(RequestStateKey key)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void Delete(RequestStateKey key)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

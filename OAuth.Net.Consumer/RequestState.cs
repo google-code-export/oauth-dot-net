@@ -32,19 +32,45 @@
 // Website: http://lab.madgex.com/oauth-net/
 // Email:   oauth-dot-net@madgex.com
 
-using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
+using System;
+using OAuth.Net.Common;
 
-namespace OAuth.Net.Examples.TwitterClient.Api
+namespace OAuth.Net.Consumer
 {
-    public interface ITwitterApi
+    public sealed class RequestState
     {
-        [SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "0#",
-            Justification = "user out parameter matches Twitter API design")]
-        bool VerifyCredentials(out ExtendedUser user, ApiCallOptions options);
+        // This class is sealed because implementors of IRequestStateStore cannot
+        // be expected to be able to store arbitrary additional data that may be
+        // added in derived classes. 
 
-        ReadOnlyCollection<Status> UserTimeline(ApiCallOptions options);
+        /// <summary>
+        /// The key that identifies the service realm and request to which
+        /// this state pertains.
+        /// </summary>
+        public RequestStateKey Key { get; private set; }
 
-        Status UpdateStatus(string status, ApiCallOptions options);
+        /// <summary>
+        /// The request token for this request flow, if applicable.
+        /// </summary>
+        public IToken RequestToken { get; set; }
+
+        /// <summary>
+        /// The access token for this request flow, if applicable.
+        /// </summary>
+        public IToken AccessToken { get; set; }
+
+        /// <summary>
+        /// Constructs a request state object using the specified
+        /// request state key. The key identifies the service realm and request
+        /// to which the state pertains.
+        /// </summary>
+        /// <param name="key"></param>
+        public RequestState(RequestStateKey key)
+        {
+            if (key == null)
+                throw new ArgumentNullException("key");
+
+            this.Key = key;
+        }
     }
 }

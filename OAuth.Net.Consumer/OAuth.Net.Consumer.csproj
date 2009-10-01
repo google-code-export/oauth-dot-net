@@ -47,18 +47,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AspNetOAuthRequest.cs" />
+    <Compile Include="Components\InMemoryRequestStateStore.cs" />
+    <Compile Include="Components\SessionRequestStateStore.cs" />
     <Compile Include="EndPoint.cs" />
     <Compile Include="EventArgs\AccessTokenReceivedEventArgs.cs" />
     <Compile Include="EventArgs\AuthorizationEventArgs.cs" />
     <Compile Include="EventArgs\PreAccessTokenRequestEventArgs.cs" />
     <Compile Include="EventArgs\PreProtectedResourceRequestEventArgs.cs" />
     <Compile Include="EventArgs\PreRequestEventArgs.cs" />
+    <Compile Include="EventArgs\AuthorizationVerificationEventArgs.cs" />
     <Compile Include="EventArgs\RequestTokenReceivedEventArgs.cs" />
+    <Compile Include="IRequestStateStore.cs" />
     <Compile Include="OAuthConsumerRequest.cs" />
     <Compile Include="OAuthResponse.cs" />
     <Compile Include="OAuthService.cs" />
     <Compile Include="OAuthRequest.cs" />
+    <Compile Include="OutOfBandRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RequestState.cs" />
+    <Compile Include="RequestStateKey.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OAuth.Net.Common\OAuth.Net.Common.csproj">

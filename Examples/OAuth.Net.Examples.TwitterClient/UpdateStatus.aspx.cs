@@ -55,33 +55,21 @@ namespace OAuth.Net.Examples.TwitterClient
 
             if (string.IsNullOrEmpty(status))
                 throw new HttpException(400, "Bad Request");
-            
-            OAuthState state = this.Session[OAuthState.SessionKey] as OAuthState;
-
-            // Create state if necessary
-            if (state == null)
-                this.Session[OAuthState.SessionKey] = state = new OAuthState();
 
             // Create Twitter API
-            TwitterApi api = new TwitterApi(state);
-            ApiCallOptions options = new ApiCallOptions
-            {
-                AuthorizationCallbackUri = new Uri(
-                    this.Request.Url,
-                    new VPathResolver().Resolve(
-                        "~/UpdateStatus.aspx?status=" + status))
-            };
+            TwitterApi api = new TwitterApi(
+                new ApiCallOptions
+                {
+                    AuthorizationCallbackUri = new Uri(
+                        this.Request.Url,
+                        new VPathResolver().Resolve(
+                            "~/UpdateStatus.aspx?status=" + status))
+                });
 
             try
             {
                 // Call Twitter API
-                api.UpdateStatus(status, options);
-            }
-            catch (AuthorizationRequiredException ex)
-            {
-                // The user has not yet connected to Twitter
-                // Redirect to Twitter for authorization
-                this.Response.Redirect(ex.AuthorizationUri.AbsoluteUri, true);
+                api.UpdateStatus(status);
             }
             catch (BadCredentialsException)
             {

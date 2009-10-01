@@ -38,9 +38,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace OAuth.Net.Examples.TwitterClient.Api
 {
-    [SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes",
-        Justification = "Type is never compared for equality")]
-    public struct ApiCallOptions
+    public class ApiCallOptions
     {
         /// <summary>
         /// (Required) The callback URI to use when authorization is required
@@ -55,11 +53,5 @@ namespace OAuth.Net.Examples.TwitterClient.Api
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly",
             Justification = "Callers must be able to set collection by design")]
         public NameValueCollection AuthorizationArguments { get; set; }
-
-        /// <summary>
-        /// The oauth_verifier received from the service provider
-        /// on the authorization callback.
-        /// </summary>
-        public string RequestTokenVerifier {get; set;}
     }
 }

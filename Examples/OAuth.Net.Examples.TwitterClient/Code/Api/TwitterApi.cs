@@ -38,26 +38,36 @@ using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Net;
+using System.Web;
+using Microsoft.Practices.ServiceLocation;
 using OAuth.Net.Common;
 using OAuth.Net.Components;
 using OAuth.Net.Consumer;
 
 namespace OAuth.Net.Examples.TwitterClient.Api
 {
-    public class TwitterApi : ITwitterApi
+    public class TwitterApi
     {
         public static readonly string DateFormat = "ddd MMM dd HH:mm:ss zzz yyyy";
 
         private static readonly object staticLock = new object();
-        private readonly OAuthState state;
+        private readonly ApiCallOptions options;
         private static OAuthService serviceDefinition;        
 
-        public TwitterApi(OAuthState state)
+        public TwitterApi(ApiCallOptions options)
         {
-            if (state == null)
-                throw new ArgumentNullException("state");
+            if (options == null)
+                throw new ArgumentNullException("options");
 
-            this.state = state;
+            this.options = options;
+        }
+
+        public static bool IsAuthorized()
+        {            
+            var stateStore = ServiceLocator.Current.GetInstance<IRequestStateStore>();
+            RequestState state = stateStore.Get(new RequestStateKey(ServiceDefinition, HttpContext.Current.Session.SessionID));
+
+            return state.AccessToken != null;
         }
 
         /// <summary>
@@ -100,11 +110,10 @@ namespace OAuth.Net.Examples.TwitterClient.Api
         /// if authentication was not successful.
         /// </para>
         /// </returns>
-        public bool VerifyCredentials(out ExtendedUser user, ApiCallOptions options)
+        public bool VerifyCredentials(out ExtendedUser user)
         {
             OAuthResource resource = this.ExecuteRequest(
                 TwitterApi.ServiceDefinition,
-                options,
                 null,
                 "http://twitter.com/account/verify_credentials.xml", "GET");
 
@@ -133,11 +142,10 @@ namespace OAuth.Net.Examples.TwitterClient.Api
         /// </summary>
         /// <param name="options">API options</param>
         /// <returns>List of statuses</returns>
-        public ReadOnlyCollection<Status> UserTimeline(ApiCallOptions options)
+        public ReadOnlyCollection<Status> UserTimeline()
         {
             OAuthResource resource = this.ExecuteRequest(
                 TwitterApi.ServiceDefinition,
-                options,
                 null,
                 "http://twitter.com/statuses/user_timeline.xml", "GET");
 
@@ -146,7 +154,7 @@ namespace OAuth.Net.Examples.TwitterClient.Api
                     resource.GetResponseStream()));
         }
 
-        public Status UpdateStatus(string status, ApiCallOptions options)
+        public Status UpdateStatus(string status)
         {
             if (status == null)
                 throw new ArgumentNullException("status");
@@ -163,7 +171,6 @@ namespace OAuth.Net.Examples.TwitterClient.Api
 
             OAuthResource resource = this.ExecuteRequest(
                 TwitterApi.ServiceDefinition,
-                options,
                 new NameValueCollection
                 {
                     { "status", status }
@@ -192,7 +199,6 @@ namespace OAuth.Net.Examples.TwitterClient.Api
             Justification = "Need to distinguish between null and empty")]
         private OAuthResource ExecuteRequest(
             OAuthService service,
-            ApiCallOptions options, 
             NameValueCollection parameters,
             string uriFormat,
             string httpMethod,
@@ -211,37 +217,10 @@ namespace OAuth.Net.Examples.TwitterClient.Api
                 throw new ArgumentException("uriFormat must not be empty", "uriFormat");
 
             var request = this.CreateRequest(service, uriFormat, httpMethod, args);
-            request.CallbackUrl = options.AuthorizationCallbackUri;
-            request.RequestTokenVerifier = options.RequestTokenVerifier;
 
             var response = request.GetResource(parameters);
 
-            if (response.HasProtectedResource)
-            {
-                // Store access token if present
-                IToken accessToken = response.Token as IToken;
-                if (accessToken != null)
-                    this.state.AccessToken = accessToken;
-
-                return response.ProtectedResource;
-            }
-            else
-            {
-                // Store request token if present
-                IToken requestToken = response.Token as IToken;
-                if (requestToken != null)
-                    this.state.RequestToken = requestToken;
-
-                // Throw to indicate authorization is required
-                throw new AuthorizationRequiredException(
-                    "Authorization required to request " + 
-                        string.Format(CultureInfo.InvariantCulture, uriFormat, args))
-                {
-                    AuthorizationUri = TwitterApi.ServiceDefinition.BuildAuthorizationUrl(
-                        requestToken,
-                        options.AuthorizationArguments)
-                };
-            }
+            return response.ProtectedResource;
         }
 
         /// <summary>
@@ -269,15 +248,15 @@ namespace OAuth.Net.Examples.TwitterClient.Api
             if (string.IsNullOrEmpty(uriFormat))
                 throw new ArgumentException("uriFormat must not be empty", "uriFormat");
 
-            return OAuthRequest.Create(
+            return AspNetOAuthRequest.Create(
                 new OAuth.Net.Consumer.EndPoint(
                     string.Format(
                         CultureInfo.InvariantCulture, 
                         uriFormat, 
                         args), httpMethod),
                 service,
-                this.state.RequestToken,
-                this.state.AccessToken);
+                this.options.AuthorizationCallbackUri,
+                HttpContext.Current.Session.SessionID);
         }
     }
 }
