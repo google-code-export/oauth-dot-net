@@ -278,6 +278,9 @@ namespace OAuth.Net.Common
                     if (nameValuePairParts.Length == 2)
                         bodyParams.Add(HttpUtility.UrlDecode(nameValuePairParts[0]), HttpUtility.UrlDecode(nameValuePairParts[1]));
                 }
+
+                if (bodyParams.Count == 0 && responseBody.Trim().Length > 0)                
+                    bodyParams.Add(OAuthRequestExceptionParameters.Problem, responseBody);                
             }
 
             return OAuthParameters.DoParse(null, response.Headers[Constants.WwwAuthenticateHeaderParameter], bodyParams, null, OAuthParameterSources.ConsumerDefault, false);
