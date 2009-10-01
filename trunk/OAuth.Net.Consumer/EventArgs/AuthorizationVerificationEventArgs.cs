@@ -32,16 +32,27 @@
 // Website: http://lab.madgex.com/oauth-net/
 // Email:   oauth-dot-net@madgex.com
 
-using OAuth.Net.Common;
+using System;
 
-namespace OAuth.Net.Examples.TwitterClient
+namespace OAuth.Net.Consumer
 {
-    public class OAuthState
+    public class AuthorizationVerificationEventArgs : EventArgs
     {
-        public static readonly string SessionKey = typeof(OAuthState).FullName;
+        /// <summary>
+        /// Creates event arguments for the Provide Verifier Handler.
+        /// </summary>
+        public AuthorizationVerificationEventArgs()
+        {
+        }
 
-        public IToken RequestToken { get; set; }
-
-        public IToken AccessToken { get; set; }
+        /// <summary>
+        /// The verifier issued by the service provider during authorization.
+        /// You should set this to the verifier received.
+        /// </summary>
+        public string Verifier
+        {
+            get;
+            set;
+        }
     }
 }

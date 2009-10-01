@@ -32,44 +32,29 @@
 // Website: http://lab.madgex.com/oauth-net/
 // Email:   oauth-dot-net@madgex.com
 
-using System;
-using System.Runtime.Serialization;
-using System.Security.Permissions;
-
-namespace OAuth.Net.Examples.TwitterClient
+namespace OAuth.Net.Consumer
 {
-    [Serializable]
-    public class AuthorizationRequiredException : Exception, ISerializable
+    public interface IRequestStateStore
     {
-        public AuthorizationRequiredException()
-            : base()
-        {
-        }
+        /// <summary>
+        /// Stores the specified request <paramref name="state"/>, overriding 
+        /// any previous state with the same key
+        /// </summary>
+        /// <param name="state">Request state</param>
+        void Store(RequestState state);
 
-        public AuthorizationRequiredException(string message)
-            : base(message)
-        {
-        }
+        /// <summary>
+        /// Gets the request state stored for the specified <paramref name="key"/>,
+        /// creating a new state object if none is stored.
+        /// </summary>
+        /// <param name="key">State key</param>
+        /// <returns>State</returns>
+        RequestState Get(RequestStateKey key);
 
-        public AuthorizationRequiredException(string message, Exception inner)
-            : base(message, inner)
-        {
-        }
-
-        protected AuthorizationRequiredException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-            this.AuthorizationUri = (Uri) info.GetValue("AuthorizationUri", typeof(Uri));
-        }
-
-        public Uri AuthorizationUri { get; set; }
-
-        [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.SerializationFormatter)]
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            base.GetObjectData(info, context);
-
-            info.AddValue("AuthorizationUri", this.AuthorizationUri, typeof(Uri));
-        }
+        /// <summary>
+        /// Permanently removes any state stored for the specified <paramref name="key"/>
+        /// </summary>
+        /// <param name="key">State key</param>
+        void Delete(RequestStateKey key);
     }
 }

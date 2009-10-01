@@ -38,7 +38,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Web;
 using System.Xml;
-using OAuth.Net.Common;
 using OAuth.Net.Components;
 using OAuth.Net.Consumer;
 
@@ -70,43 +69,32 @@ namespace OAuth.Net.Examples.FireEagleConsumer
 
             // Find the user's location
             var request = OAuthRequest.Create(
-                new EndPoint("https://fireeagle.yahooapis.com/api/0.1/user","GET"), 
+                new EndPoint("https://fireeagle.yahooapis.com/api/0.1/user", "GET"), 
                 FireEagle.OAuthService,
-                context.Session["request_token"] as IToken,
-                context.Session["access_token"] as IToken);
-
-            request.CallbackUrl = callback;
-
-            string verifier = context.Request[OAuth.Net.Common.Constants.VerifierParameter];
-            if (verifier != null)
-                request.RequestTokenVerifier = verifier;
+                callback,
+                HttpContext.Current.Session.SessionID);
+            request.VerificationHandler = AspNetOAuthRequest.HandleVerification;
 
             OAuthResponse response = request.GetResource();
 
-            if (response.HasProtectedResource)
-            {
-                // Store the access token
-                context.Session["access_token"] = response.Token;
-
-                // Load the response XML
-                XmlDocument responseXml = new XmlDocument();
-                responseXml.Load(response.ProtectedResource.GetResponseStream());
-
-                // Check the response status
-                if (responseXml.SelectSingleNode("rsp/@stat").Value == "ok")
-                    return Location.Parse(responseXml.SelectSingleNode("rsp/user/location-hierarchy/location[@best-guess='true']"));
-                else
-                    return null;
-            }
-            else
-            {
-                context.Session["request_token"] = response.Token;
-
+            if (!response.HasProtectedResource)
                 throw new AuthorizationRequiredException()
                 {
                     AuthorizationUri = FireEagle.OAuthService.BuildAuthorizationUrl(response.Token)
                 };
-            }
+            
+            // Store the access token
+            context.Session["access_token"] = response.Token;
+
+            // Load the response XML
+            XmlDocument responseXml = new XmlDocument();
+            responseXml.Load(response.ProtectedResource.GetResponseStream());
+
+            // Check the response status
+            if (responseXml.SelectSingleNode("rsp/@stat").Value == "ok")
+                return Location.Parse(responseXml.SelectSingleNode("rsp/user/location-hierarchy/location[@best-guess='true']"));
+            else
+                return null;
         }
 
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "callback", Justification = "Callback is a domain term")]
@@ -123,16 +111,11 @@ namespace OAuth.Net.Examples.FireEagleConsumer
 
             // Update the user's location
             var request = OAuthRequest.Create(
-                new EndPoint("https://fireeagle.yahooapis.com/api/0.1/update","POST"),
+                new EndPoint("https://fireeagle.yahooapis.com/api/0.1/update", "POST"),
                 FireEagle.OAuthService,
-                context.Session["request_token"] as IToken,
-                context.Session["access_token"] as IToken);
-
-            request.CallbackUrl = callback;
-
-            string verifier = context.Request[OAuth.Net.Common.Constants.VerifierParameter];
-            if (verifier != null)
-                request.RequestTokenVerifier = verifier;
+                callback,
+                HttpContext.Current.Session.SessionID);
+            request.VerificationHandler = AspNetOAuthRequest.HandleVerification;
 
             // Send the location latitude and longitude with the request
             OAuthResponse response = request.GetResource(
@@ -142,30 +125,21 @@ namespace OAuth.Net.Examples.FireEagleConsumer
                     { "lon", location.Point.Longitude.ToString(CultureInfo.InvariantCulture) }
                 });
 
-            if (response.HasProtectedResource)
-            {
-                // Store the access token
-                context.Session["access_token"] = response.Token;
-
-                // Load the response XML
-                XmlDocument responseXml = new XmlDocument();
-                responseXml.Load(response.ProtectedResource.GetResponseStream());
-
-                // Check the response status
-                if (responseXml.SelectSingleNode("rsp/@stat").Value == "ok")
-                    return true;
-                else
-                    return false;
-            }
-            else
-            {
-                context.Session["request_token"] = response.Token;
-
+            if (!response.HasProtectedResource)
                 throw new AuthorizationRequiredException()
                 {
                     AuthorizationUri = FireEagle.OAuthService.BuildAuthorizationUrl(response.Token)
                 };
-            }
+            
+            // Store the access token
+            context.Session["access_token"] = response.Token;
+
+            // Load the response XML
+            XmlDocument responseXml = new XmlDocument();
+            responseXml.Load(response.ProtectedResource.GetResponseStream());
+
+            // Check the response status
+            return responseXml.SelectSingleNode("rsp/@stat").Value == "ok";
         }
     }
 }

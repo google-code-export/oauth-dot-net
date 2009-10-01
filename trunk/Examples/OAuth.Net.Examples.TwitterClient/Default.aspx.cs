@@ -34,6 +34,7 @@
 
 using System;
 using System.Web.UI;
+using OAuth.Net.Examples.TwitterClient.Api;
 
 namespace OAuth.Net.Examples.TwitterClient
 {
@@ -41,10 +42,8 @@ namespace OAuth.Net.Examples.TwitterClient
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            OAuthState state = this.Session[OAuthState.SessionKey] as OAuthState;
-
-            // Redirect to User page if we already have an access token
-            if (state != null && state.AccessToken != null)
+            // Redirect to User page if user is already authorized with Twitter
+            if (TwitterApi.IsAuthorized())
                 this.Response.Redirect("~/User.aspx");
         }
     }

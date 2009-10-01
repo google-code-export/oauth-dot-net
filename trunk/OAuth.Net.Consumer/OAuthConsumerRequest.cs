@@ -101,18 +101,6 @@ namespace OAuth.Net.Consumer
                 private set;
             }
 
-            public TokenStatus Status
-            {
-                get
-                {
-                    return TokenStatus.Authorized;
-                }
-                set
-                {
-                    throw new NotImplementedException();
-                }
-            }
-
             public TokenType Type
             {
                 get;

@@ -8,6 +8,8 @@ using CommonServiceLocator.WindsorAdapter;
 using Microsoft.Practices.ServiceLocation;
 using OAuth.Net.Common;
 using OAuth.Net.Components;
+using OAuth.Net.Consumer;
+using OAuth.Net.Consumer.Components;
 
 namespace OAuth.Net.Examples.TwitterClient
 {
@@ -25,6 +27,7 @@ namespace OAuth.Net.Examples.TwitterClient
                 "signing.provider:HMAC-SHA1",
                 LifestyleType.Thread);
             container.AddComponent<INonceProvider, GuidNonceProvider>();
+            container.AddComponentWithLifestyle<IRequestStateStore, SessionRequestStateStore>(LifestyleType.Singleton);
 
             WindsorServiceLocator injector = new WindsorServiceLocator(container);
             ServiceLocator.SetLocatorProvider(() => injector);

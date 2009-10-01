@@ -62,22 +62,14 @@ namespace OAuth.Net.Examples.TwitterClient
             Justification = "Spurious warning")]
         protected void Page_Load(object sender, EventArgs e)
         {
-            OAuthState state = this.Session[OAuthState.SessionKey] as OAuthState;
-
-            // Create state if necessary
-            if (state == null)
-                this.Session[OAuthState.SessionKey] = state = new OAuthState();
-
             // Create Twitter API
-            TwitterApi api = new TwitterApi(state);
-            ApiCallOptions options = new ApiCallOptions
-            {
-                AuthorizationCallbackUri = new Uri(
-                    this.Request.Url, 
-                    new VPathResolver().Resolve("~/User.aspx")),
-
-                RequestTokenVerifier = Request[OAuth.Net.Common.Constants.VerifierParameter]
-            };
+            TwitterApi api = new TwitterApi(
+                new ApiCallOptions
+                {
+                    AuthorizationCallbackUri = new Uri(
+                        this.Request.Url, 
+                        new VPathResolver().Resolve("~/User.aspx"))
+                });
 
             try
             {
@@ -93,7 +85,14 @@ namespace OAuth.Net.Examples.TwitterClient
 
                 this.TwitterUser = extendedUserInfoCache.Load(
                     TimeSpan.FromMinutes(5),
-                    () => QueryTwitterForCurrentUser(api, options));
+                    () => 
+                    {
+                        ExtendedUser user;
+                        if (api.VerifyCredentials(out user))
+                            return user;
+                        else
+                            throw new BadCredentialsException();
+                    });
 
                 // Load user timeline
                 CachingContainer<IList<Status>> userTimelineCache
@@ -105,38 +104,12 @@ namespace OAuth.Net.Examples.TwitterClient
 
                 this.UserTimeline = userTimelineCache.Load(
                     TimeSpan.FromSeconds(30),
-                    () => api.UserTimeline(options));
-            }
-            catch (AuthorizationRequiredException ex)
-            {
-                // The user has not yet connected to Twitter
-                // Redirect to Twitter for authorization
-                this.Response.Redirect(ex.AuthorizationUri.AbsoluteUri, true);
+                    () => api.UserTimeline());
             }
             catch (BadCredentialsException)
             {
                 this.Response.Redirect("~/Disconnect.aspx?error=badcredentials", true);
             }
-        }
-
-        /// <summary>
-        /// Queries Twitter for extended information about the current user
-        /// </summary>
-        /// <param name="api">Twitter API</param>
-        /// <param name="options">API call options</param>
-        /// <returns>Extended user object</returns>
-        /// <exception cref="BadCredentialsException">If the credentials are
-        /// invalid</exception>
-        private static ExtendedUser QueryTwitterForCurrentUser(TwitterApi api, ApiCallOptions options)
-        {
-            if (api == null)
-                throw new ArgumentNullException("api");
-
-            ExtendedUser user;
-            if (api.VerifyCredentials(out user, options))
-                return user;
-            else
-                throw new BadCredentialsException();
         }
     }
 }
