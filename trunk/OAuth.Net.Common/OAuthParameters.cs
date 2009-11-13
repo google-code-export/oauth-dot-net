@@ -197,6 +197,19 @@ namespace OAuth.Net.Common
             private set;
         }
 
+        public OAuthParameters Clone()
+        {
+            var clone = new OAuthParameters();
+
+            foreach (KeyValuePair<string, string> item in this.parameters)
+                clone.parameters[item.Key] = item.Value;
+
+            foreach (KeyValuePair<string, string> item in this.AdditionalParameters)
+                clone.AdditionalParameters.Add(item.Key, item.Value);
+
+            return clone;
+        }
+
         /// <summary>
         /// Parses the OAuth parameters from the HTTP request, sourcing
         /// parameters from all 3 of:
