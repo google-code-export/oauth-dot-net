@@ -204,8 +204,7 @@ namespace OAuth.Net.Common
             foreach (KeyValuePair<string, string> item in this.parameters)
                 clone.parameters[item.Key] = item.Value;
 
-            foreach (KeyValuePair<string, string> item in this.AdditionalParameters)
-                clone.AdditionalParameters.Add(item.Key, item.Value);
+            clone.AdditionalParameters = new NameValueCollection(this.AdditionalParameters);
 
             return clone;
         }
