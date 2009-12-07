@@ -891,6 +891,29 @@ namespace OAuth.Net.Common
             return header.ToString();
         }
 
+        /// <summary>
+        /// Create a string representation of the exception, including the 
+        /// problem, advice and additional parameter if present.
+        /// </summary>
+        /// <returns>String representation of the exception</returns>
+        public override string ToString()
+        {
+            StringBuilder str = new StringBuilder(base.ToString());
+            
+            if (!string.IsNullOrEmpty(this.Problem))
+                str.Append("Problem: ").Append(this.Problem).AppendLine();
+            
+            if (!string.IsNullOrEmpty(this.Advice))
+                str.Append("Advice: ").Append(this.Advice).AppendLine();
+
+            if (!string.IsNullOrEmpty(this.AdditionalParameter.Key)
+                || !string.IsNullOrEmpty(this.AdditionalParameter.Value))
+                str.Append(this.AdditionalParameter.Key).Append(": ")
+                    .Append(this.AdditionalParameter.Value).AppendLine();
+
+            return str.ToString();
+        }
+
         private static void ThrowSimpleReport(string problem, string advice)
         {
             throw new OAuthRequestException()
