@@ -225,7 +225,7 @@ namespace OAuth.Net.ServiceProvider
             bool isValid = requestContext.SigningProvider.CheckSignature(
                 SignatureBase.Create(
                     httpContext.Request.HttpMethod,
-                    httpContext.Request.Url,
+                    new Uri(httpContext.Request.Url.GetLeftPart(UriPartial.Authority) + httpContext.Request.RawUrl),
                     requestContext.Parameters),
                 requestContext.Parameters.Signature,
                 requestContext.Consumer.Secret,
