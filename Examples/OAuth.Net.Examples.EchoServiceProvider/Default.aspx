@@ -132,7 +132,7 @@
                     new KeyValuePair<string, string>("bar", "baz"));   
             %>
             
-            <p>For example: <a href="<%= echoUri %>"><%= echoUri %></a> should echo: <kbd>method=foo bar&amp;bar=baz</kbd></p>
+            <p>For example: <a href="<%= echoUri.AbsoluteUri %>"><%= echoUri.AbsoluteUri%></a> should echo: <kbd>method=foo bar&amp;bar=baz</kbd></p>
         </div>
     </div>
     <div id="footer">

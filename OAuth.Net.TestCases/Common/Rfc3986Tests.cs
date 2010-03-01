@@ -52,6 +52,16 @@ namespace OAuth.Net.TestCases.Common
 
             Assert.That(googleurl, Is.EqualTo("http%3A%2F%2Fwww.google.com%2Fm8%2Ffeeds"));
         }
+
+        [Test]
+        [SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores", Justification = "Unit test")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Unit test methods cannot be static")]
+        public void Test_EncodePlusCharacter()
+        {
+            string value = Rfc3986.Encode("123+regerg");
+
+            Assert.That(value, Is.EqualTo("123%2Bregerg"));
+        }
     }
 }
 #endif
