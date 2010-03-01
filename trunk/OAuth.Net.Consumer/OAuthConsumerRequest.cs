@@ -87,7 +87,7 @@ namespace OAuth.Net.Consumer
 
             public string Token
             {
-                get { return String.Empty; }
+                get { return null; }
             }
 
             public string Secret

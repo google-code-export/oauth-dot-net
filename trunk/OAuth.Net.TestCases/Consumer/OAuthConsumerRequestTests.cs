@@ -45,6 +45,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using OAuth.Net.Common;
 using OAuth.Net.Consumer;
+using System.Globalization;
 
 namespace OAuth.Net.TestCases.Consumer
 {
@@ -78,8 +79,32 @@ namespace OAuth.Net.TestCases.Consumer
                 new EndPoint("http://provider.example.net/profile", "GET"),
                 service);
 
-            
+            OAuthParameters authParameters = new OAuthParameters()
+            {
+                ConsumerKey = service.Consumer.Key,
+                Realm = service.Realm,
+                SignatureMethod = service.SignatureMethod,
+                Timestamp = "1191242096",
+                Nonce = "kllo9940pd9333jh",
+                Version = service.OAuthVersion
+            };
+
+            Assert.AreEqual(
+                SignatureBase.Create(consumerRequest.ResourceEndPoint.HttpMethod, consumerRequest.ResourceEndPoint.Uri, authParameters),
+                "GET&http%3A%2F%2Fprovider.example.net%2Fprofile&oauth_consumer_key%3Ddpf43f3p2l4k3l03%26oauth_nonce%3Dkllo9940pd9333jh%26oauth_signature_method%3DHMAC-SHA1%26oauth_timestamp%3D1191242096%26oauth_version%3D1.0");
+
+            authParameters.Sign(consumerRequest.ResourceEndPoint.Uri,
+                                    consumerRequest.ResourceEndPoint.HttpMethod,
+                                    service.Consumer,
+                                    consumerRequest.RequestToken,
+                                    new OAuth.Net.Components.HmacSha1SigningProvider());
+
+            Assert.AreEqual( authParameters.Signature, "SGtGiOrgTGF5Dd4RUMguopweOSU=");
+
         }
+
+
+
     }
 }
 

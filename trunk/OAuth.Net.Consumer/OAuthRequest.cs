@@ -825,19 +825,6 @@ namespace OAuth.Net.Consumer
 
         protected virtual void SignParameters(Uri requestUri, string httpMethod, OAuthParameters authParameters, IToken token)
         {
-            if (token != null)
-                authParameters.Token = token.Token; 
-
-            OAuthParameters signingParameters = authParameters.Clone();
-            var signingUri = new UriBuilder(requestUri);
-
-            // Normalize the request uri for signing
-            if (!string.IsNullOrEmpty(requestUri.Query))
-            {
-                // TODO: Will the parameters necessarily be Rfc3698 encoded here? If not, then Rfc3968.SplitAndDecode will throw FormatException
-                signingParameters.AdditionalParameters.Add(Rfc3986.SplitAndDecode(requestUri.Query.Substring(1)));
-                signingUri.Query = null;
-            }
 
             // Check there is a signing provider for the signature method
             ISigningProvider signingProvider = this.Service.ComponentLocator.GetInstance<ISigningProvider>(Constants.SigningProviderIdPrefix + this.Service.SignatureMethod);
@@ -853,10 +840,7 @@ namespace OAuth.Net.Consumer
                 OAuthRequestException.ThrowSignatureMethodRejected(null);
 
             // Compute the signature
-            authParameters.Signature = signingProvider.ComputeSignature(
-                SignatureBase.Create(httpMethod, signingUri.Uri, signingParameters),
-                this.Service.Consumer.Secret,
-                (token != null && token.Secret != null) ? token.Secret : null);           
+            authParameters.Sign(requestUri, httpMethod, this.Service.Consumer, token, signingProvider);
         }
 
         /// <summary>
