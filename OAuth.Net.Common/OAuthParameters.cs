@@ -209,6 +209,36 @@ namespace OAuth.Net.Common
             return clone;
         }
 
+        public void Sign(Uri requestUri, string httpMethod, IConsumer consumer, IToken token, ISigningProvider signingProvider)
+        {
+            if (token != null)
+                this.Token = token.Token;
+
+            OAuthParameters signingParameters = this.Clone();
+            var signingUri = new UriBuilder(requestUri);
+
+            // Normalize the request uri for signing
+            if (!string.IsNullOrEmpty(requestUri.Query))
+            {
+                // TODO: Will the parameters necessarily be Rfc3698 encoded here? If not, then Rfc3968.SplitAndDecode will throw FormatException
+                signingParameters.AdditionalParameters.Add(Rfc3986.SplitAndDecode(requestUri.Query.Substring(1)));
+                signingUri.Query = null;
+            }
+
+            if (signingProvider == null)
+            {
+                // There is no signing provider for this signature method
+                OAuthRequestException.ThrowSignatureMethodRejected(null);
+            }
+
+            // Compute the signature
+            this.Signature = signingProvider.ComputeSignature(
+                SignatureBase.Create(httpMethod, signingUri.Uri, signingParameters),
+                consumer.Secret,
+                (token != null && token.Secret != null) ? token.Secret : null); 
+
+        }
+
         /// <summary>
         /// Parses the OAuth parameters from the HTTP request, sourcing
         /// parameters from all 3 of:
