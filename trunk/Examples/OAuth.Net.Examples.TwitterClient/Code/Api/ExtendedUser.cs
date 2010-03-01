@@ -86,7 +86,7 @@ namespace OAuth.Net.Examples.TwitterClient.Api
             set
             {
                 this.CreatedDate = DateTime
-                    .ParseExact(value, TwitterApi.DateFormat, null);
+                    .ParseExact(value, TwitterApi.DateFormat, CultureInfo.InvariantCulture);
             }
         }
 
