@@ -8,6 +8,11 @@
 </head>
 <body>
     <form id="form1" runat="server">
+    
+    <h1>This example makes a two legged OAuth consumer request to YQL.</h1>
+    
+    <p>If the request is successfull you should see some XML displayed below.</p>
+    
     <div>
         <asp:Xml ID="YQLDisplay" runat="server"></asp:Xml>
     </div>
