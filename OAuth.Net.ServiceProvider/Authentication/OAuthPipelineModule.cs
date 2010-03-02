@@ -37,6 +37,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Web;
 using OAuth.Net.Common;
 
+
 namespace OAuth.Net.ServiceProvider
 {
     public class OAuthPipelineModule
@@ -135,13 +136,28 @@ namespace OAuth.Net.ServiceProvider
              * The consumer key, token, signature method, signature, timestamp and nonce parameters
              * are all required
              */
-            parameters.RequireAllOf(
-                    Constants.ConsumerKeyParameter,
-                    Constants.TokenParameter,
-                    Constants.SignatureMethodParameter,
-                    Constants.SignatureParameter,
-                    Constants.TimestampParameter,
-                    Constants.NonceParameter);
+            if (ServiceProviderContext.Settings.AllowTwoLeggedRequests)
+            {
+                parameters.RequireAllOf(
+                        Constants.ConsumerKeyParameter,                        
+                        Constants.SignatureMethodParameter,
+                        Constants.SignatureParameter,
+                        Constants.TimestampParameter,
+                        Constants.NonceParameter);
+            }
+            else
+            {
+                //For 3 legged TokenParameter is required
+                parameters.RequireAllOf(
+                        Constants.ConsumerKeyParameter,
+                        Constants.TokenParameter,
+                        Constants.SignatureMethodParameter,
+                        Constants.SignatureParameter,
+                        Constants.TimestampParameter,
+                        Constants.NonceParameter);
+
+            }
+
             /*
              * The version parameter is optional, but it if is present its value must be 1.0
              */
@@ -163,52 +179,51 @@ namespace OAuth.Net.ServiceProvider
 
         protected virtual void SetAccessToken(HttpApplication application, OAuthRequestContext context)
         {
-            /*
-             * Check the token
-             */
-            if (ServiceProviderContext.TokenStore.ContainsAccessToken(context.Parameters.Token))
+            IAccessToken accessToken = null;
+
+            if (context.Parameters.Token == null && ServiceProviderContext.Settings.AllowTwoLeggedRequests)
             {
-                IAccessToken accessToken = ServiceProviderContext.TokenStore.GetAccessToken(context.Parameters.Token);
-
-                if (accessToken == null)
-                    OAuthRequestException.ThrowTokenRejected(null);
-                else
-                {
-                    /*
-                     * Ensure the token was issued to the same consumer as this request purports
-                     * to be from.
-                     */
-                    if (!accessToken.ConsumerKey.Equals(context.Parameters.ConsumerKey))
-                        OAuthRequestException.ThrowTokenRejected(null);
-
-                    switch (accessToken.Status)
-                    {
-                        case TokenStatus.Authorized:
-                            context.AccessToken = accessToken;
-                            break;
-
-                        case TokenStatus.Expired:
-                            OAuthRequestException.ThrowTokenExpired(null);
-                            break;
-
-                        case TokenStatus.Used:
-                            OAuthRequestException.ThrowTokenUsed(null);
-                            break;
-
-                        case TokenStatus.Revoked:
-                            OAuthRequestException.ThrowTokenRevoked(null);
-                            break;
-
-                        case TokenStatus.Unauthorized:
-                        case TokenStatus.Unknown:
-                        default:
-                            OAuthRequestException.ThrowTokenRejected(null);
-                            break;
-                    }
-                }
+                accessToken = new EmptyAccessToken(context.Consumer.Key);
             }
-            else
+            else if (ServiceProviderContext.TokenStore.ContainsAccessToken(context.Parameters.Token))
+                accessToken = ServiceProviderContext.TokenStore.GetAccessToken(context.Parameters.Token);
+
+            if (accessToken == null)
                 OAuthRequestException.ThrowTokenRejected(null);
+            else
+            {
+                /*
+                 * Ensure the token was issued to the same consumer as this request purports
+                 * to be from.
+                 */
+                if (!accessToken.ConsumerKey.Equals(context.Parameters.ConsumerKey))
+                    OAuthRequestException.ThrowTokenRejected(null);
+
+                switch (accessToken.Status)
+                {
+                    case TokenStatus.Authorized:
+                        context.AccessToken = accessToken;
+                        break;
+
+                    case TokenStatus.Expired:
+                        OAuthRequestException.ThrowTokenExpired(null);
+                        break;
+
+                    case TokenStatus.Used:
+                        OAuthRequestException.ThrowTokenUsed(null);
+                        break;
+
+                    case TokenStatus.Revoked:
+                        OAuthRequestException.ThrowTokenRevoked(null);
+                        break;
+
+                    case TokenStatus.Unauthorized:
+                    case TokenStatus.Unknown:
+                    default:
+                        OAuthRequestException.ThrowTokenRejected(null);
+                        break;
+                }
+            }          
         }
 
         protected virtual void SetRequestId(HttpApplication application, OAuthRequestContext context)
@@ -228,6 +243,10 @@ namespace OAuth.Net.ServiceProvider
 
         protected virtual void SetUser(HttpApplication application, OAuthRequestContext context)
         {
+            //If we are an EmptyAccessToken then there is no User to load.
+            if (context.AccessToken is EmptyAccessToken)
+                return;
+
             // Create the principal
             context.Principal = new OAuthPrincipal(context.AccessToken);
 

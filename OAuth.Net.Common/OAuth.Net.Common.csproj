@@ -61,6 +61,7 @@
     <Compile Include="OAuthResource.cs" />
     <Compile Include="PathHelper.cs" />
     <Compile Include="StreamCopier.cs" />
+    <Compile Include="Tokens\EmptyToken.cs" />
     <Compile Include="Tokens\IAccessToken.cs" />
     <Compile Include="Tokens\IIssuedToken.cs" />
     <Compile Include="Tokens\IRequestToken.cs" />

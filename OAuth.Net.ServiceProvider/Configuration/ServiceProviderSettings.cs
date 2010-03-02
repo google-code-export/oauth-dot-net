@@ -94,5 +94,13 @@ namespace OAuth.Net.ServiceProvider
             get { return (string)this["DummyIdentity"]; }
             set { this["DummyIdentity"] = value; }
         }
+
+        [ConfigurationProperty("AllowTwoLeggedRequests", IsRequired = false, DefaultValue = false)]
+        public bool AllowTwoLeggedRequests
+        {
+            get { return (bool)this["AllowTwoLeggedRequests"]; }
+            set { this["AllowTwoLeggedRequests"] = value; }
+        }
+
     }
 }
