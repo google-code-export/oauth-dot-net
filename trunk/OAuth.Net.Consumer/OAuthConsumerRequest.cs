@@ -72,43 +72,6 @@ namespace OAuth.Net.Consumer
                 new EmptyToken(settings.Consumer.Key, TokenType.Access),
                 new EmptyToken(settings.Consumer.Key, TokenType.Request)
             );
-        }
-
-
-        private class EmptyToken : IToken
-        {
-            public EmptyToken(string consumerKey, TokenType tokenType)
-            {
-                this.ConsumerKey = consumerKey;
-                this.Type = tokenType;
-            }
-
-            #region IToken Members
-
-            public string Token
-            {
-                get { return null; }
-            }
-
-            public string Secret
-            {
-                get { return null; }
-            }
-
-            public string ConsumerKey
-            {
-                get;
-                private set;
-            }
-
-            public TokenType Type
-            {
-                get;
-                private set;
-            }
-
-            #endregion
-        }
-
+        }        
     }
 }
