@@ -4,9 +4,20 @@ The current source trunk is under active development, and is likely to be unstab
 
 = New On The Trunk =
 
+March 2010 - 
+
+ * Implementation to support Consumer Requests (2-legged OAuth) in the Consumer and Service Provider are now in the trunk.  
+
+ * Example code of making Consumer Requests has now been added.
+
+Dec 2009 - 
+
  * Work to streamline API for consumers (ongoing, disruptive)
 
+Sep 2009 - 
+
  * Implementing changes for the OAuth Core 1.0 Rev A spec.
+
 14th May 2009 - Changes made to consumer classes commited.
 
 18th June 2009 - Changes made to service provider classes commited.
