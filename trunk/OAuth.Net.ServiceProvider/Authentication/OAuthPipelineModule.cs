@@ -36,7 +36,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Web;
 using OAuth.Net.Common;
-
+using OAuth.Net.ServiceProvider.Tokens;
 
 namespace OAuth.Net.ServiceProvider
 {
@@ -136,7 +136,7 @@ namespace OAuth.Net.ServiceProvider
              * The consumer key, token, signature method, signature, timestamp and nonce parameters
              * are all required
              */
-            if (ServiceProviderContext.Settings.AllowTwoLeggedRequests)
+            if (ServiceProviderContext.Settings.AllowConsumerRequests)
             {
                 parameters.RequireAllOf(
                         Constants.ConsumerKeyParameter,                        
@@ -181,7 +181,7 @@ namespace OAuth.Net.ServiceProvider
         {
             IAccessToken accessToken = null;
 
-            if (context.Parameters.Token == null && ServiceProviderContext.Settings.AllowTwoLeggedRequests)
+            if (context.Parameters.Token == null && ServiceProviderContext.Settings.AllowConsumerRequests)
             {
                 accessToken = new EmptyAccessToken(context.Consumer.Key);
             }
@@ -245,7 +245,11 @@ namespace OAuth.Net.ServiceProvider
         {
             //If we are an EmptyAccessToken then there is no User to load.
             if (context.AccessToken is EmptyAccessToken)
+            {
+                //Setup any roles defined for Consumer Requests.
+                context.AccessToken.RequestToken.Roles = ServiceProviderContext.Settings.ConsumerRequestRoles;
                 return;
+            }
 
             // Create the principal
             context.Principal = new OAuthPrincipal(context.AccessToken);

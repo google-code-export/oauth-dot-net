@@ -35,40 +35,56 @@
 using System;
 using OAuth.Net.Common;
 
-namespace OAuth.Net.Common
+namespace OAuth.Net.ServiceProvider.Tokens
 {
-    public class EmptyToken : IToken
+    public class EmptyRequestToken : EmptyToken, IRequestToken
     {
-        public EmptyToken(string consumerKey, TokenType tokenType)
+
+        public EmptyRequestToken(string consumerKey)
+            : base(consumerKey, TokenType.Request)
         {
-            this.ConsumerKey = consumerKey;
-            this.Type = tokenType;
+            this.Status = TokenStatus.Authorized;
         }
 
-        #region IToken Members
+        private OAuthParameters associatedParameters = new OAuthParameters();
 
-        public string Token
+        #region IRequestToken Members
+
+        public OAuthParameters AssociatedParameters
         {
-            get { return null; }
+            get { return this.associatedParameters; }
         }
 
-        public string Secret
+        public System.Security.Principal.IIdentity AuthenticatedUser
         {
-            get { return null; }
+            get
+            {
+                return null;
+            }
+
+            set
+            {
+                throw new InvalidOperationException("An EmptyRequestToken cannot be assocaited to a particular user");
+            }
+
         }
 
-        public string ConsumerKey
+        public string[] Roles
         {
             get;
-            private set;
-        }
-
-        public TokenType Type
-        {
-            get;
-            private set;
+            set;
         }
 
         #endregion
-    }   
+
+        #region IIssuedToken Members
+
+        public TokenStatus Status
+        {
+            get;
+            set;
+        }
+
+        #endregion
+    }
 }

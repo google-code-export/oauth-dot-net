@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A6D845EE-20BE-4754-A70A-7DDF0B8FA953}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -55,6 +55,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestTokenHandler.cs" />
     <Compile Include="ServiceProviderContext.cs" />
+    <Compile Include="Tokens\EmptyAccessToken.cs" />
+    <Compile Include="Tokens\EmptyRequestToken.cs" />
     <Compile Include="WorkflowHelper.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -35,40 +35,45 @@
 using System;
 using OAuth.Net.Common;
 
-namespace OAuth.Net.Common
+namespace OAuth.Net.ServiceProvider.Tokens
 {
-    public class EmptyToken : IToken
+
+    public class EmptyAccessToken : EmptyToken, IAccessToken
     {
-        public EmptyToken(string consumerKey, TokenType tokenType)
+
+        public EmptyAccessToken(string consumerKey)
+            : base(consumerKey, TokenType.Access)
         {
-            this.ConsumerKey = consumerKey;
-            this.Type = tokenType;
+            this.requestToken = new EmptyRequestToken(consumerKey);
         }
 
-        #region IToken Members
+        private IRequestToken requestToken;
 
-        public string Token
-        {
-            get { return null; }
-        }
+        #region IAccessToken Members
 
-        public string Secret
+        public IRequestToken RequestToken
         {
-            get { return null; }
-        }
-
-        public string ConsumerKey
-        {
-            get;
-            private set;
-        }
-
-        public TokenType Type
-        {
-            get;
-            private set;
+            get
+            {
+                return requestToken;
+            }
+            set
+            {
+                throw new InvalidOperationException("An EmptyAccessToken can not have anything other than an EmptyRequestToken");
+            }
         }
 
         #endregion
-    }   
+
+        #region IIssuedToken Members
+
+        public TokenStatus Status
+        {
+            get;
+            set;
+        }
+
+        #endregion
+    }
+
 }
