@@ -95,11 +95,18 @@ namespace OAuth.Net.ServiceProvider
             set { this["DummyIdentity"] = value; }
         }
 
-        [ConfigurationProperty("AllowTwoLeggedRequests", IsRequired = false, DefaultValue = false)]
-        public bool AllowTwoLeggedRequests
+        [ConfigurationProperty("AllowConsumerRequests", IsRequired = false, DefaultValue = false)]
+        public bool AllowConsumerRequests
         {
-            get { return (bool)this["AllowTwoLeggedRequests"]; }
-            set { this["AllowTwoLeggedRequests"] = value; }
+            get { return (bool)this["AllowConsumerRequests"]; }
+            set { this["AllowConsumerRequests"] = value; }
+        }
+
+        [ConfigurationProperty("ConsumerRequestRoles", IsRequired = false, DefaultValue = "")]
+        public string[] ConsumerRequestRoles
+        {
+            get { return ((string)this["ConsumerRequestRoles"]).Split(','); }
+            set { this["ConsumerRequestRoless"] = string.Join(",", value); }
         }
 
     }
