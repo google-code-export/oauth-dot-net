@@ -54,27 +54,6 @@ namespace OAuth.Net.ServiceProvider
             context.Error += new EventHandler(this.HandleError);
         }
 
-        void HandleError(object sender, EventArgs e)
-        {
-            if (ServiceProviderContext.Settings.AuthenticateRequests)
-            {
-                HttpApplication application = (HttpApplication)sender;
-
-                if (application.Context.Error is OAuthRequestException)
-                {
-                    OAuthRequestException exception = (OAuthRequestException)application.Context.Error;
-
-                    OAuthRequestContext context = WorkflowHelper.RetrieveOAuthContext(application.Context);
-                    if (context != null)
-                        context.AddError(exception);
-
-                    application.Context.ClearError(); //Ensure we clear the exception to avoid ASP.NET handling this
-
-                    WorkflowHelper.SendBadRequest(application.Context, exception, null);
-                }
-            }
-        }
-
         public virtual void Dispose()
         {
         }
@@ -155,7 +134,6 @@ namespace OAuth.Net.ServiceProvider
                         Constants.SignatureParameter,
                         Constants.TimestampParameter,
                         Constants.NonceParameter);
-
             }
 
             /*
@@ -255,6 +233,27 @@ namespace OAuth.Net.ServiceProvider
             context.Principal = new OAuthPrincipal(context.AccessToken);
 
             application.Context.User = context.Principal;
+        }
+
+        void HandleError(object sender, EventArgs e)
+        {
+            if (ServiceProviderContext.Settings.AuthenticateRequests)
+            {
+                HttpApplication application = (HttpApplication)sender;
+
+                if (application.Context.Error is OAuthRequestException)
+                {
+                    OAuthRequestException exception = (OAuthRequestException)application.Context.Error;
+
+                    OAuthRequestContext context = WorkflowHelper.RetrieveOAuthContext(application.Context);
+                    if (context != null)
+                        context.AddError(exception);
+
+                    application.Context.ClearError(); //Ensure we clear the exception to avoid ASP.NET handling this
+
+                    WorkflowHelper.SendBadRequest(application.Context, exception, null);
+                }
+            }
         }
 
         ////#region Advertising and error reporting

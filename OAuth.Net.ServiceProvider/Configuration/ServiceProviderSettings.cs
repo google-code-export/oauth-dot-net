@@ -102,11 +102,11 @@ namespace OAuth.Net.ServiceProvider
             set { this["AllowConsumerRequests"] = value; }
         }
 
-        [ConfigurationProperty("ConsumerRequestRoles", IsRequired = false, DefaultValue = "")]
+        [ConfigurationProperty("ConsumerRequestRoles", IsRequired = false, DefaultValue = new string[]{})]
         public string[] ConsumerRequestRoles
         {
-            get { return ((string)this["ConsumerRequestRoles"]).Split(','); }
-            set { this["ConsumerRequestRoless"] = string.Join(",", value); }
+            get { return (string[])this["ConsumerRequestRoles"]; }
+            set { this["ConsumerRequestRoless"] = value;}
         }
 
     }
