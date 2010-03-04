@@ -151,8 +151,7 @@ namespace OAuth.Net.ServiceProvider
                     Constants.NonceParameter,
                     Constants.VerifierParameter,
                     Constants.VersionParameter, // (optional)
-                    Constants.RealmParameter// (optional)
-                    ); 
+                    Constants.RealmParameter); // (optional)
 
             requestContext.Parameters = parameters;
         }
