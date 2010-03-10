@@ -51,17 +51,19 @@ namespace OAuth.Net.Components
         /// <summary>
         /// Create a new in-memory consumer store.
         /// </summary>
-        public InMemoryConsumerStore()
+        public InMemoryConsumerStore() : this(new List<IConsumer>())
         {
-            this.ConsumerDictionary = new Dictionary<string, IConsumer>();
+            
         }
 
         /// <summary>
         /// Create a new in-memory consumer store with a set of pre-defined consumers
         /// </summary>
-        public InMemoryConsumerStore(IConsumer[] consumers): this()
+        public InMemoryConsumerStore(IList<IConsumer> consumersToAdd)
         {
-            foreach (IConsumer consumer in consumers)
+            this.ConsumerDictionary = new Dictionary<string, IConsumer>();
+
+            foreach (IConsumer consumer in consumersToAdd)
             {
                 if (!this.Contains(consumer.Key))
                 {

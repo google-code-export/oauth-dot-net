@@ -45,6 +45,7 @@ namespace OAuth.Net.ServiceProvider.Tokens
             : base(consumerKey, TokenType.Access)
         {
             this.requestToken = new EmptyRequestToken(consumerKey);
+            this.Status = TokenStatus.Authorized;
         }
 
         private IRequestToken requestToken;
