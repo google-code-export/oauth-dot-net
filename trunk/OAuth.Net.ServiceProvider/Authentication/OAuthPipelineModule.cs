@@ -225,7 +225,10 @@ namespace OAuth.Net.ServiceProvider
             if (context.AccessToken is EmptyAccessToken)
             {
                 //Setup any roles defined for Consumer Requests.
-                context.AccessToken.RequestToken.Roles = ServiceProviderContext.Settings.ConsumerRequestRoles;
+                string[] roles = new string[] { };
+                Array.Resize<string>(ref roles, ServiceProviderContext.Settings.ConsumerRequestRoles.Count);                                                
+                ServiceProviderContext.Settings.ConsumerRequestRoles.CopyTo(roles, 0);
+                context.AccessToken.RequestToken.Roles = roles;                
                 return;
             }
 

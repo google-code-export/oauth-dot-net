@@ -66,6 +66,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Examples.TwitterC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Examples.YQL2LeggedClient", "Examples\OAuth.Net.Examples.YQL2LeggedClient\OAuth.Net.Examples.YQL2LeggedClient.csproj", "{2DBC88DB-93D1-472A-A3E3-D9FB358EC9F7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Examples.OAuthRequest", "Examples\OAuth.Net.Examples.OAuthRequest\OAuth.Net.Examples.OAuthRequest.csproj", "{DADB844A-7151-4E32-9C0D-EFB1D3BAFF6F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -108,6 +110,10 @@ Global
 		{2DBC88DB-93D1-472A-A3E3-D9FB358EC9F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2DBC88DB-93D1-472A-A3E3-D9FB358EC9F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2DBC88DB-93D1-472A-A3E3-D9FB358EC9F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DADB844A-7151-4E32-9C0D-EFB1D3BAFF6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DADB844A-7151-4E32-9C0D-EFB1D3BAFF6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DADB844A-7151-4E32-9C0D-EFB1D3BAFF6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DADB844A-7151-4E32-9C0D-EFB1D3BAFF6F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -117,5 +123,6 @@ Global
 		{70CBEA9B-51EE-4529-AD92-5EDD09617DDA} = {58C9025D-453D-44C6-9F75-EC5FF15293FA}
 		{CDF95B2D-FCE6-4F28-942E-AA7A223722A9} = {58C9025D-453D-44C6-9F75-EC5FF15293FA}
 		{2DBC88DB-93D1-472A-A3E3-D9FB358EC9F7} = {58C9025D-453D-44C6-9F75-EC5FF15293FA}
+		{DADB844A-7151-4E32-9C0D-EFB1D3BAFF6F} = {58C9025D-453D-44C6-9F75-EC5FF15293FA}
 	EndGlobalSection
 EndGlobal
