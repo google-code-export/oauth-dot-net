@@ -57,6 +57,20 @@ namespace OAuth.Net.Components
         }
 
         /// <summary>
+        /// Create a new in-memory consumer store with a set of pre-defined consumers
+        /// </summary>
+        public InMemoryConsumerStore(IConsumer[] consumers): this()
+        {
+            foreach (IConsumer consumer in consumers)
+            {
+                if (!this.Contains(consumer.Key))
+                {
+                    this.Add(consumer);
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets all the consumers in the store.
         /// </summary>
         public virtual ICollection<IConsumer> Consumers
