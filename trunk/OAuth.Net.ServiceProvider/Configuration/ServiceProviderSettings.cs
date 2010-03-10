@@ -104,11 +104,19 @@ namespace OAuth.Net.ServiceProvider
             set { this["AllowConsumerRequests"] = value; }
         }
 
-        [ConfigurationProperty("ConsumerRequestRoles", IsRequired = false, DefaultValue = new string[]{})]
+        [ConfigurationProperty("ConsumerRequestRoles", IsRequired = false)]
         [TypeConverter(typeof(CommaDelimitedStringCollectionConverter))]
         public CommaDelimitedStringCollection ConsumerRequestRoles
         {
-            get { return (CommaDelimitedStringCollection)this["ConsumerRequestRoles"]; }
+            get 
+            {
+                object value = this["ConsumerRequestRoles"];
+                if (value == null)
+                    return new CommaDelimitedStringCollection();
+                else 
+                    return (CommaDelimitedStringCollection) value;
+            
+            }
             set { this["ConsumerRequestRoless"] = value;}
         }
 
