@@ -33,7 +33,9 @@
 // Email:   oauth-dot-net@madgex.com
 
 using System.Configuration;
+using System.ComponentModel;
 using OAuth.Net.Common;
+
 
 namespace OAuth.Net.ServiceProvider
 {
@@ -103,9 +105,10 @@ namespace OAuth.Net.ServiceProvider
         }
 
         [ConfigurationProperty("ConsumerRequestRoles", IsRequired = false, DefaultValue = new string[]{})]
-        public string[] ConsumerRequestRoles
+        [TypeConverter(typeof(CommaDelimitedStringCollectionConverter))]
+        public CommaDelimitedStringCollection ConsumerRequestRoles
         {
-            get { return (string[])this["ConsumerRequestRoles"]; }
+            get { return (CommaDelimitedStringCollection)this["ConsumerRequestRoles"]; }
             set { this["ConsumerRequestRoless"] = value;}
         }
 
