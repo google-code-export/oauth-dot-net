@@ -1,23 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
-
-using OAuth.Net.Common;
+using System.Text;
 using Microsoft.Practices.ServiceLocation;
+using OAuth.Net.Common;
 
 namespace OAuth.Net.Components
 {
-
     /// <summary>
     /// Implements the Verification Provider by hashing the token with the consumer key.
     /// The return verifier must equal this value.
     /// </summary>
     public class MD5HashVerificationProvider : IVerificationProvider
     {
-
-        #region IVerificationProvider Members
-
         /// <summary>
         /// Generates a new Verification code for the given token.
         /// </summary>
@@ -25,7 +20,7 @@ namespace OAuth.Net.Components
         /// <returns></returns>
         public string Generate(IRequestToken token)
         {
-            return CreateBase64MD5Hash(BuildHashValue( token ));            
+            return this.CreateBase64MD5Hash(this.BuildHashValue(token));            
         }
 
         /// <summary>
@@ -36,10 +31,11 @@ namespace OAuth.Net.Components
         /// <returns></returns>
         public bool IsValid(IRequestToken token, string verifier)
         {
-            string hash = CreateBase64MD5Hash(BuildHashValue(token)); 
+            string hash = this.CreateBase64MD5Hash(this.BuildHashValue(token)); 
             return hash.Equals(verifier, StringComparison.Ordinal);
         }
 
+        [SuppressMessage("Microsoft.StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Valid prefix")]
         private string CreateBase64MD5Hash(string valueToHash)
         {
             MD5 md5Provider = System.Security.Cryptography.MD5CryptoServiceProvider.Create();
@@ -48,7 +44,7 @@ namespace OAuth.Net.Components
 
         private string BuildHashValue(IRequestToken token)
         {
-            return token.Token + GetConsumerSecret(token.ConsumerKey);
+            return token.Token + this.GetConsumerSecret(token.ConsumerKey);
         }
 
         private string GetConsumerSecret(string consumerKey)
@@ -61,7 +57,5 @@ namespace OAuth.Net.Components
             else
                 throw new ArgumentException("Consumer could not be found for key " + consumerKey, "consumerKey");
         }
-
-        #endregion
     }
 }

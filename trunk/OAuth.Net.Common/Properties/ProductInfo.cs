@@ -32,6 +32,8 @@
 // Website: http://lab.madgex.com/oauth-net/
 // Email:   oauth-dot-net@madgex.com
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace OAuth.Net
 {
     public static class ProductInfo
@@ -42,6 +44,7 @@ namespace OAuth.Net
         public const string Product = "OAuth.net";
         public const string Company = "Madgex";
         public const string Copyright = "Copyright © Madgex 2008";
+                
         public const string Trademark = "";
 
         public const bool IsComVisible = false;

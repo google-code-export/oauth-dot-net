@@ -44,6 +44,20 @@ namespace OAuth.Net.Consumer
         // added in derived classes. 
 
         /// <summary>
+        /// Constructs a request state object using the specified
+        /// request state key. The key identifies the service realm and request
+        /// to which the state pertains.
+        /// </summary>
+        /// <param name="key"></param>
+        public RequestState(RequestStateKey key)
+        {
+            if (key == null)
+                throw new ArgumentNullException("key");
+
+            this.Key = key;
+        }
+
+        /// <summary>
         /// The key that identifies the service realm and request to which
         /// this state pertains.
         /// </summary>
@@ -58,19 +72,5 @@ namespace OAuth.Net.Consumer
         /// The access token for this request flow, if applicable.
         /// </summary>
         public IToken AccessToken { get; set; }
-
-        /// <summary>
-        /// Constructs a request state object using the specified
-        /// request state key. The key identifies the service realm and request
-        /// to which the state pertains.
-        /// </summary>
-        /// <param name="key"></param>
-        public RequestState(RequestStateKey key)
-        {
-            if (key == null)
-                throw new ArgumentNullException("key");
-
-            this.Key = key;
-        }
     }
 }

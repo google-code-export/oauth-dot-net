@@ -32,7 +32,6 @@
 // Website: http://lab.madgex.com/oauth-net/
 // Email:   oauth-dot-net@madgex.com
 
-
 using System;
 using System.Collections.Specialized;
 using System.Globalization;
@@ -45,7 +44,7 @@ namespace OAuth.Net.Consumer
 {
     /// <summary>
     /// Makes an OAuth Consumer request for a resource without an access token.
-    /// <see href="http://oauth.googlecode.com/svn/spec/ext/consumer_request/1.0/drafts/1/spec.html">
+    /// <see href="http://oauth.googlecode.com/svn/spec/ext/consumer_request/1.0/drafts/1/spec.html"/>
     /// 
     /// A method for using the OAuth flow to sign a request made between a Consumer and Service Provider where no User is involved. 
     /// This enables OAuth to be used as a replacement to HTTP Basic authentication, which is not as complex as HTTP Digest authentication, 
@@ -70,8 +69,7 @@ namespace OAuth.Net.Consumer
                 resourceEndPoint,
                 settings,
                 new EmptyToken(settings.Consumer.Key, TokenType.Access),
-                new EmptyToken(settings.Consumer.Key, TokenType.Request)
-            );
+                new EmptyToken(settings.Consumer.Key, TokenType.Request));
         }        
     }
 }

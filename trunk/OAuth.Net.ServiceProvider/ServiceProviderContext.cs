@@ -181,7 +181,6 @@ namespace OAuth.Net.ServiceProvider
             }
         }
 
-
         /// <summary>
         /// An instance of a token generator. 
         /// </summary>
@@ -206,8 +205,6 @@ namespace OAuth.Net.ServiceProvider
                 }
             }
         }
-
-        
 
         /// <summary>
         /// An instance of a token store. 

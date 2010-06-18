@@ -54,7 +54,7 @@ namespace OAuth.Net.Consumer.Components
             if (state == null)
                 throw new ArgumentNullException("state");
 
-            lock (SyncRoot)
+            lock (this.SyncRoot)
             {
                 this.states[state.Key] = state;
             }
@@ -71,7 +71,7 @@ namespace OAuth.Net.Consumer.Components
             if (key == null)
                 throw new ArgumentNullException("key");
 
-            lock (SyncRoot)
+            lock (this.SyncRoot)
             {
                 if (this.states.ContainsKey(key))
                     return this.states[key];
@@ -91,7 +91,7 @@ namespace OAuth.Net.Consumer.Components
             if (key == null)
                 throw new ArgumentNullException("key");
 
-            lock (SyncRoot)
+            lock (this.SyncRoot)
             {
                 if (this.states.ContainsKey(key))
                     this.states.Remove(key);

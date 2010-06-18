@@ -44,7 +44,6 @@ namespace OAuth.Net.Components
     public class OAuthConsumer
         : IConsumer
     {
-
         /// <summary>
         /// Creates a consumer with the given key and secret. The status will
         /// be Unknown.

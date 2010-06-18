@@ -40,22 +40,6 @@ namespace OAuth.Net.Consumer
     public class RequestStateKey : IEquatable<RequestStateKey>
     {
         /// <summary>
-        /// The service realm this state applies to. This could be a HTTP Authorization
-        /// Realm as per RFC 2616, or some other identifier for a service.
-        /// </summary>
-        public string ServiceRealm { get; private set; }
-
-        /// <summary>
-        /// The consumer key this state applies to.
-        /// </summary>
-        public string ConsumerKey { get; private set; }
-
-        /// <summary>
-        /// An identifier for the end user this state applies to.
-        /// </summary>
-        public string EndUserId { get; private set; }
-
-        /// <summary>
         /// Constructs a request state key from a service realm, consumer key, and
         /// an end user id
         /// </summary>
@@ -104,6 +88,22 @@ namespace OAuth.Net.Consumer
             this.EndUserId = endUserId;
         }
 
+        /// <summary>
+        /// The service realm this state applies to. This could be a HTTP Authorization
+        /// Realm as per RFC 2616, or some other identifier for a service.
+        /// </summary>
+        public string ServiceRealm { get; private set; }
+
+        /// <summary>
+        /// The consumer key this state applies to.
+        /// </summary>
+        public string ConsumerKey { get; private set; }
+
+        /// <summary>
+        /// An identifier for the end user this state applies to.
+        /// </summary>
+        public string EndUserId { get; private set; }
+       
         public override bool Equals(object obj)
         {
             var other = obj as RequestStateKey;

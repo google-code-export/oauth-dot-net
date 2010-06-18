@@ -44,6 +44,7 @@ namespace OAuth.Net.ServiceProvider
     public class OAuthRequestContext
     {
         private List<OAuthRequestException> errors = new List<OAuthRequestException>();
+        private IRequestToken requestToken;
 
         public OAuthRequestContext()
             : this(null)
@@ -77,18 +78,21 @@ namespace OAuth.Net.ServiceProvider
             get;
             set;
         }
-
-        private IRequestToken requestToken;
+       
         public IRequestToken RequestToken
         {
             get 
             {
-                if (requestToken == null && AccessToken != null)
-                    requestToken = AccessToken.RequestToken;
+                if (this.requestToken == null && this.AccessToken != null)
+                    this.requestToken = this.AccessToken.RequestToken;
 
-                return requestToken;
+                return this.requestToken;
             }
-            set { requestToken = value; }
+
+            set 
+            {
+                this.requestToken = value; 
+            }
         }
 
         public IAccessToken AccessToken
@@ -132,21 +136,6 @@ namespace OAuth.Net.ServiceProvider
             get;
             private set;
         }
-       
-        public void AddError(OAuthRequestException error)
-        {
-            this.errors.Add(error);
-        }
-
-        public void RemoveError(OAuthRequestException error)
-        {
-            this.errors.Remove(error);
-        }
-
-        public void ClearErrors()
-        {
-            this.errors = new List<OAuthRequestException>();
-        }
 
         public static bool operator ==(OAuthRequestContext left, OAuthRequestContext right)
         {
@@ -164,6 +153,21 @@ namespace OAuth.Net.ServiceProvider
             return !(left == right);
         }
 
+        public void AddError(OAuthRequestException error)
+        {
+            this.errors.Add(error);
+        }
+
+        public void RemoveError(OAuthRequestException error)
+        {
+            this.errors.Remove(error);
+        }
+
+        public void ClearErrors()
+        {
+            this.errors = new List<OAuthRequestException>();
+        }
+        
         public override bool Equals(object obj)
         {
             if (obj == null)
@@ -178,9 +182,18 @@ namespace OAuth.Net.ServiceProvider
             return this.Equals(obj as OAuthRequestContext);
         }
 
+        public override int GetHashCode()
+        {
+            int hash = 1;
+
+            if (this.ResponseParameters != null)
+                hash ^= this.ResponseParameters.GetHashCode();
+
+            return hash;
+        }
+
         private bool Equals(OAuthRequestContext other)
         {
-
             if (other == null)
                 return false;
 
@@ -203,16 +216,6 @@ namespace OAuth.Net.ServiceProvider
                    ((this.ResponseParameters == null && other.ResponseParameters == null) ||
                     (this.ResponseParameters != null && this.ResponseParameters.Equals(other.ResponseParameters))) &&
                    (this.IsOAuthRequest == other.IsOAuthRequest);
-        }
-
-        public override int GetHashCode()
-        {
-            int hash = 1;
-            
-            if (this.ResponseParameters != null)
-                hash ^= this.ResponseParameters.GetHashCode();
-
-            return hash;
         }
     }
 }

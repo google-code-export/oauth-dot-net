@@ -162,7 +162,8 @@ namespace OAuth.Net.Common
         /// The OAuth version parameter value for OAuth Core 1.0
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores", Justification = "No other sensible punctuation")]
-        public const string Version1_0 = "1.0";
+        [SuppressMessage("Microsoft.StyleCop.CSharp.NamingRules", "SA1310:FieldNamesMustNotContainUnderscore", Justification = "No other sensible punctuation")]
+        public const string Version1_0 = "1.0";        
 
         /// <summary>
         /// The Windsor configuration ID prefix for signing providers

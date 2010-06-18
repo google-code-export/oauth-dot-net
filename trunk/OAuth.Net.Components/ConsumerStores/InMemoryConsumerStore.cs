@@ -52,8 +52,7 @@ namespace OAuth.Net.Components
         /// Create a new in-memory consumer store.
         /// </summary>
         public InMemoryConsumerStore() : this(new List<IConsumer>())
-        {
-            
+        {            
         }
 
         /// <summary>

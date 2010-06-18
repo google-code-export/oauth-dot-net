@@ -43,9 +43,7 @@ namespace OAuth.Net.Common
         {
             this.ConsumerKey = consumerKey;
             this.Type = tokenType;
-        }
-
-        #region IToken Members
+        }        
 
         public string Token
         {
@@ -68,7 +66,5 @@ namespace OAuth.Net.Common
             get;
             private set;
         }
-
-        #endregion
     }   
 }

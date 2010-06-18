@@ -54,3 +54,5 @@ using System.Runtime.InteropServices;
 [assembly: CLSCompliant(OAuth.Net.ProductInfo.IsClsCompliant)]
 
 [assembly: AssemblyVersion(OAuth.Net.ProductInfo.Version)]
+
+[assembly: System.Security.AllowPartiallyTrustedCallers]

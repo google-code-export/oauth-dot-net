@@ -61,6 +61,5 @@ namespace OAuth.Net.Common
         /// <param name="verifier"></param>
         /// <returns></returns>
         bool IsValid(IRequestToken token, string verifier);
-
     }
 }

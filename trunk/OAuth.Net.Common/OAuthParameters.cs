@@ -196,49 +196,7 @@ namespace OAuth.Net.Common
             get;
             private set;
         }
-
-        public OAuthParameters Clone()
-        {
-            var clone = new OAuthParameters();
-
-            foreach (KeyValuePair<string, string> item in this.parameters)
-                clone.parameters[item.Key] = item.Value;
-
-            clone.AdditionalParameters = new NameValueCollection(this.AdditionalParameters);
-
-            return clone;
-        }
-
-        public void Sign(Uri requestUri, string httpMethod, IConsumer consumer, IToken token, ISigningProvider signingProvider)
-        {
-            if (token != null)
-                this.Token = token.Token;
-
-            OAuthParameters signingParameters = this.Clone();
-            var signingUri = new UriBuilder(requestUri);
-
-            // Normalize the request uri for signing
-            if (!string.IsNullOrEmpty(requestUri.Query))
-            {
-                // TODO: Will the parameters necessarily be Rfc3698 encoded here? If not, then Rfc3968.SplitAndDecode will throw FormatException
-                signingParameters.AdditionalParameters.Add(Rfc3986.SplitAndDecode(requestUri.Query.Substring(1)));
-                signingUri.Query = null;
-            }
-
-            if (signingProvider == null)
-            {
-                // There is no signing provider for this signature method
-                OAuthRequestException.ThrowSignatureMethodRejected(null);
-            }
-
-            // Compute the signature
-            this.Signature = signingProvider.ComputeSignature(
-                SignatureBase.Create(httpMethod, signingUri.Uri, signingParameters),
-                consumer.Secret,
-                (token != null && token.Secret != null) ? token.Secret : null); 
-
-        }
-
+ 
         /// <summary>
         /// Parses the OAuth parameters from the HTTP request, sourcing
         /// parameters from all 3 of:
@@ -403,6 +361,47 @@ namespace OAuth.Net.Common
                                 @params.Add(key, value);
 
             return @params;
+        }
+
+        public OAuthParameters Clone()
+        {
+            var clone = new OAuthParameters();
+
+            foreach (KeyValuePair<string, string> item in this.parameters)
+                clone.parameters[item.Key] = item.Value;
+
+            clone.AdditionalParameters = new NameValueCollection(this.AdditionalParameters);
+
+            return clone;
+        }
+
+        public void Sign(Uri requestUri, string httpMethod, IConsumer consumer, IToken token, ISigningProvider signingProvider)
+        {
+            if (token != null)
+                this.Token = token.Token;
+
+            OAuthParameters signingParameters = this.Clone();
+            var signingUri = new UriBuilder(requestUri);
+
+            // Normalize the request uri for signing
+            if (!string.IsNullOrEmpty(requestUri.Query))
+            {
+                // TODO: Will the parameters necessarily be Rfc3698 encoded here? If not, then Rfc3968.SplitAndDecode will throw FormatException
+                signingParameters.AdditionalParameters.Add(Rfc3986.SplitAndDecode(requestUri.Query.Substring(1)));
+                signingUri.Query = null;
+            }
+
+            if (signingProvider == null)
+            {
+                // There is no signing provider for this signature method
+                OAuthRequestException.ThrowSignatureMethodRejected(null);
+            }
+
+            // Compute the signature
+            this.Signature = signingProvider.ComputeSignature(
+                SignatureBase.Create(httpMethod, signingUri.Uri, signingParameters),
+                consumer.Secret,
+                (token != null && token.Secret != null) ? token.Secret : null);
         }
 
         public string ToHeaderFormat()
@@ -656,20 +655,7 @@ namespace OAuth.Net.Common
 
                 AdditionalParameters = GetNonOAuthParameters(wwwAuthHeaderParams, postParams, queryStringParams)
             };
-        }
-
-        private NameValueCollection OAuthRequestParams(params string[] excludedParameters)
-        {
-            var @params = new NameValueCollection();
-
-            // Add OAuth parameters whose values are not null except excluded parameters
-            foreach (var param in this.parameters.Keys)
-                if (this.parameters[param] != null && Array.IndexOf<string>(excludedParameters, param) < 0)
-                    @params.Add(param, this.parameters[param]);
-
-            return @params;
-        }
-
+        }        
 
         private static void EncodeHeaderValue(StringBuilder buffer, string key, string value, string separator, bool quote)
         {
@@ -837,6 +823,18 @@ namespace OAuth.Net.Common
                     return paramCollection[param];
 
             return null;
+        }
+
+        private NameValueCollection OAuthRequestParams(params string[] excludedParameters)
+        {
+            var @params = new NameValueCollection();
+
+            // Add OAuth parameters whose values are not null except excluded parameters
+            foreach (var param in this.parameters.Keys)
+                if (this.parameters[param] != null && Array.IndexOf<string>(excludedParameters, param) < 0)
+                    @params.Add(param, this.parameters[param]);
+
+            return @params;
         }
     }
 }

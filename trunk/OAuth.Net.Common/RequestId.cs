@@ -82,7 +82,7 @@ namespace OAuth.Net.Common
         {
             get;
             private set;
-        }
+        }        
 
         public static bool operator ==(RequestId left, RequestId right)
         {
@@ -95,6 +95,11 @@ namespace OAuth.Net.Common
         public static bool operator !=(RequestId left, RequestId right)
         {
             return !left.Equals(right);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Timestamp.GetHashCode();
         }
 
         public override bool Equals(object obj)
@@ -117,11 +122,6 @@ namespace OAuth.Net.Common
                 && string.Equals(this.Nonce, other.Nonce)
                 && string.Equals(this.ConsumerKey, other.ConsumerKey)
                 && string.Equals(this.Token, other.Token);
-        }
-
-        public override int GetHashCode()
-        {
-            return this.Timestamp.GetHashCode();
-        }
+        }      
     }
 }
