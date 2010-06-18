@@ -1,7 +1,7 @@
 #labels Featured
 = OAuth.net 0.8.1.1=
 
-== 18th June 2010 ==
+=== 18th June 2010 ===
 
  * Modified to allow Consumers to be loaded into store through castle container.  Appears to throw an error if a property doesn't have a public set.
  * Changes to InMemoryConsumerStore and fleshed out example a bit more
