@@ -50,6 +50,6 @@ namespace OAuth.Net
         public const bool IsComVisible = false;
         public const bool IsClsCompliant = true;
 
-        public const string Version = "0.8.1.0";
+        public const string Version = "0.8.1.1";
     }
 }
