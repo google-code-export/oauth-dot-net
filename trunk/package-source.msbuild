@@ -8,10 +8,10 @@
   
   <Target Name="PackageSource">
 	<!-- Build OAuth.Net.Common (to get assembly version) -->
-	<MSBuild Projects="OAuth.Net.Common\OAuth.Net.Common.csproj" Targets="Build" Properties="Configuration=Debug"/>
+	<MSBuild Projects="1.0a\OAuth.Net.Common\OAuth.Net.Common.csproj" Targets="Build" Properties="Configuration=Debug"/>
 	
 	<!-- Find the assembly version (for Common but should all be the same) -->
-	<GetAssemblyIdentity AssemblyFiles="OAuth.Net.Common\bin\Debug\OAuth.Net.Common.dll">
+	<GetAssemblyIdentity AssemblyFiles="1.0a\OAuth.Net.Common\bin\Debug\OAuth.Net.Common.dll">
 		<Output TaskParameter="Assemblies" ItemName="AssemblyInfo" />
 	</GetAssemblyIdentity>
 	
