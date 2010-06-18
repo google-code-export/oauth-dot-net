@@ -4,6 +4,10 @@ The current source trunk is under active development, and is likely to be unstab
 
 = New On The Trunk =
 
+July 2010 - 
+ * Work on 1.0a spec is now frozen apart from any further bug fixes
+ * Restructure of the project and initial work on OAuth 2 
+
 March 2010 - 
 
  * Implementation to support Consumer Requests (2-legged OAuth) in the Consumer and Service Provider are now in the trunk.  
