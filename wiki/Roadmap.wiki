@@ -20,15 +20,15 @@ Items Needed Before Release:
 == v.0.71 ==
 Due: Mid July 2009
 
-Release to create new Google Contacts example.
+~~Release to create new Google Contacts example.
 
 
 == v0.8 ==
 Due: July 2009
 
-Implement two-legged [http://oauth.googlecode.com/svn/spec/ext/consumer_request/1.0/drafts/2/spec.html Consumer Request extension ]
+~~Implement two-legged [http://oauth.googlecode.com/svn/spec/ext/consumer_request/1.0/drafts/2/spec.html Consumer Request extension ]
 
 == v0.9 ==
-Due: TBA
+Due: December 2010
 
-Implementation of XRD and OAuth Discovery - dependent on creation of new extension.
+Implementation of OAuth 2 Specification
