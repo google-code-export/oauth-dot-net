@@ -173,7 +173,7 @@ namespace OAuth.Net.Common
             TokenType type;
             try 
             {
-                type = (TokenType) Enum.Parse(typeof(TokenType), Rfc3986.Decode(parts[0]), true);
+                type = (TokenType)Enum.Parse(typeof(TokenType), Rfc3986.Decode(parts[0]), true);
             }
             catch (Exception e)
             {
@@ -222,6 +222,22 @@ namespace OAuth.Net.Common
             info.AddValue("serializedForm", OAuthToken.Serialize(this));
         }
         
+        public override int GetHashCode()
+        {
+            int hash = this.Type.GetHashCode();
+
+            if (this.Token != null)
+                hash ^= this.Token.GetHashCode();
+
+            if (this.Secret != null)
+                hash ^= this.Secret.GetHashCode();
+
+            if (this.ConsumerKey != null)
+                hash ^= this.ConsumerKey.GetHashCode();
+
+            return hash;
+        }
+
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Casts aren't unnecessary")]
         public override bool Equals(object obj)
         {
@@ -244,22 +260,6 @@ namespace OAuth.Net.Common
                 && string.Equals(this.Token, other.Token)
                 && string.Equals(this.Secret, other.Secret)
                 && string.Equals(this.ConsumerKey, other.ConsumerKey);
-        }        
-
-        public override int GetHashCode()
-        {
-            int hash = this.Type.GetHashCode();
-
-            if( this.Token != null )
-                hash ^= this.Token.GetHashCode();
-            
-            if( this.Secret != null )
-                hash ^= this.Secret.GetHashCode();
-
-            if( this.ConsumerKey != null )
-                hash ^= this.ConsumerKey.GetHashCode();
-
-            return hash;
-        }
+        }                
     }
 }

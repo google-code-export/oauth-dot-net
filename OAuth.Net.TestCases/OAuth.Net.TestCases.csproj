@@ -122,7 +122,6 @@
   -->
   <PropertyGroup>
     <PostBuildEvent>copy /Y $(TargetDir)$(TargetFileName).config $(SolutionDir)nunit-tests.config
-"$(ProjectDir)\..\Tools\Microsoft FxCop 1.36\FxCopCmd.exe" /project:"$(SolutionDir)\OAuth.Net.fxcop" /console
 "$(ProjectDir)\..\Tools\nunit-2.4.8\bin\nunit-console" /nologo /nodots /transform:"$(ProjectDir)\..\Tools\nunit-2.4.8\nunit-vsout.xslt" "$(ProjectDir)\..\nunit-tests.nunit"</PostBuildEvent>
   </PropertyGroup>
 </Project>

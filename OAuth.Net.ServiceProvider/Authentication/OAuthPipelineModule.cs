@@ -126,7 +126,7 @@ namespace OAuth.Net.ServiceProvider
             }
             else
             {
-                //For 3 legged TokenParameter is required
+                // For 3 legged TokenParameter is required
                 parameters.RequireAllOf(
                         Constants.ConsumerKeyParameter,
                         Constants.TokenParameter,
@@ -221,10 +221,10 @@ namespace OAuth.Net.ServiceProvider
 
         protected virtual void SetUser(HttpApplication application, OAuthRequestContext context)
         {
-            //If we are an EmptyAccessToken then there is no User to load.
+            // If we are an EmptyAccessToken then there is no User to load.
             if (context.AccessToken is EmptyAccessToken)
             {
-                //Setup any roles defined for Consumer Requests.
+                // Setup any roles defined for Consumer Requests.
                 string[] roles = new string[] { };
                 Array.Resize<string>(ref roles, ServiceProviderContext.Settings.ConsumerRequestRoles.Count);                                                
                 ServiceProviderContext.Settings.ConsumerRequestRoles.CopyTo(roles, 0);
@@ -238,7 +238,7 @@ namespace OAuth.Net.ServiceProvider
             application.Context.User = context.Principal;
         }
 
-        void HandleError(object sender, EventArgs e)
+        private void HandleError(object sender, EventArgs e)
         {
             if (ServiceProviderContext.Settings.AuthenticateRequests)
             {
@@ -252,7 +252,7 @@ namespace OAuth.Net.ServiceProvider
                     if (context != null)
                         context.AddError(exception);
 
-                    application.Context.ClearError(); //Ensure we clear the exception to avoid ASP.NET handling this
+                    application.Context.ClearError(); // Ensure we clear the exception to avoid ASP.NET handling this
 
                     WorkflowHelper.SendBadRequest(application.Context, exception, null);
                 }

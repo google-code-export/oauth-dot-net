@@ -189,6 +189,11 @@ namespace OAuth.Net.Common
             return this || other;
         }
 
+        public override int GetHashCode()
+        {
+            return this.Success.GetHashCode();
+        }
+
         public override bool Equals(object obj)
         {
             if (obj == null)
@@ -206,11 +211,6 @@ namespace OAuth.Net.Common
         private bool Equals(ResultInfo<T> other)
         {
             return this.Success == other.Success;               
-        }
-
-        public override int GetHashCode()
-        {
-            return this.Success.GetHashCode();
-        }
+        }       
     }
 }

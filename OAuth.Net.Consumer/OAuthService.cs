@@ -99,7 +99,7 @@ namespace OAuth.Net.Consumer
         {
             get
             {
-                return RequestTokenEndPoint.Uri;
+                return this.RequestTokenEndPoint.Uri;
             }
         }        
 
@@ -128,7 +128,7 @@ namespace OAuth.Net.Consumer
         {
             get
             {
-                return AccessTokenEndPoint.Uri;
+                return this.AccessTokenEndPoint.Uri;
             }
         }
         
@@ -578,6 +578,18 @@ namespace OAuth.Net.Consumer
         }
 
         /// <summary>
+        /// Gets a hash code for the OAuthService.
+        /// </summary>
+        /// <returns>A hash code, computed from the hash codes of the properties</returns>
+        public override int GetHashCode()
+        {
+            return this.RequestTokenEndPoint.GetHashCode()
+                ^ this.AuthorizationUrl.GetHashCode() ^ this.AccessTokenEndPoint.GetHashCode()
+                ^ this.Realm.GetHashCode() ^ this.SignatureMethod.GetHashCode()
+                ^ this.OAuthVersion.GetHashCode() ^ this.Consumer.GetHashCode();
+        }
+
+        /// <summary>
         /// Checks whether the supplied object is equal to this OAuthService object.
         /// </summary>
         /// <remarks>OAuthServices are compared property by property.</remarks>
@@ -617,18 +629,6 @@ namespace OAuth.Net.Consumer
                 && string.Equals(this.SignatureMethod, other.SignatureMethod)
                 && string.Equals(this.OAuthVersion, other.OAuthVersion)
                 && this.Consumer.Equals(other.Consumer);
-        }
-
-        /// <summary>
-        /// Gets a hash code for the OAuthService.
-        /// </summary>
-        /// <returns>A hash code, computed from the hash codes of the properties</returns>
-        public override int GetHashCode()
-        {
-            return this.RequestTokenEndPoint.GetHashCode() 
-                ^ this.AuthorizationUrl.GetHashCode() ^ this.AccessTokenEndPoint.GetHashCode()                 
-                ^ this.Realm.GetHashCode() ^ this.SignatureMethod.GetHashCode() 
-                ^ this.OAuthVersion.GetHashCode() ^ this.Consumer.GetHashCode();
         }
     }
 }

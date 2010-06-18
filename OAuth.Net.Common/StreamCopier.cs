@@ -39,6 +39,8 @@ namespace OAuth.Net.Common
 {
     public static class StreamCopier
     {
+        private const long DefaultStreamChunkSize = 0x1000;
+
         public static void CopyTo(Stream from, Stream to)
         {
             if (!from.CanRead || !to.CanWrite)
@@ -55,9 +57,6 @@ namespace OAuth.Net.Common
             {
                 to.Write(buffer, 0, read);
             }
-        }
-
-        private const long DefaultStreamChunkSize = 0x1000;
+        }       
     }
-
 }

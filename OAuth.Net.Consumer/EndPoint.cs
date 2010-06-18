@@ -49,9 +49,8 @@ namespace OAuth.Net.Consumer
         /// supplied uri
         /// </summary>
         /// <param name="uri">An absolute Uri</param>
-        public EndPoint(string uri) : this( new Uri(uri) )
-        {
-            
+        public EndPoint(string uri) : this(new Uri(uri))
+        {            
         }
 
         /// <summary>
@@ -72,10 +71,8 @@ namespace OAuth.Net.Consumer
         /// </summary>
         /// <param name="uri">An absolute Uri</param>
         /// <param name="httpMethod">GET, POST, DELETE or PUT</param>
-        public EndPoint(string uri, string httpMethod)
-            : this( new Uri(uri), httpMethod)
+        public EndPoint(string uri, string httpMethod) : this(new Uri(uri), httpMethod)
         {
-
         }
 
         /// <summary>
@@ -83,7 +80,7 @@ namespace OAuth.Net.Consumer
         /// </summary>
         /// <param name="uri">An absolute Uri</param>
         /// <param name="httpMethod">GET, POST, DELETE or PUT</param>
-        public EndPoint(Uri uri, string httpMethod) : this( uri )
+        public EndPoint(Uri uri, string httpMethod) : this(uri)
         {            
             switch (httpMethod)
             {
@@ -138,6 +135,11 @@ namespace OAuth.Net.Consumer
             return !(left == right);
         }
 
+        public override int GetHashCode()
+        {
+            return this.HttpMethod.GetHashCode() ^ this.Uri.GetHashCode();
+        }
+
         public override bool Equals(object obj)
         {
             if (obj == null)
@@ -157,11 +159,6 @@ namespace OAuth.Net.Consumer
             return string.Equals(this.HttpMethod, other.HttpMethod)
                  && ((this.Uri == null && other.Uri == null) ||
                      (this.Uri != null && this.Uri.Equals(other.Uri)));
-        }
-
-        public override int GetHashCode()
-        {
-            return this.HttpMethod.GetHashCode() ^ this.Uri.GetHashCode();
-        }
+        }        
     }
 }

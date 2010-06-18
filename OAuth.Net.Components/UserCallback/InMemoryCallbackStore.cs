@@ -11,9 +11,7 @@ namespace OAuth.Net.Components
     /// </summary>
     public class InMemoryCallbackStore : ICallbackStore
     {
-        private Dictionary<IRequestToken, Uri> CallbackStore = new Dictionary<IRequestToken, Uri>();
-
-        #region ICallbackStore Members
+        private Dictionary<IRequestToken, Uri> callbackStore = new Dictionary<IRequestToken, Uri>();
 
         /// <summary>
         /// Appends a new callback to the store.
@@ -23,13 +21,13 @@ namespace OAuth.Net.Components
         /// <returns>true if the callbackUri is succesfully appended or false if there already exists a callbackUri for the token</returns>
         public bool AddCallback(IRequestToken token, Uri callbackUri)
         {
-            lock (CallbackStore)
+            lock (this.callbackStore)
             {
-                if (CallbackStore.ContainsKey(token))
+                if (this.callbackStore.ContainsKey(token))
                     return false;
                 else
                 {
-                    CallbackStore.Add(token, callbackUri);
+                    this.callbackStore.Add(token, callbackUri);
                     return true;
                 }
             }
@@ -42,9 +40,9 @@ namespace OAuth.Net.Components
         /// <returns></returns>
         public bool ContainsCallback(IRequestToken token)
         {
-            lock (CallbackStore)
+            lock (this.callbackStore)
             {
-                return CallbackStore.ContainsKey(token);
+                return this.callbackStore.ContainsKey(token);
             }
         }
 
@@ -59,15 +57,13 @@ namespace OAuth.Net.Components
         {
             Uri uri = null;
 
-            lock (CallbackStore)
-            {                
-                CallbackStore.TryGetValue( token, out uri );
-                CallbackStore.Remove( token );                
+            lock (this.callbackStore)
+            {
+                this.callbackStore.TryGetValue(token, out uri);
+                this.callbackStore.Remove(token);                
             }
 
             return uri;
         }
-
-        #endregion
     }
 }

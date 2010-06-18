@@ -37,44 +37,34 @@ using OAuth.Net.Common;
 
 namespace OAuth.Net.ServiceProvider.Tokens
 {
-
     public class EmptyAccessToken : EmptyToken, IAccessToken
     {
+        private IRequestToken requestToken;
 
         public EmptyAccessToken(string consumerKey)
             : base(consumerKey, TokenType.Access)
         {
             this.requestToken = new EmptyRequestToken(consumerKey);
             this.Status = TokenStatus.Authorized;
-        }
-
-        private IRequestToken requestToken;
-
-        #region IAccessToken Members
+        }      
 
         public IRequestToken RequestToken
         {
             get
             {
-                return requestToken;
+                return this.requestToken;
             }
+
             set
             {
                 throw new InvalidOperationException("An EmptyAccessToken can not have anything other than an EmptyRequestToken");
             }
         }
 
-        #endregion
-
-        #region IIssuedToken Members
-
         public TokenStatus Status
         {
             get;
             set;
         }
-
-        #endregion
     }
-
 }

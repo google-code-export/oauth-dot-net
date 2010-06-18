@@ -56,5 +56,7 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyVersion(OAuth.Net.ProductInfo.Version)]
 
+[assembly: System.Security.AllowPartiallyTrustedCallers]
+
 // Suppress FxCop warning about OAuth.Net namespace
 [module: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "OAuth.Net", Justification = "ProductInfo type defines properties for assemblies containing child namespaces")]

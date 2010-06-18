@@ -108,8 +108,7 @@ namespace OAuth.Net.Consumer
             // Look for verifier
             string verifier = httpContext.Request.QueryString[Constants.VerifierParameter];
             if (verifier != null)
-                // Found verifier
-                args.Verifier = verifier;
+                args.Verifier = verifier; // Found verifier
         }
 
         /// <summary>

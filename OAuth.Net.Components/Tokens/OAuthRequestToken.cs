@@ -162,6 +162,11 @@ namespace OAuth.Net.Components
             return !(left == right);
         }
 
+        public override int GetHashCode()
+        {
+            return this.Token.GetHashCode() ^ this.Secret.GetHashCode() ^ this.ConsumerKey.GetHashCode();
+        }
+
         public override bool Equals(object obj)
         {
             if (obj == null)
@@ -182,19 +187,14 @@ namespace OAuth.Net.Components
                 return false;
 
             return this.Token.Equals(other.Token)
-                && this.Secret.Equals(other.Secret) //Constructor ensures that this is not null
+                && this.Secret.Equals(other.Secret) // Constructor ensures that this is not null
                 && this.Status == other.Status
                 && string.Equals(this.ConsumerKey, other.ConsumerKey)
                 && ((this.AssociatedParameters == null && other.AssociatedParameters == null) ||
                     (this.AssociatedParameters != null && this.AssociatedParameters.Equals(other.AssociatedParameters)))
                 && ((this.AuthenticatedUser == null && other.AuthenticatedUser == null) ||
                     (this.AuthenticatedUser != null && this.AuthenticatedUser.Equals(other.AuthenticatedUser)))
-                && Array.Equals(this.Roles, other.Roles);
-        }
-
-        public override int GetHashCode()
-        {
-            return this.Token.GetHashCode() ^ this.Secret.GetHashCode() ^ this.ConsumerKey.GetHashCode();                
-        }
+                && this.Roles.IsEqualTo<string>(other.Roles);            
+        }       
     }
 }

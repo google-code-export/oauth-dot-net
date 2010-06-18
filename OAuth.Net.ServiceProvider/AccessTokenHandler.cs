@@ -268,7 +268,7 @@ namespace OAuth.Net.ServiceProvider
         /// <para>
         /// If you need to apply extra rules before allowing an access
         /// token to be issued, you should create an AccessTokenHandler class
-        /// which inherits from this & overrides the AllowRequest method
+        /// which inherits from this &amp; overrides the AllowRequest method
         /// and add it as a HTTP handler for the access token URI.
         /// </para>
         /// 

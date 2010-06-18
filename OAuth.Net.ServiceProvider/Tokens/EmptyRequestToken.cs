@@ -39,16 +39,13 @@ namespace OAuth.Net.ServiceProvider.Tokens
 {
     public class EmptyRequestToken : EmptyToken, IRequestToken
     {
+        private OAuthParameters associatedParameters = new OAuthParameters();
 
         public EmptyRequestToken(string consumerKey)
             : base(consumerKey, TokenType.Request)
         {
             this.Status = TokenStatus.Authorized;
-        }
-
-        private OAuthParameters associatedParameters = new OAuthParameters();
-
-        #region IRequestToken Members
+        }       
 
         public OAuthParameters AssociatedParameters
         {
@@ -66,7 +63,6 @@ namespace OAuth.Net.ServiceProvider.Tokens
             {
                 throw new InvalidOperationException("An EmptyRequestToken cannot be assocaited to a particular user");
             }
-
         }
 
         public string[] Roles
@@ -75,16 +71,10 @@ namespace OAuth.Net.ServiceProvider.Tokens
             set;
         }
 
-        #endregion
-
-        #region IIssuedToken Members
-
         public TokenStatus Status
         {
             get;
             set;
-        }
-
-        #endregion
+        }        
     }
 }

@@ -32,10 +32,9 @@
 // Website: http://lab.madgex.com/oauth-net/
 // Email:   oauth-dot-net@madgex.com
 
-using System.Configuration;
 using System.ComponentModel;
+using System.Configuration;
 using OAuth.Net.Common;
-
 
 namespace OAuth.Net.ServiceProvider
 {
@@ -51,7 +50,7 @@ namespace OAuth.Net.ServiceProvider
 
         /// <summary>
         /// Defines if the Pipeline module checks for OAuth authentication parameters on inbound requests.
-        /// The &lt;location&gt;&lt;/location&gt tag of the web.config file can be used to switch this settings on/off for
+        /// The &lt;location&gt;&lt;/location&gt; tag of the web.config file can be used to switch this settings on/off for
         /// different urls.
         /// </summary>
         [ConfigurationProperty("AuthenticateRequests", IsRequired = false, DefaultValue = true)]
@@ -114,11 +113,13 @@ namespace OAuth.Net.ServiceProvider
                 if (value == null)
                     return new CommaDelimitedStringCollection();
                 else 
-                    return (CommaDelimitedStringCollection) value;
-            
+                    return (CommaDelimitedStringCollection) value;            
             }
-            set { this["ConsumerRequestRoless"] = value;}
-        }
 
+            set 
+            { 
+                this["ConsumerRequestRoless"] = value;
+            }
+        }
     }
 }

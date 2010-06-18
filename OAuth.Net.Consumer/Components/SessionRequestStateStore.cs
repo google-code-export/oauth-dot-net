@@ -42,14 +42,9 @@ namespace OAuth.Net.Consumer.Components
     /// </summary>
     public class SessionRequestStateStore : IRequestStateStore
     {
-        private static readonly string KeyPrefix = typeof(SessionRequestStateStore).FullName + ':';
-
-        private static string GetStringKey(RequestStateKey key)
-        {
-            return KeyPrefix + key.ServiceRealm + '/' + key.ConsumerKey + '/' + (key.EndUserId ?? string.Empty);
-        }
-
         protected readonly object SyncRoot = new object();
+
+        private static readonly string KeyPrefix = typeof(SessionRequestStateStore).FullName + ':';                
 
         /// <summary>
         /// Stores the specified request <paramref name="state"/>, overriding 
@@ -61,7 +56,7 @@ namespace OAuth.Net.Consumer.Components
             if (state == null)
                 throw new ArgumentNullException("state");
 
-            lock (SyncRoot)
+            lock (this.SyncRoot)
             {
                 HttpContext.Current.Session[GetStringKey(state.Key)] = state;
             }
@@ -78,7 +73,7 @@ namespace OAuth.Net.Consumer.Components
             if (key == null)
                 throw new ArgumentNullException("key");
 
-            lock (SyncRoot)
+            lock (this.SyncRoot)
             {
                 var state = HttpContext.Current.Session[GetStringKey(key)] as RequestState;
                 if (state != null)
@@ -99,10 +94,15 @@ namespace OAuth.Net.Consumer.Components
             if (key == null)
                 throw new ArgumentNullException("key");
 
-            lock (SyncRoot)
+            lock (this.SyncRoot)
             {
                 HttpContext.Current.Session[GetStringKey(key)] = null;
             }
+        }
+
+        private static string GetStringKey(RequestStateKey key)
+        {
+            return KeyPrefix + key.ServiceRealm + '/' + key.ConsumerKey + '/' + (key.EndUserId ?? string.Empty);
         }
     }
 }

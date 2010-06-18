@@ -167,7 +167,7 @@ namespace OAuth.Net.ServiceProvider
             ServiceProviderContext.TokenStore.Add(token);
 
             // Add to the response
-            requestContext.ResponseParameters[Constants.CallbackConfirmedParameter] = "true"; //The spec never defines when to send false or what will happen if you do.
+            requestContext.ResponseParameters[Constants.CallbackConfirmedParameter] = "true"; // The spec never defines when to send false or what will happen if you do.
             requestContext.ResponseParameters[Constants.TokenParameter] = token.Token;
             requestContext.ResponseParameters[Constants.TokenSecretParameter] = token.Secret;
         }
@@ -184,8 +184,6 @@ namespace OAuth.Net.ServiceProvider
             return requestToken;
         }
 
-
-
         /// <summary>
         /// Determines whether a request token is issued for this request.
         /// </summary>
@@ -194,7 +192,7 @@ namespace OAuth.Net.ServiceProvider
         /// <para>
         /// If you need to apply extra rules before allowing an request
         /// token to be issued, you should create an RequestTokenHandler class
-        /// which inherits from this & overrides the AllowRequest method
+        /// which inherits from this &amp; overrides the AllowRequest method
         /// and add it as a HTTP handler for the request token URI.
         /// </para>
         /// 
