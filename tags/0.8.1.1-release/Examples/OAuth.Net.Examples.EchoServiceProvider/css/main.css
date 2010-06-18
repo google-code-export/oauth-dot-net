@@ -1,0 +1,329 @@
+﻿/*
+Title:      Madgex master styles inc. Yahoo reset
+Author:     James Wragg
+Copyright:  2008, Madgex Ltd.
+
+hsdf sdf sdgh sdf 
+*/
+
+		/*
+			Copyright (c) 2008, Yahoo! Inc. All rights reserved.
+			Code licensed under the BSD License:
+			http://developer.yahoo.net/yui/license.txt
+			version: 2.5.1
+		*/
+		html{color:#000;background:#FFF;}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0;}table{border-collapse:collapse;border-spacing:0;}fieldset,img{border:0;}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal;}li{list-style:none;}caption,th{text-align:left;}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}q:before,q:after{content:'';}abbr,acronym {border:0;font-variant:normal;}sup {vertical-align:text-top;}sub {vertical-align:text-bottom;}input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit;}input,textarea,select{*font-size:100%;}legend{color:#000;}
+
+		body {
+			background-color: #fff;
+			font: 12px/1.4 Verdana, Helvetica, Arial, sans-serif;
+			color:#333333;
+			position: relative; /* fix for ie6 to enable the body text to be selectable */
+		}
+		
+	
+		/* type */
+		h1 {
+			font: 34px/0.9 Verdana,sans-serif;
+			margin: 0em;
+			padding: 0em;
+
+		}
+		h2 {
+			font: 24px/1.05 Verdana,sans-serif;
+			margin: 1.8em 0 0.3em;
+			}
+			h2.alt {
+				clear: both;
+				text-align: center;
+			}
+			h1 + h2 {
+				margin-top: 0;
+			}
+			#secondary-content h2 {
+				border-bottom: 1px dotted #d2d2d2;
+				padding-bottom: 0.2em;
+			}
+		h3 {
+			font-weight: bold;
+			}
+			h3.dink {
+				background:transparent url(/images/grey-dink.gif) no-repeat scroll left top;
+				display:block;
+				font-family:"Myriad Pro", "Trebuchet MS", sans-serif;
+				font-size:18px;
+				line-height: 22px;
+				height:119px;
+				left:-170px;
+				padding:30px 18px 0pt;
+				position:absolute;
+				top:7.3em;
+				width:116px;
+			}
+		p{ margin: 0.4em 0 1.4em 0; }
+		strong { font-weight: bold }
+		
+		/* link effects */
+		a,a:visited,a:active {
+			text-decoration: none;
+			color: #1E3481;
+			font-weight: bold;
+		}
+		#main-content a:hover {
+			text-decoration: underline;
+		}
+		.news p a {
+			color: #1E3481 !important;
+			font-weight: bold;
+		}
+        .breakout span { display: block; text-align: left; padding-left: 30px;}
+		.breakout span a{
+		    color: #1E3481 !important;
+		}
+		
+		
+		/* layout */
+		#content,
+		#footer,
+		#quote,
+		.wrapper {
+			width: 960px;
+			margin: 0 auto;
+			position: relative;
+		}
+			
+		#dink {
+			background: url(/images/pink-dink.png) top left no-repeat;
+			position: absolute;
+			left: 624px;
+			top: -57px;
+			width:122px;
+			padding:35px 15px;
+			height: 109px;
+			color: #fff;
+			font-family: Verdana;
+			}
+			#dink p {
+				width: 122px;
+				margin: 0;
+			}
+			#dink a {
+				display: block;
+				font-weight: bold;
+				color: #fff;
+			}
+        
+			
+		#content {
+			padding-top: 85px;
+			margin-bottom: 3em;
+			line-height: 18px;
+			}
+			#main-content {
+				position: relative;
+				float: left;
+				width: 630px;
+				padding:0 60px 20px 0;
+				height: auto !important;
+				height: 40em;
+				min-height: 40em;
+			}
+			#secondary-content {
+				padding-left: 730px;
+			}
+			#secondary-content ul {
+				margin: 0.3em 0;
+			}
+			#nav {
+				font: 16px/1.5 Arial;
+				font-weight: bold;
+				overflow: hidden;
+				zoom: 1;
+				margin-left: 0;
+				}
+				#nav li {
+					float: left;
+					clear: both;
+					margin: 0.2em 0;
+					}
+					#nav li ul {
+						margin: 0 0 0 2em;
+					}
+				#nav a {
+					font-weight: normal;
+					display: block;
+					float: left;
+					color: #000;
+					}
+					#nav a.active, #nav a:hover {
+						font-weight: bold;
+					}
+		
+		#footer {
+			clear: both;
+			margin: 0 auto;
+			padding-top: 5em;
+			padding-bottom: 5em;
+			}
+			#footer img {
+				margin: 0 1.5em 0 0;
+			}
+			#footer p {
+				margin: 1em 0;
+			}
+		
+		
+		
+		/* Common styles */
+		p.backlink {
+			position: absolute;
+			top: -2.2em;
+		}
+		#secondary-content img {
+			margin: 1em 0 0.3em;
+			}
+			#secondary-content ul li {
+				width: 100%;
+			}
+		a.casestudy, h2 + ul a, p.backlink a {
+			color: #070a97 !important;
+		}
+		a.casestudy:hover, h2 + ul a:hover {
+			text-decoration: underline;
+		}
+		ul {
+			margin: 1.5em 0 1.5em 3em;
+			}
+			ul li {
+				margin: 0.5em 0;
+			}
+		ul.dinks {
+			margin: 2em 0 2.5em 3em;
+			}
+			ul.dinks li {
+				list-style-image: url(/images/dink-small.gif);
+				}
+				ul.dinks h3 {
+					margin: 1.5em 0 0;
+				}
+				ul.dinks h3 + p {
+					margin: 0 0 ;
+				}
+				ul.dinks a {
+					color: #1e3481 !important;
+					font-weight: bold;
+				}
+		ul.logos {
+			padding: 1em 0;
+			background: #f1f1f1;
+			margin: 3.5em 0;
+			overflow: hidden;
+			zoom: 1;
+			}
+			ul.logos li {
+				float: left;
+				width: auto;
+				text-align: center;
+			}
+			ul.logos li.alt {
+				float: left;
+				width: 49%;
+			}
+		ul.screenshots {
+			background: #f1f1f1;
+			border: 1px solid #f1f1f1;
+			-moz-border-radius: 0.8em;
+			-webkit-border-radius: 0.8em;
+			border-radius: 0.8em;
+			margin: 1em 0 3em;
+			overflow: hidden;
+			zoom: 1;
+			}
+			ul.screenshots li {
+				float:left;
+				margin:0 0 2em;
+				padding:1em 0pt 1em 16px;
+				position:relative;
+				text-align:left;
+				width:auto;
+				zoom:1;
+			}
+			ul.screenshots li img {
+				position: relative;
+				left: -5px;
+			}
+			
+		.breakout {
+			margin:2em 0pt;
+			text-align:center;
+			z-index:1000;
+			position:relative;
+			width:690px;
+			left: -30px;
+			}
+			.breakout img.single {
+				width:750px;
+				margin: 0 0 0.25em;
+				position:relative;
+			}
+			.caption {
+				width: 630px;
+				color: #bfbfbf;
+				display: block;
+				text-align: left;
+				}
+				.breakout .caption {
+					margin: 0;
+				}
+
+		a.pdf {
+			background: url(/images/pdf-icon.gif) 0 4px no-repeat;
+			float: left;
+			clear: both;
+			width: auto;
+			height: 55px;
+			padding-left: 55px;
+			color: #070a97 !important;
+			margin: 3em 0 4em;
+			}
+			a.pdf span {
+				display: block;
+			}
+		a.vcardTop {
+			padding-top: 25px;
+			background: url(/images/vcard.gif) top left no-repeat;
+			display: block;
+		}
+
+
+		.container3 {
+			/* 3 column container */
+			margin:2em 0 1em;
+			float: left;
+			width: 100%;
+			}
+			.container3.links {
+			    text-align: center;
+			}
+
+			.container3 .grid1 { float: left; width: 31.3333%; padding: 0 2% 0 0;}
+			.container3 .grid1-last { float: left; width: 33.3333%; padding: 0;}
+			.container3 .grid2 { float: left; width: 64.6666%; padding: 0 2% 0 0;}
+			.container3 .grid2-last { float: left; width: 66.6666%; padding: 0;}
+			.container3 .grid3 { float: left; width: 97.9999%; padding: 0 2% 0 0;}
+			.container3 .grid3-last { float: left; width: 99.9999%; padding: 0;}
+			.container3 .clear { clear: both; width: 100%; overflow: hidden;}
+
+			
+		
+		
+		dd{
+			font-weight: bold;
+			margin-bottom: 1em;		
+		}
+		
+		
+		
+		
+		
+		

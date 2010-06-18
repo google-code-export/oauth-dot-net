@@ -1,0 +1,128 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.ServiceProvider", "OAuth.Net.ServiceProvider\OAuth.Net.ServiceProvider.csproj", "{A6D845EE-20BE-4754-A70A-7DDF0B8FA953}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Common", "OAuth.Net.Common\OAuth.Net.Common.csproj", "{EE739EF0-FD95-48CC-86AB-BCD873981949}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{92D34CAF-0C26-4B1F-9AB9-1CB99D14E8C2}"
+	ProjectSection(SolutionItems) = preProject
+		Libraries\Castle.Core.dll = Libraries\Castle.Core.dll
+		Libraries\Castle.Core.xml = Libraries\Castle.Core.xml
+		Libraries\Castle.DynamicProxy.dll = Libraries\Castle.DynamicProxy.dll
+		Libraries\Castle.DynamicProxy.xml = Libraries\Castle.DynamicProxy.xml
+		Libraries\Castle.DynamicProxy2.dll = Libraries\Castle.DynamicProxy2.dll
+		Libraries\Castle.DynamicProxy2.xml = Libraries\Castle.DynamicProxy2.xml
+		Libraries\Castle.MicroKernel.dll = Libraries\Castle.MicroKernel.dll
+		Libraries\Castle.MicroKernel.xml = Libraries\Castle.MicroKernel.xml
+		Libraries\Castle.Windsor.dll = Libraries\Castle.Windsor.dll
+		Libraries\Castle.Windsor.xml = Libraries\Castle.Windsor.xml
+		Libraries\CommonServiceLocator.WindsorAdapter.dll = Libraries\CommonServiceLocator.WindsorAdapter.dll
+		Libraries\HtmlAgilityPack.dll = Libraries\HtmlAgilityPack.dll
+		Libraries\HtmlAgilityPack.xml = Libraries\HtmlAgilityPack.xml
+		Libraries\Microsoft.Practices.ServiceLocation.dll = Libraries\Microsoft.Practices.ServiceLocation.dll
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Maintenance", "Maintenance", "{25EA3BF2-606C-441B-8495-71C155CB7B53}"
+	ProjectSection(SolutionItems) = preProject
+		docproject.sandcastle.shfb = docproject.sandcastle.shfb
+		nunit-tests.nunit = nunit-tests.nunit
+		OAuth.Net.fxcop = OAuth.Net.fxcop
+		oauth.net.strongname.pfx = oauth.net.strongname.pfx
+		Settings.StyleCop = Settings.StyleCop
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Consumer", "OAuth.Net.Consumer\OAuth.Net.Consumer.csproj", "{AB7712BB-ADFB-48B5-AD8A-420683C2D7E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Components", "OAuth.Net.Components\OAuth.Net.Components.csproj", "{BCF0E325-B557-4D2C-9092-25A9E97490C3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Licenses", "Licenses", "{29F5B41F-415D-45E6-AAC9-E2E0662D00BE}"
+	ProjectSection(SolutionItems) = preProject
+		Licenses\Castle Project License.txt = Licenses\Castle Project License.txt
+		Licenses\CommonServiceLocator License.txt = Licenses\CommonServiceLocator License.txt
+		Licenses\HTML Agility Pack License.txt = Licenses\HTML Agility Pack License.txt
+		Licenses\OAuth.Net License.txt = Licenses\OAuth.Net License.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{454727E8-8040-4A77-8B45-68C6FAA5956C}"
+	ProjectSection(SolutionItems) = preProject
+		Documentation\OAuthNet.chm = Documentation\OAuthNet.chm
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.TestCases", "OAuth.Net.TestCases\OAuth.Net.TestCases.csproj", "{27F0F1C7-42D6-4F55-BEDB-39458A1661F9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CDF95B2D-FCE6-4F28-942E-AA7A223722A9} = {CDF95B2D-FCE6-4F28-942E-AA7A223722A9}
+		{70CBEA9B-51EE-4529-AD92-5EDD09617DDA} = {70CBEA9B-51EE-4529-AD92-5EDD09617DDA}
+		{73D326B1-79CF-4E3B-BB28-F902FEF34957} = {73D326B1-79CF-4E3B-BB28-F902FEF34957}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{58C9025D-453D-44C6-9F75-EC5FF15293FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Examples.FireEagleConsumer", "Examples\OAuth.Net.Examples.FireEagleConsumer\OAuth.Net.Examples.FireEagleConsumer.csproj", "{73D326B1-79CF-4E3B-BB28-F902FEF34957}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Examples.EchoServiceProvider", "Examples\OAuth.Net.Examples.EchoServiceProvider\OAuth.Net.Examples.EchoServiceProvider.csproj", "{70CBEA9B-51EE-4529-AD92-5EDD09617DDA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Examples.TwitterClient", "Examples\OAuth.Net.Examples.TwitterClient\OAuth.Net.Examples.TwitterClient.csproj", "{CDF95B2D-FCE6-4F28-942E-AA7A223722A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Examples.YQL2LeggedClient", "Examples\OAuth.Net.Examples.YQL2LeggedClient\OAuth.Net.Examples.YQL2LeggedClient.csproj", "{2DBC88DB-93D1-472A-A3E3-D9FB358EC9F7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Examples.OAuthRequest", "Examples\OAuth.Net.Examples.OAuthRequest\OAuth.Net.Examples.OAuthRequest.csproj", "{DADB844A-7151-4E32-9C0D-EFB1D3BAFF6F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A6D845EE-20BE-4754-A70A-7DDF0B8FA953}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6D845EE-20BE-4754-A70A-7DDF0B8FA953}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6D845EE-20BE-4754-A70A-7DDF0B8FA953}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6D845EE-20BE-4754-A70A-7DDF0B8FA953}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE739EF0-FD95-48CC-86AB-BCD873981949}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE739EF0-FD95-48CC-86AB-BCD873981949}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE739EF0-FD95-48CC-86AB-BCD873981949}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE739EF0-FD95-48CC-86AB-BCD873981949}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB7712BB-ADFB-48B5-AD8A-420683C2D7E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB7712BB-ADFB-48B5-AD8A-420683C2D7E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB7712BB-ADFB-48B5-AD8A-420683C2D7E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB7712BB-ADFB-48B5-AD8A-420683C2D7E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCF0E325-B557-4D2C-9092-25A9E97490C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCF0E325-B557-4D2C-9092-25A9E97490C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCF0E325-B557-4D2C-9092-25A9E97490C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCF0E325-B557-4D2C-9092-25A9E97490C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27F0F1C7-42D6-4F55-BEDB-39458A1661F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27F0F1C7-42D6-4F55-BEDB-39458A1661F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27F0F1C7-42D6-4F55-BEDB-39458A1661F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27F0F1C7-42D6-4F55-BEDB-39458A1661F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73D326B1-79CF-4E3B-BB28-F902FEF34957}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73D326B1-79CF-4E3B-BB28-F902FEF34957}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73D326B1-79CF-4E3B-BB28-F902FEF34957}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73D326B1-79CF-4E3B-BB28-F902FEF34957}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70CBEA9B-51EE-4529-AD92-5EDD09617DDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70CBEA9B-51EE-4529-AD92-5EDD09617DDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70CBEA9B-51EE-4529-AD92-5EDD09617DDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70CBEA9B-51EE-4529-AD92-5EDD09617DDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDF95B2D-FCE6-4F28-942E-AA7A223722A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDF95B2D-FCE6-4F28-942E-AA7A223722A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDF95B2D-FCE6-4F28-942E-AA7A223722A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDF95B2D-FCE6-4F28-942E-AA7A223722A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DBC88DB-93D1-472A-A3E3-D9FB358EC9F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DBC88DB-93D1-472A-A3E3-D9FB358EC9F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DBC88DB-93D1-472A-A3E3-D9FB358EC9F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DBC88DB-93D1-472A-A3E3-D9FB358EC9F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DADB844A-7151-4E32-9C0D-EFB1D3BAFF6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DADB844A-7151-4E32-9C0D-EFB1D3BAFF6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DADB844A-7151-4E32-9C0D-EFB1D3BAFF6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DADB844A-7151-4E32-9C0D-EFB1D3BAFF6F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{73D326B1-79CF-4E3B-BB28-F902FEF34957} = {58C9025D-453D-44C6-9F75-EC5FF15293FA}
+		{70CBEA9B-51EE-4529-AD92-5EDD09617DDA} = {58C9025D-453D-44C6-9F75-EC5FF15293FA}
+		{CDF95B2D-FCE6-4F28-942E-AA7A223722A9} = {58C9025D-453D-44C6-9F75-EC5FF15293FA}
+		{2DBC88DB-93D1-472A-A3E3-D9FB358EC9F7} = {58C9025D-453D-44C6-9F75-EC5FF15293FA}
+		{DADB844A-7151-4E32-9C0D-EFB1D3BAFF6F} = {58C9025D-453D-44C6-9F75-EC5FF15293FA}
+	EndGlobalSection
+EndGlobal
