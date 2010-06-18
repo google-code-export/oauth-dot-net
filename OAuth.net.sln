@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.ServiceProvider", "OAuth.Net.ServiceProvider\OAuth.Net.ServiceProvider.csproj", "{A6D845EE-20BE-4754-A70A-7DDF0B8FA953}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.ServiceProvider", "1.0a\OAuth.Net.ServiceProvider\OAuth.Net.ServiceProvider.csproj", "{A6D845EE-20BE-4754-A70A-7DDF0B8FA953}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Common", "OAuth.Net.Common\OAuth.Net.Common.csproj", "{EE739EF0-FD95-48CC-86AB-BCD873981949}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Common", "1.0a\OAuth.Net.Common\OAuth.Net.Common.csproj", "{EE739EF0-FD95-48CC-86AB-BCD873981949}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{92D34CAF-0C26-4B1F-9AB9-1CB99D14E8C2}"
 	ProjectSection(SolutionItems) = preProject
@@ -32,9 +32,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Maintenance", "Maintenance"
 		Settings.StyleCop = Settings.StyleCop
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Consumer", "OAuth.Net.Consumer\OAuth.Net.Consumer.csproj", "{AB7712BB-ADFB-48B5-AD8A-420683C2D7E9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Consumer", "1.0a\OAuth.Net.Consumer\OAuth.Net.Consumer.csproj", "{AB7712BB-ADFB-48B5-AD8A-420683C2D7E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Components", "OAuth.Net.Components\OAuth.Net.Components.csproj", "{BCF0E325-B557-4D2C-9092-25A9E97490C3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Components", "1.0a\OAuth.Net.Components\OAuth.Net.Components.csproj", "{BCF0E325-B557-4D2C-9092-25A9E97490C3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Licenses", "Licenses", "{29F5B41F-415D-45E6-AAC9-E2E0662D00BE}"
 	ProjectSection(SolutionItems) = preProject
@@ -49,7 +49,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 		Documentation\OAuthNet.chm = Documentation\OAuthNet.chm
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.TestCases", "OAuth.Net.TestCases\OAuth.Net.TestCases.csproj", "{27F0F1C7-42D6-4F55-BEDB-39458A1661F9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.TestCases", "1.0a\OAuth.Net.TestCases\OAuth.Net.TestCases.csproj", "{27F0F1C7-42D6-4F55-BEDB-39458A1661F9}"
 	ProjectSection(ProjectDependencies) = postProject
 		{CDF95B2D-FCE6-4F28-942E-AA7A223722A9} = {CDF95B2D-FCE6-4F28-942E-AA7A223722A9}
 		{70CBEA9B-51EE-4529-AD92-5EDD09617DDA} = {70CBEA9B-51EE-4529-AD92-5EDD09617DDA}
@@ -58,15 +58,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.TestCases", "OAut
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{58C9025D-453D-44C6-9F75-EC5FF15293FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Examples.FireEagleConsumer", "Examples\OAuth.Net.Examples.FireEagleConsumer\OAuth.Net.Examples.FireEagleConsumer.csproj", "{73D326B1-79CF-4E3B-BB28-F902FEF34957}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Examples.FireEagleConsumer", "1.0a\Examples\OAuth.Net.Examples.FireEagleConsumer\OAuth.Net.Examples.FireEagleConsumer.csproj", "{73D326B1-79CF-4E3B-BB28-F902FEF34957}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Examples.EchoServiceProvider", "Examples\OAuth.Net.Examples.EchoServiceProvider\OAuth.Net.Examples.EchoServiceProvider.csproj", "{70CBEA9B-51EE-4529-AD92-5EDD09617DDA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Examples.EchoServiceProvider", "1.0a\Examples\OAuth.Net.Examples.EchoServiceProvider\OAuth.Net.Examples.EchoServiceProvider.csproj", "{70CBEA9B-51EE-4529-AD92-5EDD09617DDA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Examples.TwitterClient", "Examples\OAuth.Net.Examples.TwitterClient\OAuth.Net.Examples.TwitterClient.csproj", "{CDF95B2D-FCE6-4F28-942E-AA7A223722A9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Examples.TwitterClient", "1.0a\Examples\OAuth.Net.Examples.TwitterClient\OAuth.Net.Examples.TwitterClient.csproj", "{CDF95B2D-FCE6-4F28-942E-AA7A223722A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Examples.YQL2LeggedClient", "Examples\OAuth.Net.Examples.YQL2LeggedClient\OAuth.Net.Examples.YQL2LeggedClient.csproj", "{2DBC88DB-93D1-472A-A3E3-D9FB358EC9F7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Examples.YQL2LeggedClient", "1.0a\Examples\OAuth.Net.Examples.YQL2LeggedClient\OAuth.Net.Examples.YQL2LeggedClient.csproj", "{2DBC88DB-93D1-472A-A3E3-D9FB358EC9F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Examples.OAuthRequest", "Examples\OAuth.Net.Examples.OAuthRequest\OAuth.Net.Examples.OAuthRequest.csproj", "{DADB844A-7151-4E32-9C0D-EFB1D3BAFF6F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth.Net.Examples.OAuthRequest", "1.0a\Examples\OAuth.Net.Examples.OAuthRequest\OAuth.Net.Examples.OAuthRequest.csproj", "{DADB844A-7151-4E32-9C0D-EFB1D3BAFF6F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.0a", "1.0a", "{8E8C610D-B591-41D5-810D-9B9DB6B908A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -124,5 +126,11 @@ Global
 		{CDF95B2D-FCE6-4F28-942E-AA7A223722A9} = {58C9025D-453D-44C6-9F75-EC5FF15293FA}
 		{2DBC88DB-93D1-472A-A3E3-D9FB358EC9F7} = {58C9025D-453D-44C6-9F75-EC5FF15293FA}
 		{DADB844A-7151-4E32-9C0D-EFB1D3BAFF6F} = {58C9025D-453D-44C6-9F75-EC5FF15293FA}
+		{EE739EF0-FD95-48CC-86AB-BCD873981949} = {8E8C610D-B591-41D5-810D-9B9DB6B908A7}
+		{BCF0E325-B557-4D2C-9092-25A9E97490C3} = {8E8C610D-B591-41D5-810D-9B9DB6B908A7}
+		{AB7712BB-ADFB-48B5-AD8A-420683C2D7E9} = {8E8C610D-B591-41D5-810D-9B9DB6B908A7}
+		{A6D845EE-20BE-4754-A70A-7DDF0B8FA953} = {8E8C610D-B591-41D5-810D-9B9DB6B908A7}
+		{27F0F1C7-42D6-4F55-BEDB-39458A1661F9} = {8E8C610D-B591-41D5-810D-9B9DB6B908A7}
+		{58C9025D-453D-44C6-9F75-EC5FF15293FA} = {8E8C610D-B591-41D5-810D-9B9DB6B908A7}
 	EndGlobalSection
 EndGlobal
