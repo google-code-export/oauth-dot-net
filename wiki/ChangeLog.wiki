@@ -1,4 +1,31 @@
 #labels Featured
+= OAuth.net 0.8.1.1=
+
+== 18th June 2010 ==
+
+ * Modified to allow Consumers to be loaded into store through castle container.  Appears to throw an error if a property doesn't have a public set.
+ * Changes to InMemoryConsumerStore and fleshed out example a bit more
+ * Fixed issue loading comma separated list of strings.
+ * Added in config settings to be able to define which roles a ConsumerRequest is granted.
+ * Implemented new 2 Legged Client example to show use of Consumer Requests.
+ * Moved Sign to OAuthParameters to allow easier testing and completed succesfull test of OAuthConsumerRequest
+ * Fixed EchoServiceProvider to encode the echo URL correctly.  http://code.google.com/p/oauth-dot-net/issues/detail?id=22&colspec=ID%20Type%20Status%20Priority%20Owner%20Assembly%20Summary
+ * Changed the WorkflowHelper to handle situation where a URL redirect may have happened.  URL is now constructed based on the RawUrl and the Authority of the HttpRequest.Uri
+ * Implemented patch provided through Issue 21 http://code.google.com/p/oauth-dot-net/issues/detail?id=21&colspec=ID%20Type%20Status%20Priority%20Owner%20Assembly%20Summary
+ * Overrode OAuthRequestException.ToString to contain additional data
+ * Fixed cloning of AdditionalParameters
+ * Fix for doubled up query string arguments when fetching a protected resource URI with query string arguments
+ * Added request state store for managing the state of consumer requests;
+ * Added AspNetOAuthRequest for configuring consumer requests for a typical ASP.NET environment;Updated example apps to use new APIs
+ * Changed how the body of a response handles text sent down.  If it isn't parse able into a name value collection then the full content is added into as an OAuthRequestExtensionParameters.Problem
+ * Removed OAuthService.CallbackUrl and replaced it with OAuthRequest.CallbackUrl
+ * Removed SP-specific stuff from IToken (moved to IIssuedToken);
+ * Moved OAuthToken out of Consumer into Common;
+ * Changed OAuthRequest to use RequestTokenVerifier property properly;
+ * Updated examples to set RequestTokenVerifier properly
+ * Added NonceProvider property to ServiceProviderContext and re-named MD5HashVerifierProvider to MD5HashVerificationProvider. See http://code.google.com/p/oauth-dot-net/issues/detail?id=19&colspec=ID%20Type%20Status%20Priority%20Owner%20Assembly%20Summary
+
+
 = OAuth.net 0.7.1.0=
 
 ===5th August 2009==
